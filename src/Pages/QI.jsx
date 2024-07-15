@@ -2,12 +2,12 @@ import React from 'react'
 import Nav from '../Navbar/Nav';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import bg from '../Assets/one.jpg'
-import text from '../Assets/AIImage-1.jpg'
-import img from '../Assets/AIImage-2.jpg'
-import generated1 from '../Assets/Generated-Image-01.png'
-import generated2 from '../Assets/Generated-Image-02.png'
-import generated3 from '../Assets/Generated-Image-03.png'
+import bg from '../Assets/one.webp'
+import text from '../Assets/AIImage-1.webp'
+import img from '../Assets/AIImage-2.webp'
+import generated1 from '../Assets/Generated-Image-01.webp'
+import generated2 from '../Assets/Generated-Image-02.webp'
+import generated3 from '../Assets/Generated-Image-03.webp'
 import Sidenav from '../Navbar/Sidenav';
 import { Link } from 'react-router-dom';
 import { Typography } from '@mui/material';

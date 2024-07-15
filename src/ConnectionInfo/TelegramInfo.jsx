@@ -3,13 +3,13 @@ import { FaCheckCircle } from "react-icons/fa";
 import Box from '@mui/material/Box';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import AddBotImage1 from '../Assets/AddBotImage-1.jpg';
-import AddBotImage2 from '../Assets/AddBotImage-2.jpg';
-import AddBotImage3 from '../Assets/AddBotImage-3.jpg';
-import AddBotImage4 from '../Assets/AddBotImage-4.jpg';
-import AddBotImage5 from '../Assets/AddBotImage-5.jpg';
-import BotCodeImage from '../Assets/BotCodeImage.jpg';
-import BotMessage from '../Assets/BotMessage.jpg';
+import AddBotImage1 from '../Assets/AddBotImage-1.webp';
+import AddBotImage2 from '../Assets/AddBotImage-2.webp';
+import AddBotImage3 from '../Assets/AddBotImage-3.webp';
+import AddBotImage4 from '../Assets/AddBotImage-4.webp';
+import AddBotImage5 from '../Assets/AddBotImage-5.webp';
+import BotCodeImage from '../Assets/BotCodeImage.webp';
+import BotMessage from '../Assets/BotMessage.webp';
 import TeleSlideShow1 from './TeleSlideShow1';
 
 const firstSetImages = [AddBotImage1, AddBotImage2, AddBotImage3, AddBotImage4, AddBotImage5, BotCodeImage, BotMessage]

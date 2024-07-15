@@ -1,28 +1,20 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/img-redundant-alt */
-import React from 'react'
+import React, { useState } from 'react'
 import Nav from "../Navbar/Nav"
 import { FaCirclePlay } from "react-icons/fa6";
 import { Dialog, DialogContent } from "@mui/material";
 import { IconButton, Typography } from '@mui/material';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
-import bg from '../Assets/bg7.jpg'
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import QS1 from '../Assets/QS-01.jpg'
-import about from '../Assets/social-media-platforms-01.jpg'
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import bg1 from '../Assets/bground1.jpg'
-import why from '../Assets/soc.png'
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
-import DeveloperBoardIcon from '@mui/icons-material/DeveloperBoard';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import why from '../Assets/soc.webp'
 import Sidenav from '../Navbar/Sidenav';
 import { Link } from 'react-router-dom';
-import sto from '../Assets/ais.jpg'
+import sto from '../Assets/ais.webp'
 import AutoFixHighRoundedIcon from '@mui/icons-material/AutoFixHighRounded';
 import ContentCutRoundedIcon from '@mui/icons-material/ContentCutRounded';
 import EventAvailableRoundedIcon from '@mui/icons-material/EventAvailableRounded';
@@ -33,7 +25,7 @@ import { CgPlayButtonO } from "react-icons/cg";
 
 const About = () => {
     const token = localStorage.getItem('token')
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
         setOpen(true);

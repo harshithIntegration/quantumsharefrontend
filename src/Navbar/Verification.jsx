@@ -5,8 +5,8 @@ import axiosInstance from '../Helper/AxiosInstance';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import DoneIcon from '@mui/icons-material/Done';
-import QS from "../Assets/QS.png";
-import emg1 from '../Assets/msg.png';
+import QS from "../Assets/QS.webp";
+import emg1 from '../Assets/msg.webp';
 import { Link } from 'react-router-dom';
 import { AppContext } from '../Context/AppContext';
 

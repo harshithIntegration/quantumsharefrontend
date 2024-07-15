@@ -15,7 +15,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { List, ListItem, ListItemText } from '@mui/material';
 import { Person, PersonOutline, PrivacyTipOutlined } from "@mui/icons-material";
 import { IoLanguage } from "react-icons/io5";
-import QS from '../Assets/QS.png';
+import QS from '../Assets/QS.webp';
 
 const Nav = () => {
     const [anchorElNav, setAnchorElNav] = useState(null);
