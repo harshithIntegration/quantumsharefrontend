@@ -11,12 +11,12 @@ import InsertLinkIcon from '@mui/icons-material/InsertLink';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import MapsUgcIcon from '@mui/icons-material/MapsUgc';
 import Alert from '@mui/material/Alert';
-import why from '../Assets/home.png'
-import about1 from '../Assets/about 1.jpg'
-import about2 from '../Assets/about2.jpg'
-import about3 from '../Assets/about-company-3.jpg'
-import feature1 from '../Assets/features-1.jpg'
-import feature2 from '../Assets/tabs-3.jpg'
+import why from '../Assets/home.webp'
+import about1 from '../Assets/about 1.webp'
+import about2 from '../Assets/about2.webp'
+import about3 from '../Assets/about-company-3.webp'
+import feature1 from '../Assets/features-1.webp'
+import feature2 from '../Assets/tabs-3.webp'
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import ImageIcon from '@mui/icons-material/Image';

@@ -8,7 +8,7 @@ import CardContent from '@mui/material/CardContent';
 import Nav from '../Navbar/Nav';
 import Sidenav from '../Navbar/Sidenav';
 import { Link } from 'react-router-dom';
-import bg from '../Assets/bg7.jpg'
+import bg from '../Assets/bg7.webp'
 import { FaCirclePlay } from "react-icons/fa6";
 
 const Features = () => {

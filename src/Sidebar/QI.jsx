@@ -303,7 +303,7 @@ import { RingLoader } from 'react-spinners';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import Zoom from '@mui/material/Zoom';
 import DoneIcon from '@mui/icons-material/Done';
-import Quantum from '../Assets/Quantum_Logo.png'
+import Quantum from '../Assets/Quantum_Logo.webp'
 import { ImageContext } from '../Context/ImageContext';
 import UpgradeIcon from '@mui/icons-material/Upgrade';
 
