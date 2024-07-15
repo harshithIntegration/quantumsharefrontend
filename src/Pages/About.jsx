@@ -234,20 +234,20 @@ const About = () => {
                 </Grid>
                 <Grid container spacing={1} sx={{ backgroundColor: "#b61a1d", paddingTop: "50px", paddingBottom: "50px" }}>
                     <Grid item xs={4} sx={{ borderRight: "1px solid white", paddingLeft: '35px' }}>
-                        <h3 style={{ color: "white", textAlign: 'start', fontSize: '20px', paddingLeft: "40px" }}>Save Time and Effort</h3>
-                        <p style={{ paddingLeft: "40px", color: "white", fontSize: "18px", marginTop: '5%' }}>
+                        <h3 style={{ color: "white", textAlign: 'start', fontSize: '20px', paddingLeft: "60px" }}>Save Time and Effort</h3>
+                        <p style={{ paddingLeft: "60px", color: "white", fontSize: "18px", marginTop: '5%', paddingRight: '8px' }}>
                             Forget about logging in and out of multiple accounts. With Quantum Share, you can share your content across all your social media platforms in one go, saving you valuable time and effort.
                         </p>
                     </Grid>
                     <Grid item xs={4} sx={{ borderRight: "1px solid white" }}>
-                        <h3 style={{ color: "white", paddingLeft: "15px", textAlign: 'start', fontSize: '20px' }}>Maximize Reach</h3>
-                        <p style={{ paddingLeft: "15px", color: "white", fontSize: "18px", marginTop: '5%', paddingRight: "3px" }}>
+                        <h3 style={{ color: "white", paddingLeft: "20px", textAlign: 'start', fontSize: '20px' }}>Maximize Reach</h3>
+                        <p style={{ paddingLeft: "20px", color: "white", fontSize: "18px", marginTop: '5%', paddingRight: "8px" }}>
                             Expand your reach by distributing your content across various social media networks at the same time. Enhance your online presence seamlessly with Quantum Share.
                         </p>
                     </Grid>
                     <Grid item xs={4}>
-                        <h3 style={{ color: "white", paddingLeft: "15px", textAlign: 'start', fontSize: '20px' }}>Streamlined Workflow</h3>
-                        <p style={{ paddingLeft: "15px", color: "white", fontSize: "18px", marginTop: '5%' }}>
+                        <h3 style={{ color: "white", paddingLeft: "20px", textAlign: 'start', fontSize: '20px' }}>Streamlined Workflow</h3>
+                        <p style={{ paddingLeft: "20px", color: "white", fontSize: "18px", marginTop: '5%', paddingRight: '8px' }}>
                             Simplify your content distribution process with Quantum Share's intuitive interface and powerful features. Focus on creating great content while we handle the rest.
                         </p>
                     </Grid>
