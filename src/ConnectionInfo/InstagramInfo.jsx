@@ -30,23 +30,23 @@ const InstagramInfo = () => {
                             <div id='connection'>
                                 <div className='circle1'>
                                     <div><FaCheckCircle className='checkCricle' /></div>
-                                    <p style={{ fontSize: '19px' }}>Open Meta Business Suite on your Facebook Profile. Navigate to page management window.</p>
+                                    <p style={{ fontSize: '17px' }}>Open Meta Business Suite on your Facebook Profile. Navigate to page management window.</p>
                                 </div><br />
                                 <div className='circle1'>
                                     <div><FaCheckCircle className='checkCricle' /></div>
-                                    <p style={{ fontSize: '19px' }}>Select an option to Connect Instagram account and login with Instagram.</p>
+                                    <p style={{ fontSize: '17px' }}>Select an option to Connect Instagram account and login with Instagram.</p>
                                 </div><br />
                                 <div className='circle1'>
                                     <div><FaCheckCircle className='checkCricle' /></div>
-                                    <p style={{ fontSize: '19px' }}>Grant the required permissions to allow Meta Business Suite to access and manage your Instagram messages.</p>
+                                    <p style={{ fontSize: '17px' }}>Grant the required permissions to allow Meta Business Suite to access and manage your Instagram messages.</p>
                                 </div><br />
                                 <div className='circle1'>
                                     <div><FaCheckCircle className='checkCricle' /></div>
-                                    <p style={{ fontSize: '19px' }}>Add your Instagram account to your business portfolio.</p>
+                                    <p style={{ fontSize: '17px' }}>Add your Instagram account to your business portfolio.</p>
                                 </div><br />
                                 <div className='circle1'>
                                     <div><FaCheckCircle className='checkCricle' /></div>
-                                    <p style={{ fontSize: '19px' }}>Instagram connected successful popup window will appear.</p>
+                                    <p style={{ fontSize: '17px' }}>Instagram connected successful popup window will appear.</p>
                                 </div>
                             </div>
                             <br />
@@ -60,15 +60,15 @@ const InstagramInfo = () => {
                                 <div id='connection'>
                                     <div className='circle1'>
                                         <div><FaCheckCircle className='checkCricle' /></div>
-                                        <p style={{ fontSize: '19px' }}>Go to your profile, tap on your profile picture or profile icon.</p>
+                                        <p style={{ fontSize: '17px' }}>Go to your profile, tap on your profile picture or profile icon.</p>
                                     </div><br />
                                     <div className='circle1'>
                                         <div><FaCheckCircle className='checkCricle' /></div>
-                                        <p style={{ fontSize: '19px' }}>Select "Settings" in setting click on Account type and tools and select "Switch to Professional Account."</p>
+                                        <p style={{ fontSize: '17px' }}>Select "Settings" in setting click on Account type and tools and select "Switch to Professional Account."</p>
                                     </div><br />
                                     <div className='circle1'>
                                         <div><FaCheckCircle className='checkCricle' /></div>
-                                        <p style={{ fontSize: '19px' }}>Select "Business" as your account type. And click on "Done" to complete the process</p>
+                                        <p style={{ fontSize: '17px' }}>Select "Business" as your account type. And click on "Done" to complete the process</p>
                                     </div><br />
                                 </div>
                             </div>

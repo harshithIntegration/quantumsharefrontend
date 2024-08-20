@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-mixed-operators */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState, useContext,useRef } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import { Dialog, DialogContent, DialogActions, Grid, Button, Tooltip, Popover, Zoom, DialogContentText } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
@@ -87,11 +87,11 @@ const Post = ({ onClose }) => {
     const handleConfirmCloseOpen = () => {
         if (changesMade) {
             console.log("ps:hit");
-            onClose()
+            // onClose()
             setConfirmCloseOpen(true);
         } else {
             console.log("ps:hit");
-            onClose()
+            // onClose()
             closeDialog();
         }
     };
@@ -246,6 +246,7 @@ const Post = ({ onClose }) => {
     };
 
     const handleSubmit = async () => {
+        setConfirmCloseOpen(false);
         setOpen1(false);
         const platforms = mediaPlatform.split(',');
         if (!platforms || platforms.length === 0) {
@@ -270,24 +271,36 @@ const Post = ({ onClose }) => {
                     toast.dismiss(loadingToasts[platforms.indexOf(platform)]);
 
                     if (platform === 'facebook' && Array.isArray(response.data)) {
-                        response.data.forEach(res => {
+                        response.data.forEach(async res => {
                             if (res.status === "success" && res.platform === "facebook") {
                                 toast.success(res.message);
-                                setRemainingCredits(res.remainingCredits); // Update remainingCredits context
-                                localStorage.setItem('remainingCredits', res.remainingCredits); // Update local storage
+                                setRemainingCredits(res.remainingCredits);
+                                localStorage.setItem('remainingCredits', res.remainingCredits);
+
+                                const postId = res.data.id;
+                                console.log(postId);
+                                setTimeout(async () => {
+                                    await axiosInstance.get(`/quatumshare/socialmedia/get/recent/post`, {
+                                        headers: {
+                                            'Accept': 'application/json',
+                                            Authorization: `Bearer ${token}`
+                                        },
+                                        params: { postId }
+                                    });
+                                }, 5000);
                             } else if (res.status === "error" && res.code === 114) {
-                                console.error('Credit Depleted Error Message:', res.message); // Log only the message
+                                console.error('Credit Depleted Error Message:', res.message);
                                 toast.error(res.message);
                             }
                         });
                     } else if (platform === 'instagram' && response.data.success?.status === "success") {
                         const res = response.data.success;
                         toast.success(res.message);
-                        setRemainingCredits(res.remainingCredits); // Update remainingCredits context
-                        localStorage.setItem('remainingCredits', res.remainingCredits); // Update local storage
+                        setRemainingCredits(res.remainingCredits);
+                        localStorage.setItem('remainingCredits', res.remainingCredits);
                     } else if (platform === 'instagram' && response.data.structure?.status === "error" && response.data.structure.code === 114) {
                         const res = response.data.structure;
-                        console.error('Credit Depleted Error Message:', res.message); // Log only the message
+                        console.error('Credit Depleted Error Message:', res.message);
                         toast.error(res.message);
                     } else if (platform === 'telegram' && response.data.success?.status === "success") {
                         const res = response.data.success;
@@ -297,7 +310,7 @@ const Post = ({ onClose }) => {
                         // toast.success(response.data.success.message);
                     } else if (platform === 'telegram' && response.data.structure?.status === "error" && response.data.structure.code === 114) {
                         const res = response.data.structure;
-                        console.error('Credit Depleted Error Message:', res.message); // Log only the message
+                        console.error('Credit Depleted Error Message:', res.message);
                         toast.error(res.message);
                     } else if (platform === 'youtube' && response.data.success?.message) {
                         toast.success(response.data.success.message);
@@ -315,19 +328,19 @@ const Post = ({ onClose }) => {
                         if (Array.isArray(responseData)) {
                             responseData.forEach(err => {
                                 if (err.status === "error" && err.code === 114) {
-                                    console.error('Credit Depleted Error Message:', err.message); // Log only the message
+                                    console.error('Credit Depleted Error Message:', err.message);
                                     toast.error(err.message);
                                 }
                             });
                         } else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
                             const err = responseData.structure;
-                            console.error('Credit Depleted Error Message:', err.message); // Log only the message
+                            console.error('Credit Depleted Error Message:', err.message);
                             toast.error(err.message);
                         }
                     } else if (Array.isArray(responseData)) {
                         responseData.forEach(err => {
                             if (err.status === "error" && err.code === 114) {
-                                console.error('Credit Depleted Error Message:', err.message); // Log only the message
+                                console.error('Credit Depleted Error Message:', err.message);
                                 toast.error(err.message);
                             }
                         });
@@ -336,13 +349,13 @@ const Post = ({ onClose }) => {
                             if (err.code === 404 && err.platform === platform.toLowerCase()) {
                                 toast.error(err.message);
                             } else if (err.status === "error" && err.code === 114) {
-                                console.error('Credit Depleted Error Message:', err.message); // Log only the message
+                                console.error('Credit Depleted Error Message:', err.message);
                                 toast.error(err.message);
                             }
                         });
                     } else if (platform === 'instagram' && responseData.structure?.status === "error" && responseData.structure.code === 114) {
                         const err = responseData.structure;
-                        console.error('Credit Depleted Error Message:', err.message); // Log only the message
+                        console.error('Credit Depleted Error Message:', err.message);
                         toast.error(err.message);
                     } else if (platform === 'instagram' && responseData.structure?.code === 404) {
                         toast.error(responseData.structure.message);

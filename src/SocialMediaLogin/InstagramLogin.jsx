@@ -50,8 +50,8 @@ const InstagramLogin = () => {
             } else {
                 window.fbAsyncInit = function () {
                     FB.init({
-                        appId: '421449853704517',
-                        // appId: '1397130744461736',
+                        // appId: '421449853704517',
+                        appId: '1397130744461736',
                         cookie: true,
                         xfbml: true,
                         version: 'v19.0'
@@ -76,6 +76,7 @@ const InstagramLogin = () => {
     };
 
     const handleInstagramLogin = () => {
+        handleConnectClose();
         setLoading(true);
         loadInstagramSdk()
             .then(() => {
@@ -114,7 +115,6 @@ const InstagramLogin = () => {
     };
 
     const sendTokenToBackend = async (accessToken) => {
-        handleConnectClose()
         try {
             const response = await axiosInstance.post(`/quantum-share/instagram/user/verify-token?code=${accessToken}`, null, {
                 headers: {
@@ -196,8 +196,8 @@ const InstagramLogin = () => {
                         <ReactSVG src={instagram1}></ReactSVG>
                     </div>
                 )}
-                <div style={{ marginTop: '15px' }}>
-                    <p style={{ marginTop: '1px', fontSize: '1.3rem' }}>
+                <div style={{ marginTop: isLoggedIn ? '-15px' : '15px' }}>
+                    <p style={{ marginTop: '1px', fontSize: '1.2rem' }}>
                         <span style={{ color: 'gray' }}>
                             {InstagramUsername ? InstagramUsername : 'Instagram'}
                         </span>
@@ -205,14 +205,14 @@ const InstagramLogin = () => {
                     <h5>{Instagram_follwers_count ? `Followers : ${Instagram_follwers_count}` : ''}</h5>
                 </div>
                 {loading || disconnecting ? (
-                    <Button variant='contained' sx={{ margin: '30px auto', marginBottom: '10px', fontWeight: '600' }} disabled>
+                    <Button variant='contained' sx={{ marginTop: isLoggedIn ? '15px' : '30px', marginBottom: '10px', fontWeight: '600' }} disabled>
                         {loading ? 'Connecting...' : 'Disconnecting...'}
                     </Button>
                 ) : (
                     !isLoggedIn ? (
-                        <Button variant='contained' sx={{ margin: '30px auto', marginBottom: '10px', fontWeight: '600' }} onClick={handleConnect}>Connect</Button>
+                        <Button variant='contained' sx={{ marginTop: isLoggedIn ? '15px' : '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handleConnect}>Connect</Button>
                     ) : (
-                        <Button variant='contained' sx={{ margin: '30px auto', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>Disconnect</Button>
+                        <Button variant='contained' sx={{ marginTop: isLoggedIn ? '15px' : '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>Disconnect</Button>
                     )
                 )}
             </section >
@@ -229,7 +229,7 @@ const InstagramLogin = () => {
                         And Verify that Instagram Account is connected to a <b>Facebook Page</b>.
                     </DialogContentText>
                     <br />
-                    <DialogContentText sx={{ fontSize: '18px', textAlign: 'center' }}>
+                    <DialogContentText sx={{ fontSize: '17px', textAlign: 'center' }}>
                         Know more how to <Link to='/connect-socialmedia#instagram' id='info'>Connect a Facebook Page to an Instagram</Link><OpenInNewIcon sx={{ color: '#067acc', verticalAlign: 'middle', marginLeft: '2px', marginBottom: '5px', fontSize: 'medium' }} />
                     </DialogContentText>
                 </DialogContent>

@@ -57,7 +57,7 @@ const Sidenav = ({ children }) => {
             path: '/social-integration'
         },
         {
-            name: <div onClick={handlePublish}>Publish</div>,   
+            name: <div onClick={handlePublish}>Publish</div>,
             icon: <RiSendPlaneFill onClick={handlePublish} />
         },
         {
