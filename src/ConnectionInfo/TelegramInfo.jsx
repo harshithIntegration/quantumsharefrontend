@@ -24,10 +24,10 @@ const TelegramInfo = () => {
                         <article>
                             <h2 style={{ textAlign: 'center', color: '#ba343b', fontSize: '30px' }}>Telegram Linking</h2>
                             <br />
-                            <p style={{ textAlign: 'center', marginLeft: '1rem', fontSize: '19px' }}>Telegram utilizes bots to allow posting to your group or channel. You will need to give admin access to the QuantumShare Telegram Bot to enable publishing and deleting.</p>
+                            <p style={{ textAlign: 'center', marginLeft: '1rem', fontSize: '18px' }}>Telegram utilizes bots to allow posting to your group or channel. You will need to give admin access to the QuantumShare Telegram Bot to enable publishing and deleting.</p>
                             <br />
                             <div id='tele' style={{ textAlign: 'center', marginLeft: '1.5rem' }}>
-                                <p style={{ marginTop: '0.2rem', fontSize: '19px' }}> &#x1F6C8; You must have administrative access to the channel or group to add a bot. Telegram channel posts show the channel name and logo as the author. Telegram group posts show the QuantumShare name and logo as the author.</p>
+                                <p style={{ marginTop: '0.2rem', fontSize: '18px' }}> &#x1F6C8; You must have administrative access to the channel or group to add a bot. Telegram channel posts show the channel name and logo as the author. Telegram group posts show the QuantumShare name and logo as the author.</p>
                             </div>
                             <br />
                             <h2 style={{ fontSize: '22px', marginLeft: '2rem', color: '#ba343b' }}>Connect Telegram</h2>
@@ -35,46 +35,46 @@ const TelegramInfo = () => {
                             <div id='connection'>
                                 <div className='circle1'>
                                     <div><FaCheckCircle className='checkCricle' /></div>
-                                    <p style={{ fontSize: '19px' }}>Open your Telegram Group and go to the <b>"Add Members"</b> section.</p>
+                                    <p style={{ fontSize: '17px' }}>Open your Telegram Group and go to the <b>"Add Members"</b> section.</p>
                                 </div><br />
                                 <div className='circle1'>
                                     <div><FaCheckCircle className='checkCricle' /></div>
-                                    <p style={{ fontSize: '19px' }}>Click on <b>"Add Members"</b>, then search for <b>"QuantumShare"</b>. When <b>"QuantumShare_bot"</b> appears, click on it and add it to your group.</p>
+                                    <p style={{ fontSize: '17px' }}>Click on <b>"Add Members"</b>, then search for <b>"QuantumShare"</b>. When <b>"QuantumShare_bot"</b> appears, click on it and add it to your group.</p>
                                 </div><br />
                                 <div className='circle1'>
                                     <div><FaCheckCircle className='checkCricle' /></div>
-                                    <p style={{ fontSize: '19px' }}>Once QuantumShare is added to your group, long-press on it and select <b>"Promote to admin"</b>.</p>
+                                    <p style={{ fontSize: '17px' }}>Once QuantumShare is added to your group, long-press on it and select <b>"Promote to admin"</b>.</p>
                                 </div><br />
                                 <div className='circle1'>
                                     <div><FaCheckCircle className='checkCricle' /></div>
-                                    <p style={{ fontSize: '19px' }}>On the Admin Rights page, click on the checkmark in the top right corner.</p>
+                                    <p style={{ fontSize: '17px' }}>On the Admin Rights page, click on the checkmark in the top right corner.</p>
                                 </div><br />
                                 <div className='circle1'>
                                     <div><FaCheckCircle className='checkCricle' /></div>
-                                    <p style={{ fontSize: '19px' }}>QuantumShare will now be successfully added and will appear as an admin in the group info.</p>
+                                    <p style={{ fontSize: '17px' }}>QuantumShare will now be successfully added and will appear as an admin in the group info.</p>
                                 </div><br />
                                 <div className='circle1'>
                                     <div><FaCheckCircle className='checkCricle' /></div>
-                                    <p style={{ fontSize: '19px' }}>In your Social Integration Dashboard you will be given a Telegram access code, when you click on the Telegram Connect.</p>
+                                    <p style={{ fontSize: '17px' }}>In your Social Integration Dashboard you will be given a Telegram access code, when you click on the Telegram Connect.</p>
                                 </div><br />
                                 <div className='circle1'>
                                     <div><FaCheckCircle className='checkCricle' /></div>
-                                    <p style={{ fontSize: '19px' }}>Copy the code part.</p>
+                                    <p style={{ fontSize: '17px' }}>Copy the code part.</p>
                                 </div><br />
                                 <div className='circle1'>
                                     <div><FaCheckCircle className='checkCricle' /></div>
-                                    <p style={{ fontSize: '19px' }}>In your Telegram group at the chat prompt, paste this code and press tap the send button.</p>
+                                    <p style={{ fontSize: '17px' }}>In your Telegram group at the chat prompt, paste this code and press tap the send button.</p>
                                 </div><br />
                                 <div className='circle1'>
                                     <div><FaCheckCircle className='checkCricle' /></div>
-                                    <p style={{ fontSize: '19px' }}>Once posting the message or code in a Group or Channel, <b>Please click on OK</b>. If successful, you will get a success message in the chat.</p>
+                                    <p style={{ fontSize: '17px' }}>Once posting the message or code in a Group or Channel, <b>Please click on OK</b>. If success, you will get a success message in the chat.</p>
                                 </div><br />
                                 <div id='teleg' style={{ textAlign: 'center', marginLeft: '18rem' }}>
-                                    <p style={{ marginTop: '0.2rem', fontSize: '19px' }}> &#x1F6C8; Please wait a few minutes for a Succes response in Telegram Chat</p>
+                                    <p style={{ marginTop: '0.2rem', fontSize: '17px' }}> &#x1F6C8; Please wait a few minutes for a Succes response in Telegram Chat</p>
                                 </div><br />
                                 <div className='circle1'>
                                     <div><FaCheckCircle className='checkCricle' /></div>
-                                    <p style={{ fontSize: '19px' }}>Thus, the Telegram integration is complete. You can now publish via QuantumShare.</p>
+                                    <p style={{ fontSize: '17px' }}>Thus, the Telegram integration is complete. You can now publish via QuantumShare.</p>
                                 </div>
                             </div>
                             <br />

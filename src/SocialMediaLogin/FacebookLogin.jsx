@@ -47,8 +47,8 @@ const FacebookLogin = () => {
             } else {
                 window.fbAsyncInit = function () {
                     FB.init({
-                        appId: '421449853704517',
-                        // appId: '1397130744461736',
+                        // appId: '421449853704517',
+                        appId: '1397130744461736',
                         cookie: true,
                         xfbml: true,
                         version: 'v19.0'
@@ -199,15 +199,15 @@ const FacebookLogin = () => {
                         <ReactSVG src={facebook1}></ReactSVG>
                     </div>
                 )}
-                <div style={{ marginTop: '15px' }}>
-                    <p style={{ marginTop: '1px', fontSize: '1.3rem' }}>
+                <div style={{ marginTop: isLoggedIn ? '-15px' : '15px' }}>
+                    <p style={{ marginTop: '1px', fontSize: '1.2rem' }}>
                         <span style={{ color: 'gray' }}>
                             {facebookUsername ? facebookUsername : 'Facebook'}
                         </span>
                     </p>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         {facebookNumberofpages && (
-                            <span style={{ marginRight: '6px' }}>Number Of Pages: {facebookNumberofpages}</span>
+                            <h5 style={{ marginRight: '6px' }}>Number Of Pages: {facebookNumberofpages}</h5>
                         )}
                         {isLoggedIn && pageData.length > 0 && (
                             <Select
@@ -229,14 +229,14 @@ const FacebookLogin = () => {
                     </div>
                 </div>
                 {loading || disconnecting ? (
-                    <Button variant='contained' sx={{ margin: '30px auto', marginBottom: '10px', fontWeight: '600' }} disabled>
+                    <Button variant='contained' sx={{ marginTop: isLoggedIn ? '15px' : '30px', marginBottom: '10px', fontWeight: '600' }} disabled>
                         {loading ? 'Connecting...' : 'Disconnecting...'}
                     </Button>
                 ) : (
                     !isLoggedIn ? (
-                        <Button variant='contained' sx={{ margin: '30px auto', marginBottom: '10px', fontWeight: '600' }} value={code} name="code" onClick={handleFacebookLogin}>Connect</Button>
+                        <Button variant='contained' sx={{ marginTop: isLoggedIn ? '15px' : '30px', marginBottom: '10px', fontWeight: '600' }} value={code} name="code" onClick={handleFacebookLogin}>Connect</Button>
                     ) : (
-                        <Button variant='contained' sx={{ margin: '30px auto', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>Disconnect</Button>
+                        <Button variant='contained' sx={{ marginTop: isLoggedIn ? '15px' : '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>Disconnect</Button>
                     )
                 )}
             </section>

@@ -166,8 +166,8 @@ const TelegramLogin = () => {
                         <ReactSVG src={telegram1}></ReactSVG>
                     </div>
                 )}
-                <div style={{ marginTop: '15px' }}>
-                    <p style={{ marginTop: '1px', fontSize: '1.3rem' }}>
+                <div style={{ marginTop: isLoggedIn ? '-15px' : '15px' }}>
+                    <p style={{ marginTop: '1px', fontSize: '1.2rem' }}>
                         <span style={{ color: 'gray' }}>
                             {telegramGroupName ? telegramGroupName : 'Telegram'}
                         </span>
@@ -175,14 +175,14 @@ const TelegramLogin = () => {
                     <h5>{telegramGroupMembersCount ? `Group Members : ${telegramGroupMembersCount}` : ''}</h5>
                 </div>
                 {loading || disconnecting ? (
-                    <Button variant='contained' sx={{ margin: '30px auto', marginBottom: '10px', fontWeight: '600' }} disabled>
+                    <Button variant='contained' sx={{ marginTop: isLoggedIn ? '15px' : '30px', marginBottom: '10px', fontWeight: '600' }} disabled>
                         {loading ? 'Connecting...' : 'Disconnecting...'}
                     </Button>
                 ) : (
                     !isLoggedIn ? (
-                        <Button variant='contained' sx={{ margin: '30px auto', marginBottom: '10px', fontWeight: '600' }} onClick={handleTelegramLogin}>Connect</Button>
+                        <Button variant='contained' sx={{ marginTop: isLoggedIn ? '15px' : '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handleTelegramLogin}>Connect</Button>
                     ) : (
-                        <Button variant='contained' sx={{ margin: '30px auto', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>Disconnect</Button>
+                        <Button variant='contained' sx={{ marginTop: isLoggedIn ? '15px' : '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>Disconnect</Button>
                     )
                 )}
             </section>

@@ -11,7 +11,7 @@ import About from './Pages/About';
 import Features from './Pages/Features';
 import Pricing from './Pages/Pricing';
 import AccountOverview from './Sidebar/AccountOverview';
-import Analytics from './Sidebar/Analytics';
+import Analytics from './Sidebar/Analytics';    
 import QI from './Pages/QI';
 import SocialMediaLogin from './SocialMediaLogin/SocialMediaLogin';
 import YoutubeCallback from './SocialMediaLogin/YoutubeCallback';

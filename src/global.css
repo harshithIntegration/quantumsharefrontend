@@ -1108,6 +1108,7 @@ main {
     color: #50b855;
     font-size: 1.2rem;
     margin-left: 25px;
+    margin-top: 5px;
 }
 
 #connection {
@@ -1163,7 +1164,7 @@ main {
 /* Telegram Info */
 #tele {
     border: 1px solid #e0eaf9;
-    height: 60px;
+    height: 70px;
     border-radius: 8px;
     background-color: #e0eaf9;
 }
@@ -1172,7 +1173,7 @@ main {
     border: 1px solid #e0eaf9;
     text-align: center;
     height: 40px;
-    width: 600px;
+    width: 700px;
     border-radius: 8px;
     background-color: #e0eaf9;
 }

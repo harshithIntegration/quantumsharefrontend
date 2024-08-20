@@ -104,7 +104,7 @@ const YoutubeLogin = () => {
                     </div>
                 )}
                 <div style={{ marginTop: '15px' }}>
-                    <p style={{ marginTop: '1px', fontSize: '1.3rem' }}>
+                    <p style={{ marginTop: '1px', fontSize: '1.2rem' }}>
                         <span style={{ color: 'gray' }}>
                             {channelName ? channelName : 'YouTube'}
                         </span>
