@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
@@ -32,7 +33,7 @@ const SectionTitle = styled(Typography)(({ theme }) => ({
 }));
 
 const Pricing = () => {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const navigate = useNavigate();
 
     const handleFreeTrialClick = () => {
@@ -144,6 +145,14 @@ const Pricing = () => {
 
     return (
         <>
+            <HelmetProvider>
+                <Helmet>
+                    <title>Quantum Share Pricing - Flexible Plans to Elevate Your Social Media Strategy</title>
+                    <meta name="description" content="Discover Quantum Share's transparent and flexible pricing plans, designed to meet the needs of individuals, small businesses, and enterprises. Whether you're managing a single account or multiple platforms, our pricing offers a range of features including AI-driven content generation, cross-platform posting, advanced analytics, and enhanced privacy. Choose a plan that fits your budget and start streamlining your social media management with ease." />
+                    <link rel="canonical" href='/Features' />
+                </Helmet>
+            </HelmetProvider>
+            
             <Nav />
             {token && <Sidenav />}
             <Box sx={{ marginTop: token ? '-3.2rem' : '-1rem' }}>
@@ -167,7 +176,7 @@ const Pricing = () => {
                                 <Typography variant="h6" gutterBottom sx={{ textAlign: "start" }}>
                                     <span style={{ fontSize: "22px", color: "#b43f4f" }}>$</span><div style={{ marginTop: "-52px", marginLeft: "12px" }}><span style={{ fontSize: "56px", color: "#b43f4f", fontWeight: "bold" }}>0</span><span style={{ color: "#a3a3a5" }}>/month</span></div>
                                 </Typography>
-                                <Button variant="contained" onClick={handleFreeTrialClick} sx={{ width: "200px", background: "#fcf8f8", color: "#b43f4f", boxShadow: "none", border: "1px solid #b43f4f", fontSize: '16px', fontWeight: '600', marginTop: '-5px', '&:hover': { background: 'none' }}} > 
+                                <Button variant="contained" onClick={handleFreeTrialClick} sx={{ width: "200px", background: "#fcf8f8", color: "#b43f4f", boxShadow: "none", border: "1px solid #b43f4f", fontSize: '16px', fontWeight: '600', marginTop: '-5px', '&:hover': { background: 'none' } }} >
                                     Start a free trial
                                 </Button>
                                 <Typography variant="body2" style={{ marginTop: '16px', marginBottom: "20px", fontSize: '14px', fontWeight: '600' }} >
@@ -181,7 +190,7 @@ const Pricing = () => {
                                         <CheckCircleOutlineIcon style={{ color: 'green' }} />
                                     </Grid>
                                     <Grid item xs={11}>
-                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }} >Connect 3 Social Media Profiles</Typography>
+                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }} >Connect 5 Social Media Profiles</Typography>
                                     </Grid>
                                     <Grid item xs={1}>
                                         <CheckCircleOutlineIcon style={{ color: 'green' }} />
@@ -199,7 +208,7 @@ const Pricing = () => {
                                         <CheckCircleOutlineIcon style={{ color: 'green' }} />
                                     </Grid>
                                     <Grid item xs={11}>
-                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>3 Credits per day</Typography>
+                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>5 Credits per day</Typography>
                                     </Grid>
                                     <Grid item xs={1}>
                                         <CheckCircleOutlineIcon style={{ color: 'green' }} />
@@ -249,7 +258,7 @@ const Pricing = () => {
                                         <CheckCircleOutlineIcon style={{ color: 'green' }} />
                                     </Grid>
                                     <Grid item xs={11}>
-                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>Connect 3 Social Media Profiles</Typography>
+                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>Connect 5 Social Media Profiles</Typography>
                                     </Grid>
                                     <Grid item xs={1}>
                                         <CheckCircleOutlineIcon style={{ color: 'green' }} />

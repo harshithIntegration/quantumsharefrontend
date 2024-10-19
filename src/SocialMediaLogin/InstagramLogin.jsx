@@ -10,30 +10,52 @@ import { ReactSVG } from 'react-svg';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Typography } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { setInstaName } from '../Redux/action/NameSlice';
+import { setInstagramUrl } from '../Redux/action/pageUrlsSlice';
+import { setInstaLoggedIn } from '../Redux/action/loginStatusSilce';
 
 const InstagramLogin = () => {
-    const token = localStorage.getItem('token');
+    let token = sessionStorage.getItem("token");
     const [code, setCode] = useState('');
     const [open, setOpen] = useState(false);
     const [open1, setOpen1] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loading, setLoading] = useState(false);
     const [disconnecting, setDisconnecting] = useState(false)
     const [instagramUrl, setInstaProfileImage] = useState('');
     const [InstagramUsername, setInstaUsername] = useState('');
     const [Instagram_follwers_count, setInstaFollowers] = useState('');
 
-    useEffect(() => {
-        const storedUrl = localStorage.getItem('instagramUrl');
-        const storedUsername = localStorage.getItem('InstagramUsername');
-        const storedFollowers = localStorage.getItem('Instagram_follwers_count');
-        if (storedUrl && storedUsername && storedFollowers) {
-            setIsLoggedIn(true);
-            setInstaProfileImage(storedUrl);
-            setInstaUsername(storedUsername);
-            setInstaFollowers(storedFollowers);
+    const dispatch = useDispatch()
+    const { instaLoggedIn }=useSelector((state)=>state.loginStatus)
+
+    const fetchConnectedSocial = async () => {
+        try {
+            const endpoint = 'quantum-share/user/connected/socialmedia/instagram'
+            const response = await axiosInstance.get(endpoint, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            console.log(response.data.data)
+            if (response.data.status === 'success' && response.data.data) {
+                const { instagramUrl, InstagramUsername, Instagram_follwers_count } = response.data.data.instagram;
+                setInstaProfileImage(instagramUrl);
+                setInstaUsername(InstagramUsername);
+                dispatch(setInstaName(InstagramUsername))
+                setInstaFollowers(Instagram_follwers_count);
+                dispatch(setInstagramUrl(instagramUrl));
+                dispatch(setInstaLoggedIn(true))
+            }
         }
-    }, [token]);
+        catch (error) {
+            console.error(error)
+        }
+    }
+
+    useEffect(() => {
+        fetchConnectedSocial()
+    }, [token])
 
     const handleConnect = () => {
         setOpen(true);
@@ -50,8 +72,8 @@ const InstagramLogin = () => {
             } else {
                 window.fbAsyncInit = function () {
                     FB.init({
-                        // appId: '421449853704517',
-                        appId: '1397130744461736',
+                        appId: '421449853704517',
+                        // appId: '1397130744461736',
                         cookie: true,
                         xfbml: true,
                         version: 'v19.0'
@@ -87,7 +109,7 @@ const InstagramLogin = () => {
                         console.log('User canceled login or didn\'t authorize the app');
                         setLoading(false);
                     }
-                }, { scope: 'instagram_basic,instagram_content_publish,business_management' });
+                }, { scope: 'instagram_basic,instagram_content_publish,business_management,instagram_manage_insights' });
             })
             .catch(error => {
                 console.error('Error loading Instagram SDK:', error);
@@ -109,7 +131,7 @@ const InstagramLogin = () => {
             const accessToken = response.authResponse.accessToken;
             await sendTokenToBackend(accessToken);
         } else {
-            setIsLoggedIn(false);
+            dispatch(setInstaLoggedIn(false))
             setLoading(false);
         }
     };
@@ -123,15 +145,13 @@ const InstagramLogin = () => {
             });
             console.log('Token sent to backend successfully');
             if (response.data.status === 'success' && response.data.data) {
-                console.log(response);
                 const { instagramUrl, InstagramUsername, Instagram_follwers_count } = response.data.data;
                 setInstaProfileImage(instagramUrl);
                 setInstaUsername(InstagramUsername);
+                dispatch(setInstaName(InstagramUsername))
                 setInstaFollowers(Instagram_follwers_count);
-                localStorage.setItem('instagramUrl', instagramUrl);
-                localStorage.setItem('InstagramUsername', InstagramUsername);
-                localStorage.setItem('Instagram_follwers_count', Instagram_follwers_count);
-                setIsLoggedIn(true);
+                dispatch(setInstagramUrl(instagramUrl));
+                dispatch(setInstaLoggedIn(true))
                 toast.success("Connected to Instagram!");
             }
         } catch (error) {
@@ -159,10 +179,7 @@ const InstagramLogin = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            localStorage.removeItem('instagramUrl');
-            localStorage.removeItem('InstagramUsername');
-            localStorage.removeItem('Instagram_follwers_count');
-            setIsLoggedIn(false);
+            dispatch(setInstaLoggedIn(false))
             setInstaUsername('');
             setInstaFollowers('');
             setInstaProfileImage('');
@@ -175,47 +192,75 @@ const InstagramLogin = () => {
         }
     };
 
+    const adjustFontSize = (username) => {
+        if (username.length > 20) return '0.875rem';
+        if (username.length > 15) return '0.962rem';
+        if (username.length > 10) return '1.2rem';
+        return '1.2rem';
+    };
+
     return (
         <>
             <section className='box-soc' style={{ paddingTop: '20px' }}>
-                {isLoggedIn ? (
-                    <div className="profile-container">
-                        <div className="profile-circle">
-                            <img
-                                src={instagramUrl}
-                                alt="User Profile"
-                                style={{ width: '3.9rem', height: '3.9rem', borderRadius: '50%' }}
-                            />
-                            <div className="instagram-icon">
-                                <ReactSVG src={instaicon} />
+                {instaLoggedIn ? (
+                    <>
+                        <div className="profile-container">
+                            <div className="profile-circle">
+                                <img
+                                    src={instagramUrl}
+                                    alt="User Profile"
+                                    style={{ width: '3.9rem', height: '3.9rem', borderRadius: '50%' }}
+                                />
+                                <div className="instagram-icon">
+                                    <ReactSVG src={instaicon} />
+                                </div>
                             </div>
                         </div>
-                    </div>
+                        <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <div
+                                style={{
+                                    textAlign: 'center',
+                                    overflow: 'hidden',
+                                    whiteSpace: 'nowrap',
+                                    textOverflow: 'ellipsis',
+                                    maxWidth: '200px',
+                                    height: '2rem', 
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <p style={{ marginTop: '1px', fontSize: adjustFontSize(InstagramUsername) }}>
+                                    <span style={{ color: 'gray' }}>{InstagramUsername}</span>
+                                </p>
+                            </div>
+                            <h5>{`Followers : ${Instagram_follwers_count}`}</h5>
+                        </div>
+                    </>
                 ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '10px' }}>
-                        <ReactSVG src={instagram1}></ReactSVG>
-                    </div>
+                    <>
+                        <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '10px' }}>
+                            <ReactSVG src={instagram1}></ReactSVG>
+                        </div>
+                        <div style={{ marginTop: '15px', textAlign: 'center', overflow: 'visible', whiteSpace: 'nowrap' }}>
+                            <p style={{ marginTop: '1px', fontSize: '1.2rem', overflow: 'visible' }}>
+                                <span style={{ color: 'gray' }}>Instagram</span>
+                            </p>
+                        </div>
+                    </>
                 )}
-                <div style={{ marginTop: isLoggedIn ? '-15px' : '15px' }}>
-                    <p style={{ marginTop: '1px', fontSize: '1.2rem' }}>
-                        <span style={{ color: 'gray' }}>
-                            {InstagramUsername ? InstagramUsername : 'Instagram'}
-                        </span>
-                    </p>
-                    <h5>{Instagram_follwers_count ? `Followers : ${Instagram_follwers_count}` : ''}</h5>
-                </div>
                 {loading || disconnecting ? (
-                    <Button variant='contained' sx={{ marginTop: isLoggedIn ? '15px' : '30px', marginBottom: '10px', fontWeight: '600' }} disabled>
+                    <Button variant='contained' sx={{ marginTop: instaLoggedIn ? '15px' : '30px', marginBottom: '10px', fontWeight: '600' }} disabled>
                         {loading ? 'Connecting...' : 'Disconnecting...'}
                     </Button>
                 ) : (
-                    !isLoggedIn ? (
-                        <Button variant='contained' sx={{ marginTop: isLoggedIn ? '15px' : '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handleConnect}>Connect</Button>
+                    !instaLoggedIn ? (
+                        <Button variant='contained' sx={{ marginTop: '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handleConnect}>Connect</Button>
                     ) : (
-                        <Button variant='contained' sx={{ marginTop: isLoggedIn ? '15px' : '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>Disconnect</Button>
+                        <Button variant='contained' sx={{ marginTop: '20px', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>Disconnect</Button>
                     )
                 )}
-            </section >
+            </section>
 
             <Dialog open={open} onClose={handleConnectClose}>
                 <DialogTitle sx={{ m: 0, p: 2, color: '#ba343b', fontSize: '20px', textAlign: 'center' }}>
@@ -244,7 +289,7 @@ const InstagramLogin = () => {
             <Dialog open={open1} onClose={handleClose} maxWidth='lg'>
                 <DialogContent>
                     <DialogContentText sx={{ color: 'black', fontSize: '17px' }}>
-                        Are you sure you want to disconnect from {InstagramUsername} Instagram Profile ?
+                        Are you sure you want to disconnect from <b>{InstagramUsername}</b> Instagram Profile ?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

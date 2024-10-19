@@ -10,10 +10,11 @@ import TelegramLogin from './TelegramLogin';
 import YoutubeLogin from './YoutubeLogin';
 import TwitterLogin from './TwitterLogin';
 import LinkedInLogin from './LinkedInLogin';
-import { FaStar } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { FaCirclePlay } from "react-icons/fa6";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import RedditLogin from './RedditLogin';
+import PinterestLogin from './PinterestLogin';
 
 const SocialMediaLogin = () => {
 
@@ -32,6 +33,8 @@ const SocialMediaLogin = () => {
                                 <div className='box-container-soc' style={{ display: 'flex', justifyContent: 'space-around', margin: '25px auto', alignItems: 'center', gap: '60px', flexWrap: 'wrap' }}>
                                     <FacebookLogin />
                                     <InstagramLogin />
+                                    <LinkedInLogin />
+                                    <YoutubeLogin />
                                     <TelegramLogin />
                                 </div>
                             </div>
@@ -41,17 +44,17 @@ const SocialMediaLogin = () => {
                         </h1>
                         <div style={{ display: 'flex', justifyContent: 'center', padding: '20px', marginTop: '-2rem' }}>
                             <div className='container-soc' style={{ maxWidth: '1200px', width: '100%' }}>
-                                <div className='box-container-soc' style={{ display: 'flex', justifyContent: 'space-around', margin: '25px auto', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
-                                    <div style={{ position: 'relative', textAlign: 'center' }}>
-                                        <YoutubeLogin />
-                                        <AutoAwesomeIcon style={{ position: 'absolute', top: '10px', right: '25px', color: '#ffbf00', fontSize: '2rem' }} />
-                                    </div>
-                                    <div style={{ position: 'relative', textAlign: 'center' }}>
-                                        <LinkedInLogin />
-                                        <AutoAwesomeIcon style={{ position: 'absolute', top: '10px', right: '25px', color: '#ffbf00', fontSize: '2rem' }} />
-                                    </div>
+                                <div className='box-container-soc' style={{ display: 'flex', justifyContent: 'space-evenly', margin: '25px auto', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
                                     <div style={{ position: 'relative', textAlign: 'center' }}>
                                         <TwitterLogin />
+                                        <AutoAwesomeIcon style={{ position: 'absolute', top: '10px', right: '25px', color: '#ffbf00', fontSize: '2rem' }} />
+                                    </div>
+                                    <div style={{ position: 'relative', textAlign: 'center' }}>
+                                        <RedditLogin />
+                                        <AutoAwesomeIcon style={{ position: 'absolute', top: '10px', right: '25px', color: '#ffbf00', fontSize: '2rem' }} />
+                                    </div>
+                                    <div style={{ position: 'relative', textAlign: 'center' }}>
+                                        <PinterestLogin />
                                         <AutoAwesomeIcon style={{ position: 'absolute', top: '10px', right: '25px', color: '#ffbf00', fontSize: '2rem' }} />
                                     </div>
                                 </div>

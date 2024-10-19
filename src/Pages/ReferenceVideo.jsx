@@ -4,7 +4,7 @@ import Sidenav from '../Navbar/Sidenav';
 import { Container, Typography, Grid, Card, CardMedia, CardContent, Dialog, DialogContent, Box } from '@mui/material';
 
 const ReferenceVideo = () => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const [open, setOpen] = useState(false);
     const [selectedVideo, setSelectedVideo] = useState(null);
 

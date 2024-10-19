@@ -37,13 +37,13 @@ const Sidenav = ({ children }) => {
         setOpenPost(false);
     };
 
-    const handleAi = () => {
-        setOpenAi(!openAi)
-    };
+    // const handleAi = () => {
+    //     setOpenAi(!openAi)
+    // };
 
-    const handleCloseAi = () => {
-        setOpenAi(false)
-    };
+    // const handleCloseAi = () => {
+    //     setOpenAi(false)
+    // };
 
     const menuItem = [
         {
@@ -60,10 +60,10 @@ const Sidenav = ({ children }) => {
             name: <div onClick={handlePublish}>Publish</div>,
             icon: <RiSendPlaneFill onClick={handlePublish} />
         },
-        {
-            name: <div onClick={handleAi}>Quantum AI</div>,
-            icon: <AutoAwesomeIcon onClick={handleAi} />
-        },
+        // {
+        //     name: <div onClick={handleAi}>Quantum AI</div>,
+        //     icon: <AutoAwesomeIcon onClick={handleAi} />
+        // },
         {
             name: "Analytics",
             icon: <EqualizerOutlinedIcon />,
@@ -98,7 +98,7 @@ const Sidenav = ({ children }) => {
             <main>{children}</main>
             <Outlet />
             {openPost && <Post onClose={handleClosePost} />}
-            {openAi && <DitiAI onClose={handleCloseAi} />}
+            {/* {openAi && <DitiAI onClose={handleCloseAi} />} */}
         </div>
     );
 };

@@ -1,25 +1,28 @@
 /* eslint-disable no-unused-vars */
+/* global FB */
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axiosInstance from '../Helper/AxiosInstance';
 import { toast } from 'react-toastify';
-import { FaRegCircle, FaRegCircleDot } from "react-icons/fa6";
 import { TailSpin } from 'react-loader-spinner';
+import { useDispatch } from 'react-redux';
+import QS from '../Assets/QS.webp';
+import { setLinkLoggedIn } from '../Redux/action/loginStatusSilce';
 
 const LinkedInCallback = () => {
     const location = useLocation();
-    const token = localStorage.getItem('token');
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [LinkedInUsername, setLinkedInUsername] = useState('');
+    const dispatch = useDispatch();
+    let token = sessionStorage.getItem("token");
     const [code, setCode] = useState('');
     const [pages, setPages] = useState([]);
-    const [selectedPageName, setSelectedPageName] = useState(null);
-    const [linkedProfileImage, setLinkedProfileImage] = useState('');
-    const [linkedPageImage, setLinkedPageImage] = useState('');
-    const [linkedInFollowers_count, setLinkedInFollower_count] = useState('');
+    const [linkedInUserName, setLinkedInUserName] = useState('');
+    const [linkedInProfilePic, setLinkedInProfilePic] = useState('');
+    const [linkedInFollowersCount, setLinkedInFollowersCount] = useState('');
     const [activeSelection, setActiveSelection] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [isPageConnecting, setIsPageConnecting] = useState(false); // New state for page connection loading
+    const [isPageConnecting, setIsPageConnecting] = useState(false);
+    const [isSubmitVisible, setIsSubmitVisible] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -27,174 +30,166 @@ const LinkedInCallback = () => {
         const codeParam = urlParams.get('code');
         if (codeParam) {
             setCode(codeParam);
+            handleLinkedInCallback(codeParam);
         } else {
             console.error('Authorization code is missing from the URL parameters.');
         }
     }, [location]);
 
-    const handleLinkedInCallback = async (code, type) => {
+    const handleLinkedInCallback = async (code) => {
         try {
             setIsLoading(true);
-            console.log('Sending request with code:', code, 'and type:', type);
-            const response = await axiosInstance.post(`/quantum-share/callback/success?code=${code}&type=${type}`, { code, type }, {
+            const response = await axiosInstance.post(`/quantum-share/linkedin/callback/success?code=${code}`, { code }, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Accept': 'application/json',
                 }
             });
 
-            console.log('Full response:', response);
             const responseData = response.data;
-            console.log('Response data:', responseData);
-
-            if (responseData) {
-                if (type === 'profile') {
-                    if (responseData.data) {
-                        const parsedData = JSON.parse(responseData.data);
-                        console.log('Parsed profile data:', parsedData);
-                        const { LinkedInUsername, image_url } = parsedData;
-                        localStorage.setItem('LinkedInUsername', LinkedInUsername);
-                        setLinkedInUsername(LinkedInUsername);
-                        localStorage.setItem('linkedProfileImage', image_url);
-                        setLinkedProfileImage(image_url);
-                        setIsLoggedIn(true);
-                        toast.success("Successfully connected to LinkedIn!");
-                        navigate("/social-integration");
-                    } else {
-                        console.error('LinkedInUsername is missing in the response data.');
-                    }
-                } else if (type === 'page') {
-                    const pagesData = responseData.data;
-                    console.log('Pages data:', pagesData);
-
-                    if (pagesData && Array.isArray(pagesData)) {
-                        setPages(pagesData);
-                    } else {
-                        console.error('Pages data is missing or invalid in the response.');
-                        setPages([]);
-                    }
+            if (responseData && responseData.data) {
+                const { linkedInPages, linkedInProfile } = responseData.data;
+                if (linkedInProfile) {
+                    setLinkedInUserName(linkedInProfile.name);
+                    setLinkedInProfilePic(linkedInProfile.profile_image);
+                }
+                if (linkedInPages && Array.isArray(linkedInPages)) {
+                    setPages(linkedInPages);
                 }
             } else {
-                console.error('Response data is missing.');
+                console.error('Invalid response from the backend');
             }
         } catch (error) {
-            console.error('Error sending token to backend:', error);
+            console.error('Error fetching data from backend:', error);
             toast.error("Error connecting to LinkedIn. Please try again later.");
         } finally {
             setIsLoading(false);
         }
     };
 
-    const handleProfileClick = () => {
-        setActiveSelection('profile');
-        if (code) {
-            handleLinkedInCallback(code, 'profile');
-        } else {
-            console.error('Authorization code is missing.');
-        }
-    };
-
-    const handlePageClick = () => {
-        setActiveSelection('page');
-        if (code) {
-            handleLinkedInCallback(code, 'page');
-        } else {
-            console.error('Authorization code is missing.');
-        }
-    };
-
-    const handlePageSelect = async (page) => {
+    const handleSelection = async (type, data) => {
         try {
-            setIsPageConnecting(true); // Start loading
-            console.log('Selected page:', page);
-            const response = await axiosInstance.post('/quantum-share/save-selected-page', page, {
+            setIsPageConnecting(true);
+            const response = await axiosInstance.post(`/quantum-share/linkedIn/selected/page?type=${type}`, data, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 }
             });
-
-            console.log('Save page response:', response);
-
             if (response.status === 200) {
-                const { message } = response.data;
-                console.log(message);
-                localStorage.setItem('linkedinPageName', message);
-                console.log(message + ' connected successfully');
-                toast.success(message + ' connected successfully');
-                const { followers_count, logoUrl } = response.data.data;
-                console.log({ followers_count, logoUrl });
-                localStorage.setItem('linkedPageImage', logoUrl);
-                localStorage.setItem('linkedInFollowers_count', followers_count);
-                setIsLoggedIn(true);
-                setSelectedPageName(message);
-                setLinkedPageImage(logoUrl);
-                setLinkedInFollower_count(followers_count);
+                const { linkedInUserName, linkedInProfilePic, linkedInFollowersCount } = response.data.data;
+                setLinkedInUserName(linkedInUserName);
+                setLinkedInProfilePic(linkedInProfilePic);
+                setLinkedInFollowersCount(linkedInFollowersCount);
+                dispatch(setLinkLoggedIn(true));
                 navigate("/social-integration");
+                toast.success(`Connected to LinkedIn ${type === 'profile' ? 'Profile' : 'Page'}!`);
             } else {
-                toast.error("Failed to save the selected page.");
+                toast.error(`Failed to connect to LinkedIn ${type === 'profile' ? 'Profile' : 'Page'}`);
             }
-        } catch (response) {
-            toast.error("Error saving the selected page. Please try again later.");
+        } catch (error) {
+            console.error('Error saving the selected page/profile:', error);
+            toast.error("Error saving the selected page/profile. Please try again later.");
         } finally {
-            setIsPageConnecting(false); // Stop loading
+            setIsPageConnecting(false);
+        }
+    };
+
+    const handleProfileClick = () => {
+        setActiveSelection('profile');
+        setIsSubmitVisible(true);
+    };
+
+    const handlePageSelect = (page) => {
+        setActiveSelection(page.urn);
+        setIsSubmitVisible(true);
+    };
+
+    const handleSubmit = () => {
+        setIsSubmitting(true);
+        if (activeSelection === 'profile') {
+            handleSelection('profile', {
+                urn: "",
+                name: linkedInUserName,
+                profile_image: linkedInProfilePic,
+                accessToken: "",
+            }).finally(() => setIsSubmitting(false));
+        } else {
+            const selectedPage = pages.find(page => page.urn === activeSelection);
+            handleSelection('page', {
+                urn: selectedPage.urn,
+                name: selectedPage.name,
+                profile_image: selectedPage.profile_image,
+                accessToken: selectedPage.accessToken
+            }).finally(() => setIsSubmitting(false)); 
         }
     };
 
     return (
-        <section id='callbacks'>
-            <article>
-                {isLoading ? (
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <TailSpin color="#d3040c" height={50} width={50} />
+        <>
+            {isLoading ? (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                    <TailSpin color="#d3040c" height={50} width={50} />
+                </div>
+            ) : (
+                <div id='callbacks'>
+                    <img src={QS} alt="Logo" style={{ height: 30, width: 'auto', marginLeft: '12rem' }} />
+                    <div style={{ textAlign: 'center', marginTop: '1rem', fontSize: '20px', fontWeight: 'bold' }}>
+                        Add a LinkedIn Profile or a LinkedIn Company Page
                     </div>
-                ) : (
-                    <>
-                        {activeSelection !== 'page' ? (
-                            <div>
-                                <h2 style={{ textAlign: 'center', marginTop: '1rem', color: '#d3040c' }}>LinkedIn: what do you want to set up?</h2>
-                                <div style={{ marginLeft: '4.5rem', marginTop: '2rem' }}>
-                                    <div onClick={handleProfileClick} style={{ margin: '1rem', display: 'flex', gap: '10px' }}>
-                                        {activeSelection === 'profile' ? <FaRegCircleDot style={{ color: 'blue', fontSize: '1.3rem' }} /> : <FaRegCircle style={{ fontSize: '1.3rem' }} />}
-                                        <h3>LinkedIn Personal Profile</h3>
-                                    </div>
-                                    <div onClick={handlePageClick} style={{ margin: '1rem', display: 'flex', gap: '10px' }}>
-                                        {activeSelection === 'page' ? <FaRegCircleDot style={{ color: 'blue', fontSize: '1.3rem' }} /> : <FaRegCircle style={{ fontSize: '1.3rem' }} />}
-                                        <h3>LinkedIn Company Page</h3>
-                                    </div>
+                    <div style={{ color: '#d3040c', marginTop: '1rem', fontWeight: 'bold' }}>
+                        Add a LinkedIn Profile:
+                    </div>
+                    <div onClick={handleProfileClick} style={{
+                        marginTop: '1rem', display: 'flex', alignItems: 'center', padding: '10px', borderRadius: '8px', border: '1px solid #ddd', cursor: 'pointer'
+                    }}>
+                        <input type="radio" checked={activeSelection === 'profile'} onChange={() => setActiveSelection('profile')} style={{ marginRight: '10px' }} />
+                        {linkedInUserName && linkedInProfilePic && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <img src={linkedInProfilePic} alt="Profile" style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
+                                <div>
+                                    <h4 style={{ margin: 0 }}>{linkedInUserName}</h4>
                                 </div>
                             </div>
-                        ) : null}
-                        {Array.isArray(pages) && pages.length > 0 && activeSelection === 'page' && !isPageConnecting ? (
-                            <div>
-                                <h3 style={{ color: '#d3040c', textAlign: 'center' }}>Your LinkedIn Associated Pages:</h3>
-                                <ul>
-                                    {pages.map((page) => (
-                                        <li key={page.linkedinPageURN} style={{ marginLeft: '7.5rem' }}>
-                                            <div onClick={() => handlePageSelect(page)} style={{ margin: '1rem', display: 'flex', gap: '10px' }}>
-                                                {selectedPageName === page.linkedinPageName ? <FaRegCircleDot style={{ color: 'blue', fontSize: '1.3rem' }} /> : <FaRegCircle style={{ fontSize: '1.3rem' }} />}
-                                                <h3>{page.linkedinPageName}</h3>
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        ) : null}
-                        {isPageConnecting && ( // Show loader while connecting to the page
-                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                <TailSpin color="#d3040c" height={50} width={50} />
-                            </div>
                         )}
-                        {selectedPageName && (
-                            <div>
-                                <h3>Selected Page:</h3>
-                                <p>{selectedPageName}</p>
+                    </div>
+                    {Array.isArray(pages) && pages.length > 0 && (
+                        <>
+                            <div style={{ color: '#d3040c', marginTop: '2rem', fontWeight: 'bold' }}>
+                                Add a page associated with this account:
                             </div>
-                        )}
-                    </>
-                )}
-            </article>
-        </section>
+                            <ul style={{ paddingLeft: '0', listStyleType: 'none', marginTop: '1rem' }}>
+                                {pages.map((page) => (
+                                    <li key={page.urn} style={{
+                                        padding: '10px', border: '1px solid #ddd', borderRadius: '8px', marginTop: '10px', display: 'flex', alignItems: 'center', cursor: 'pointer'
+                                    }} onClick={() => handlePageSelect(page)}>
+                                        <input type="radio" checked={activeSelection === page.urn} onChange={() => setActiveSelection(page.urn)} style={{ marginRight: '10px' }} />
+                                        <img src={page.profile_image || 'https://via.placeholder.com/50'} alt={page.name} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
+                                        <div style={{ marginLeft: '10px' }}>
+                                            <h4 style={{ margin: '0' }}>{page.name}</h4>
+                                            <span style={{ fontSize: '14px' }}>LinkedIn Company Page</span>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </>
+                    )}
+                    {isSubmitVisible && (
+                        <div style={{ marginTop: '2rem', textAlign: 'center' }}>
+                            <button onClick={handleSubmit} style={{
+                                padding: '10px 20px', backgroundColor: '#d3040c', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer'
+                            }}>
+                                {isSubmitting ? (
+                                    <TailSpin color="#ffffff" height={20} width={20} />
+                                ) : (
+                                    'Submit'
+                                )}
+                            </button>
+                        </div>
+                    )}
+                </div>
+            )}
+        </>
     );
 };
 

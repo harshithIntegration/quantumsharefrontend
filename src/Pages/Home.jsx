@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect } from 'react';
+import { HelmetProvider, Helmet } from 'react-helmet-async';
 import { Box, Button, Grid, Typography, Container, Paper } from '@mui/material';
 import Nav from '../Navbar/Nav'
 import Card from '@mui/material/Card';
@@ -51,17 +52,24 @@ const Home = () => {
 
     return (
         <>
+            <HelmetProvider>
+                <Helmet>
+                    <title>Quantum Share - Simplify Social Media & File Sharing | Secure & Easy</title>
+                    <meta name="description" content="Quantum Share offers a seamless and secure way to share files and posts across social media. Revolutionize your sharing experience with our easy-to-use, privacy-focused platform." />
+                    <link rel="canonical" href='/home' />
+                </Helmet>
+            </HelmetProvider>
             <Nav />
             <Grid container spacing={2} className='homeMainGrid01'>
                 <Grid item xs={12} md={6} lg={6} className='homeSubGrid01'>
                     <img className='homeImg01' src={why} alt="image" />
                 </Grid>
                 <Grid item xs={12} md={6} lg={6} className='homeSubGrid02'>
-                    <div className='homeMainDiv01'>
+                    <div className='homeMainDiv01' style={{ marginLeft: '10px' }}>
                         <div className='homeSubDiv01'>
                             <h2 className='homeh2Hdr01'> Revolutionize Your <br /> Social Sharing Experience! </h2>
                             <p className='homeContent01'>
-                                With Quantum Share,we aim to streamline this process and <br />
+                                With Quantum Share, we aim to streamline this process and <br />
                                 empower users like you to effortlessly distribute content, connect <br />
                                 with others, and amplify your online presence.
                             </p>
@@ -69,7 +77,7 @@ const Home = () => {
                     </div>
                     <div className='homeMainDiv02'>
                         <Typography className='homeTypography01' gutterBottom>
-                            <span className='homeSpan01'>Watch Now</span>
+                            <span className='homeSpan01' style={{ fontSize: '20px' }}>WatchNow</span>
                             <IconButton>
                                 <CgPlayButtonO className='homeCgPlayButtonO' onClick={handleClickOpen} />
                                 <Dialog
@@ -90,6 +98,7 @@ const Home = () => {
                                 </Dialog>
                             </IconButton>
                         </Typography>
+
                         <div className='homeSubDiv02'>
                             <Link to="/signUp">
                                 <button className='homeButton01'>
@@ -224,11 +233,11 @@ const Home = () => {
                         select and connect their desired social media profiles.</Typography>
                     <Typography sx={{ fontSize: 17, marginTop: '7px', paddingBottom: "15px", paddingTop: "10px" }} style={{ paddingRight: '15px', marginRight: "20px", paddingLeft: '10px', fontWeight: '500' }} color="black" gutterBottom>
                         Once integrated, users can create and post content effortlessly. By going to
-                        media platforms the vwant topostto,andclick'Post'topublishtheircontent the 'Post' section,
+                        media platforms the we want to post to,and click 'Post'to publish their content the 'Post' section,
                         they can add a title and description, select the social across multiple platforms simultaneously.
                         This seamless process ensures efficient content management and broad reach.</Typography>
                     <Typography sx={{ fontSize: 17, marginTop: '7px', paddingTop: "15px" }} style={{ paddingRight: '15px', marginRight: "20px", paddingLeft: '10px', paddingBottom: '25px', fontWeight: '500' }} color="black" gutterBottom>
-                        Exciting upcoming features wil further enhance Quantum Share's functionality. The Schedule Post feature wil
+                        Exciting upcoming features will further enhance Quantum Share's functionality. The Schedule Post feature will
                         allow users to plan their content strategy by scheduling posts for future dates and times,ensuring consistent
                         audience engagement. Advanced Analytics will provide insights into user interactions,including likes,retweets,
                         and clicks,helping to optimize content strategies. The Auto Hashtags feature will automatically add relevant
@@ -247,7 +256,7 @@ const Home = () => {
                                 </div>
                             </div>
                             <div style={{ marginLeft: '15px' }}>
-                                <Typography sx={{ fontSize: 17, marginTop: '7px', paddingLeft: "50px", paddingRight: "80px", fontWeight: '600' }} color="text.secondary" gutterBottom>
+                                <Typography sx={{ fontSize: 17, marginTop: '7px', paddingBottom: "15px", paddingTop: "10px" }} style={{ paddingRight: '15px', marginRight: "20px", paddingLeft: '10px', fontWeight: '500' }} color="black" gutterBottom>
                                     Create a post with text, images, or videos and send it immediately or schedule ti for a future date or time. Effortlessly manage your content distribution across multiple social media platforms from one place. </Typography>
                             </div>
                         </CardContent>
@@ -263,7 +272,7 @@ const Home = () => {
                                 </div>
                             </div>
                             <div style={{ marginLeft: '15px' }}>
-                                <Typography sx={{ fontSize: 17, marginTop: '7px', paddingLeft: "50px", paddingRight: "80px", fontWeight: '600' }} color="text.secondary" gutterBottom>
+                                <Typography sx={{ fontSize: 17, marginTop: '7px', paddingBottom: "15px", paddingTop: "10px" }} style={{ paddingRight: '15px', marginRight: "20px", paddingLeft: '10px', fontWeight: '500' }} color="black" gutterBottom>
                                     Upload your images or videos directly to Quantum Share and get a URL to post with. No need for as separate image or video
                                     hosting service, simplifying your media management </Typography>
                             </div>
@@ -280,7 +289,7 @@ const Home = () => {
                                 </div>
                             </div>
                             <div style={{ marginLeft: '15px' }}>
-                                <Typography sx={{ fontSize: 17, marginTop: '7px', paddingLeft: "50px", paddingRight: "80px", fontWeight: '600' }} color="text.secondary" gutterBottom>
+                                <Typography sx={{ fontSize: 17, marginTop: '7px', paddingBottom: "15px", paddingTop: "10px" }} style={{ paddingRight: '15px', marginRight: "20px", paddingLeft: '10px', fontWeight: '500' }} color="black" gutterBottom>
                                     Save your team's time by connecting with various Quantum Share integrations, such as Notion, Airtable, Make, and Bubble. Seamlessly integrate with your existing tools and workflows. </Typography>
                             </div>
                         </CardContent>
