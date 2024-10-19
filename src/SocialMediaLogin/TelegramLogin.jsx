@@ -12,12 +12,15 @@ import Zoom from '@mui/material/Zoom';
 import DoneIcon from '@mui/icons-material/Done';
 import { Link } from 'react-router-dom';
 import { TailSpin } from 'react-loader-spinner';
+import { useDispatch, useSelector } from 'react-redux';
+import { setTelLoggedIn } from '../Redux/action/loginStatusSilce';
+import { setTelName } from '../Redux/action/NameSlice';
+import { setTelegramUrl } from '../Redux/action/pageUrlsSlice';
 
 const TelegramLogin = () => {
-    const token = localStorage.getItem('token');
+    let token = sessionStorage.getItem("token");
     const [open, setOpen] = useState(false);
     const [open1, setOpen1] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loading, setLoading] = useState(false);
     const [disconnecting, setDisconnecting] = useState(false);
     const [telegramProfileUrl, setTelegramProfileUrl] = useState('');
@@ -27,17 +30,40 @@ const TelegramLogin = () => {
     const [copied, setCopied] = useState(false);
     const [loadingCode, setLoadingCode] = useState(false);
 
-    useEffect(() => {
-        const storedUrl = localStorage.getItem('telegramProfileUrl');
-        const storedUsername = localStorage.getItem('telegramGroupName');
-        const storedGroupMembersCount = localStorage.getItem('telegramGroupMembersCount');
-        if (storedUrl && storedUsername && storedGroupMembersCount) {
-            setIsLoggedIn(true);
-            setTelegramProfileUrl(storedUrl);
-            setTelegramGroupName(storedUsername);
-            setTelegramGroupMembersCount(storedGroupMembersCount);
+    const dispatch = useDispatch()
+    const { telLoggedIn } = useSelector((state) => state.loginStatus)
+
+    const fetchConnectedSocial = async () => {
+        try {
+            const endpoint = 'quantum-share/user/connected/socialmedia/telegram';
+            const response = await axiosInstance.get(endpoint, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            console.log(response.data.data);
+
+            if (response.data.status === 'success' && response.data.data) {
+                const { telegramProfileUrl, telegramGroupName, telegramGroupMembersCount } = response.data.data.telegram;
+
+                if (telegramProfileUrl && telegramGroupName && telegramGroupMembersCount > 0) {
+                    setTelegramProfileUrl(telegramProfileUrl);
+                    dispatch(setTelegramUrl(telegramProfileUrl))
+                    setTelegramGroupName(telegramGroupName);
+                    dispatch(setTelName(telegramGroupName))
+                    setTelegramGroupMembersCount(telegramGroupMembersCount);
+                    dispatch(setTelLoggedIn(true));
+                }
+            }
         }
-    }, [token]);
+        catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchConnectedSocial()
+    }, [token])
 
     const handleConnectPopup = () => {
         setOpen1(false);
@@ -90,12 +116,11 @@ const TelegramLogin = () => {
                 console.log(response);
                 const { telegramProfileUrl, telegramGroupName, telegramGroupMembersCount } = response.data.data;
                 setTelegramProfileUrl(telegramProfileUrl);
+                dispatch(setTelegramUrl(telegramProfileUrl))
                 setTelegramGroupName(telegramGroupName);
+                dispatch(setTelName(telegramGroupName))
                 setTelegramGroupMembersCount(telegramGroupMembersCount);
-                localStorage.setItem('telegramProfileUrl', telegramProfileUrl);
-                localStorage.setItem('telegramGroupName', telegramGroupName);
-                localStorage.setItem('telegramGroupMembersCount', telegramGroupMembersCount)
-                setIsLoggedIn(true);
+                dispatch(setTelLoggedIn(true))
                 toast.success("Connected to Telegram!");
             }
         } catch (error) {
@@ -129,10 +154,7 @@ const TelegramLogin = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            localStorage.removeItem('telegramProfileUrl');
-            localStorage.removeItem('telegramGroupName');
-            localStorage.removeItem('telegramGroupMembersCount');
-            setIsLoggedIn(false);
+            dispatch(setTelLoggedIn(false))
             setTelegramGroupName('');
             setTelegramProfileUrl('');
             setTelegramGroupMembersCount('');
@@ -145,48 +167,75 @@ const TelegramLogin = () => {
         }
     };
 
+    const adjustFontSize = (username) => {
+        if (username.length > 20) return '0.875rem';
+        if (username.length > 15) return '0.962rem';
+        if (username.length > 10) return '1.2rem';
+        return '1.2rem';
+    };
+
     return (
         <>
             <section className='box-soc' style={{ paddingTop: '20px' }}>
-                {isLoggedIn ? (
-                    <div className="profile-container">
-                        <div className="profile-circle">
-                            <img
-                                src={telegramProfileUrl}
-                                alt="User Profile"
-                                style={{ width: '3.9rem', height: '3.9rem', borderRadius: '50%' }}
-                            />
-                            <div className="instagram-icon">
-                                <ReactSVG src={tgicon} />
+                {telLoggedIn ? (
+                    <>
+                        <div className="profile-container">
+                            <div className="profile-circle">
+                                <img
+                                    src={telegramProfileUrl}
+                                    alt="User Profile"
+                                    style={{ width: '3.9rem', height: '3.9rem', borderRadius: '50%' }}
+                                />
+                                <div className="instagram-icon">
+                                    <ReactSVG src={tgicon} />
+                                </div>
                             </div>
                         </div>
-                    </div>
+                        <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <div
+                                style={{
+                                    textAlign: 'center',
+                                    overflow: 'hidden',
+                                    whiteSpace: 'nowrap',
+                                    textOverflow: 'ellipsis',
+                                    maxWidth: '200px',
+                                    height: '2rem',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <p style={{ marginTop: '1px', fontSize: adjustFontSize(telegramGroupName) }}>
+                                    <span style={{ color: 'gray' }}>{telegramGroupName}</span>
+                                </p>
+                            </div>
+                            <h5>{`Group Members : ${telegramGroupMembersCount}`}</h5>
+                        </div>
+                    </>
                 ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '10px' }}>
-                        <ReactSVG src={telegram1}></ReactSVG>
-                    </div>
+                    <>
+                        <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '10px' }}>
+                            <ReactSVG src={telegram1}></ReactSVG>
+                        </div>
+                        <div style={{ marginTop: '15px', textAlign: 'center', overflow: 'visible', whiteSpace: 'nowrap' }}>
+                            <p style={{ marginTop: '1px', fontSize: '1.2rem', overflow: 'visible' }}>
+                                <span style={{ color: 'gray' }}>Telegram</span>
+                            </p>
+                        </div>
+                    </>
                 )}
-                <div style={{ marginTop: isLoggedIn ? '-15px' : '15px' }}>
-                    <p style={{ marginTop: '1px', fontSize: '1.2rem' }}>
-                        <span style={{ color: 'gray' }}>
-                            {telegramGroupName ? telegramGroupName : 'Telegram'}
-                        </span>
-                    </p>
-                    <h5>{telegramGroupMembersCount ? `Group Members : ${telegramGroupMembersCount}` : ''}</h5>
-                </div>
                 {loading || disconnecting ? (
-                    <Button variant='contained' sx={{ marginTop: isLoggedIn ? '15px' : '30px', marginBottom: '10px', fontWeight: '600' }} disabled>
+                    <Button variant='contained' sx={{ marginTop: telLoggedIn ? '15px' : '30px', marginBottom: '10px', fontWeight: '600' }} disabled>
                         {loading ? 'Connecting...' : 'Disconnecting...'}
                     </Button>
                 ) : (
-                    !isLoggedIn ? (
-                        <Button variant='contained' sx={{ marginTop: isLoggedIn ? '15px' : '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handleTelegramLogin}>Connect</Button>
+                    !telLoggedIn ? (
+                        <Button variant='contained' sx={{ marginTop: '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handleTelegramLogin}>Connect</Button>
                     ) : (
-                        <Button variant='contained' sx={{ marginTop: isLoggedIn ? '15px' : '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>Disconnect</Button>
+                        <Button variant='contained' sx={{ marginTop: '20px', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>Disconnect</Button>
                     )
                 )}
             </section>
-
             <Dialog open={open1} onClose={handleConnectPopup}>
                 <DialogTitle sx={{ color: '#b4232a', fontSize: '20px', textAlign: 'center' }}>
                     Link Telegram

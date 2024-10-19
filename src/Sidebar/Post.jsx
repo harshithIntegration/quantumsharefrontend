@@ -23,16 +23,18 @@ import axiosInstance from "../Helper/AxiosInstance";
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from "react-router-dom";
 import { ImageContext } from "../Context/ImageContext";
-import { AppContext } from "../Context/AppContext";
 import Webcam from 'react-webcam';
 import CloseIcon from '@mui/icons-material/Close';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import { FaVideo } from "react-icons/fa";
+import { setRemainingCredits } from '../Redux/action/dataslice'
+import { useDispatch, useSelector } from "react-redux";
+import WarningIcon from '@mui/icons-material/Warning';
 
 const Post = ({ onClose }) => {
     const navigate = useNavigate()
-    const token = localStorage.getItem('token')
+    let token = sessionStorage.getItem("token");
     const [open, setOpen] = useState(true);
     const [open1, setOpen1] = useState(false);
     const [file, setFile] = useState(null);
@@ -53,7 +55,6 @@ const Post = ({ onClose }) => {
     const [selectedIcons, setSelectedIcons] = useState([]);
     const [mediaPlatform, setMediaPlatform] = useState([]);
     const { image1 } = useContext(ImageContext);
-    const { setRemainingCredits } = useContext(AppContext);
     const [showBox, setShowBox] = useState(false);
     const [disableMainTooltip, setDisableMainTooltip] = useState(false);
     const [showCamera, setShowCamera] = useState(false);
@@ -64,12 +65,96 @@ const Post = ({ onClose }) => {
     const mediaRecorderRef = useRef(null);
     const [imageUrl, setImageUrl] = useState('');
     const [isRecording, setIsRecording] = useState(false);
+    const [sr, setSr] = useState('');
+    const [postSubmitted, setPostSubmitted] = useState(false)
+
+    const dispatch = useDispatch()
+    // const { remainingCredits } = useSelector((state) => state.data)
 
     const handleSelectIconAndSendToParent = (selectedIcons, mediaPlatform) => {
         setSelectedIcons(selectedIcons);
+        console.log(selectedIcons);
         setMediaPlatform(mediaPlatform);
+        if (!mediaPlatform.includes('youtube') && !mediaPlatform.includes('Reddit')) {
+            setTitle('');
+        }
+        if (!mediaPlatform.includes('Reddit')) {
+            setSr('');
+        }
         console.log(mediaPlatform);
     };
+
+    const [warningMessages, setWarningMessages] = useState([]);
+    const validatePlatforms = () => {
+        let newWarningMessages = [];
+        let shouldDisableShare = false;
+
+        if (!file && !caption) {
+            newWarningMessages.push("A post cannot be shared without either text or media.");
+            shouldDisableShare = true;
+        }
+
+        if (file && !mediaPlatform.length) {
+            newWarningMessages.push("Please select at least one media platform to share the post.");
+            shouldDisableShare = true;
+        }
+
+        if (mediaPlatform.includes('youtube')) {
+            if (!title) {
+                newWarningMessages.push("Please enter a title for YouTube.");
+                shouldDisableShare = true;
+            } else if (fileType !== 'video') {
+                if (mediaPlatform.length > 1) {
+                    newWarningMessages.push(
+                        "The selected image will be shared to all selected platforms except YouTube. Only video files can be shared to YouTube."
+                    );
+                    shouldDisableShare = true;
+                } else {
+                    newWarningMessages.push(
+                        "Only video files can be shared to YouTube. Please select a video."
+                    );
+                    shouldDisableShare = true;
+                }
+            }
+        }
+
+        if (mediaPlatform.includes('Reddit')) {
+            if (!title || !sr) {
+                if (!title) newWarningMessages.push("Please enter a title for Reddit.");
+                if (!sr) newWarningMessages.push("Please enter a subreddit for Reddit.");
+                shouldDisableShare = true;
+            }
+        }
+
+        if (mediaPlatform.includes('Reddit') && (fileType === 'image' || fileType === 'video')) {
+            newWarningMessages.push(
+                "Reddit does not support image or video sharing. Please remove the media or deselect Reddit."
+            );
+            shouldDisableShare = true;
+        }
+
+        if ((mediaPlatform.includes('instagram') || mediaPlatform.includes('youtube')) && !file) {
+            newWarningMessages.push(
+                "Instagram and YouTube only support media posts. The text will be shared to other platforms."
+            );
+            shouldDisableShare = true;
+        }
+
+        setWarningMessages(newWarningMessages);
+        setShareButtonDisabled(shouldDisableShare);
+    };
+
+    useEffect(() => {
+        if (!mediaPlatform.length && !file && !caption) {
+            setWarningMessages(["A post cannot be shared without either text or media."]);
+            setShareButtonDisabled(true);
+        } else if (file && !mediaPlatform.length) {
+            setWarningMessages(["Please select at least one media platform to share the post."]);
+            setShareButtonDisabled(true);
+        } else if (mediaPlatform.length > 0 && (file || caption)) {
+            validatePlatforms();
+        }
+    }, [mediaPlatform, title, sr, file, fileType, caption]);
 
     const closeDialog = () => {
         setOpen(false);
@@ -86,12 +171,8 @@ const Post = ({ onClose }) => {
 
     const handleConfirmCloseOpen = () => {
         if (changesMade) {
-            console.log("ps:hit");
-            // onClose()
             setConfirmCloseOpen(true);
         } else {
-            console.log("ps:hit");
-            // onClose()
             closeDialog();
         }
     };
@@ -139,7 +220,6 @@ const Post = ({ onClose }) => {
     const handleCapture = () => {
         const imageSrc = webcamRef.current.getScreenshot();
 
-        // Convert base64 image to Blob
         const byteCharacters = atob(imageSrc.split(',')[1]);
         const byteNumbers = new Array(byteCharacters.length);
         for (let i = 0; i < byteCharacters.length; i++) {
@@ -148,12 +228,10 @@ const Post = ({ onClose }) => {
         const byteArray = new Uint8Array(byteNumbers);
         const blob = new Blob([byteArray], { type: 'image/png' });
 
-        // Create File object from Blob
         const file = new File([blob], 'captured_image.png', { type: 'image/png' });
 
-        // Set state variables
-        setFile(file); // Set the File object as the selected file
-        setFileType('image'); // Update the file type to 'image'
+        setFile(file);
+        setFileType('image');
         setShareButtonDisabled(false);
         setShowCamera(false);
     };
@@ -169,7 +247,6 @@ const Post = ({ onClose }) => {
         } else {
             mediaRecorderRef.current.stop();
             setIsRecording(false);
-
         }
     };
 
@@ -177,8 +254,8 @@ const Post = ({ onClose }) => {
         if (event.data.size > 0) {
             const videoFile = new File([event.data], 'recorded_video.webm', { type: 'video/webm' });
             console.log(videoFile);
-            setFile(videoFile); // Set the File object as the selected file
-            setFileType('video'); // Update the file type to 'video'
+            setFile(videoFile);
+            setFileType('video');
             setShareButtonDisabled(false);
             setShowCamera(false);
         }
@@ -204,8 +281,8 @@ const Post = ({ onClose }) => {
         'facebook': 'Facebook',
         'instagram': 'Instagram',
         'telegram': 'Telegram',
-        'youtube': 'Youtube',
-        'twitter': 'Twitter'
+        'LinkedIn': 'LinkedIn',
+        'youtube': 'Youtube'
     };
 
     const getDisplayPlatformName = (platform) => {
@@ -225,16 +302,16 @@ const Post = ({ onClose }) => {
                 return '/quantum-share/post/file/instagram';
             case 'telegram':
                 return '/quantum-share/post/file/telegram';
+            case 'LinkedIn':
+                return '/quantum-share/post/file/linkedIn';
             case 'youtube':
                 return '/quantum-share/post/file/youtube';
-            case 'twitter':
-                return '/quantum-share/post/file/twitter';
             default:
                 throw new Error(`Unsupported platform: ${platform}`);
         }
     };
 
-    const createFormData = (file, caption, title, platform) => {
+    const createFormData = (file, caption, title, platform, sr) => {
         const formData = new FormData();
         if (file) {
             formData.append('mediaFile', file);
@@ -242,6 +319,7 @@ const Post = ({ onClose }) => {
         formData.append('caption', caption);
         formData.append('title', title);
         formData.append('mediaPlatform', platform);
+        formData.append('sr', sr);
         return formData;
     };
 
@@ -259,7 +337,7 @@ const Post = ({ onClose }) => {
             );
             const responses = await Promise.all(platforms.map(async platform => {
                 const endpoint = getEndpointForPlatform(platform);
-                const formData = createFormData(file, caption, title, platform, image1);
+                const formData = createFormData(file, caption, title, platform, image1, sr);
                 try {
                     const response = await axiosInstance.post(endpoint, formData, {
                         headers: {
@@ -269,118 +347,165 @@ const Post = ({ onClose }) => {
                         params: { mediaPlatform: platform }
                     });
                     toast.dismiss(loadingToasts[platforms.indexOf(platform)]);
-
-                    if (platform === 'facebook' && Array.isArray(response.data)) {
-                        response.data.forEach(async res => {
-                            if (res.status === "success" && res.platform === "facebook") {
-                                toast.success(res.message);
-                                setRemainingCredits(res.remainingCredits);
-                                localStorage.setItem('remainingCredits', res.remainingCredits);
-
-                                const postId = res.data.id;
-                                console.log(postId);
-                                setTimeout(async () => {
-                                    await axiosInstance.get(`/quatumshare/socialmedia/get/recent/post`, {
-                                        headers: {
-                                            'Accept': 'application/json',
-                                            Authorization: `Bearer ${token}`
-                                        },
-                                        params: { postId }
-                                    });
-                                }, 5000);
-                            } else if (res.status === "error" && res.code === 114) {
-                                console.error('Credit Depleted Error Message:', res.message);
-                                toast.error(res.message);
-                            }
-                        });
-                    } else if (platform === 'instagram' && response.data.success?.status === "success") {
-                        const res = response.data.success;
-                        toast.success(res.message);
-                        setRemainingCredits(res.remainingCredits);
-                        localStorage.setItem('remainingCredits', res.remainingCredits);
-                    } else if (platform === 'instagram' && response.data.structure?.status === "error" && response.data.structure.code === 114) {
-                        const res = response.data.structure;
-                        console.error('Credit Depleted Error Message:', res.message);
-                        toast.error(res.message);
-                    } else if (platform === 'telegram' && response.data.success?.status === "success") {
-                        const res = response.data.success;
-                        toast.success(res.message);
-                        setRemainingCredits(res.remainingCredits);
-                        localStorage.setItem('remainingCredits', res.remainingCredits)
-                        // toast.success(response.data.success.message);
-                    } else if (platform === 'telegram' && response.data.structure?.status === "error" && response.data.structure.code === 114) {
-                        const res = response.data.structure;
-                        console.error('Credit Depleted Error Message:', res.message);
-                        toast.error(res.message);
-                    } else if (platform === 'youtube' && response.data.success?.message) {
-                        toast.success(response.data.success.message);
-                    } else if (platform === 'twitter' && response.data.success?.message) {
-                        toast.success(response.data.success.message);
+                    if (platform === 'facebook') {
+                        if (Array.isArray(response.data)) {
+                            response.data.forEach(async res => {
+                                if (res.status === "success" && res.platform === "facebook") {
+                                    toast.success(res.message);
+                                    const postId = res.data.id;                                    
+                                    setTimeout(async () => {
+                                        await axiosInstance.get(`/quatumshare/socialmedia/get/recent/post`, {
+                                            headers: {
+                                                'Accept': 'application/json',
+                                                Authorization: `Bearer ${token}`
+                                            },
+                                            params: { postId }
+                                        });
+                                    }, 40000);
+                                } else if (res.status === "error" && res.code === 114) {
+                                    console.error('Credit Depleted Error Message:', res.message);
+                                    toast.info(res.message);
+                                }
+                            });
+                        }
+                    } else if (platform === 'instagram') {
+                        if (response.data.success?.status === "success") {
+                            const res = response.data.success;
+                            toast.success(res.message);
+                            const postId = res.data.id;
+                            setTimeout(async () => {
+                                await axiosInstance.get(`/quatumshare/socialmedia/get/recent/post`, {
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        Authorization: `Bearer ${token}`
+                                    },
+                                    params: { postId }
+                                });
+                            }, 5000);
+                        } else if (response.data.code === 116) {
+                            const res = response.data;
+                            console.error('Unsupported Aspect Ratio:', res.message);
+                            toast.error(res.message);
+                        } else if (response.data.structure?.status === "error" && response.data.structure.code === 114) {
+                            const res = response.data.structure;
+                            console.error('Credit Depleted Error Message:', res.message);
+                            toast.info(res.message);
+                        } else if (response.data.structure?.code === 404) {
+                            toast.error(response.data.structure.message);
+                        }
+                    } else if (platform === 'youtube') {
+                        if (response.data.success && response.data.success.message) {
+                            const res = response.data.success;
+                            toast.success(res.message);
+                            const postId = res.data.id;
+                            setTimeout(async () => {
+                                await axiosInstance.get(`/quatumshare/socialmedia/get/recent/post`, {
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        Authorization: `Bearer ${token}`
+                                    },
+                                    params: { postId }
+                                });
+                            }, 10000);
+                        } else if (response.data.structure?.status === "error" && response.data.structure.code === 114) {
+                            const res = response.data.structure;
+                            console.error('Credit Depleted Error Message:', res.message);
+                            toast.info(res.message);
+                        } else if (response.data.structure?.code === 404) {
+                            toast.error(response.data.structure.message);
+                        } else if (response.data.structure?.code === 500) {
+                            toast.error('YouTube: Failed to send media, Quota Exceeded Please try again after 24 hrs.');
+                        }
+                    } else if (platform === 'telegram') {
+                        if (response.data.success?.status === "success") {
+                            const res = response.data.success;
+                            toast.success(res.message);
+                        } else if (response.data.structure?.status === "error" && response.data.structure.code === 114) {
+                            const res = response.data.structure;
+                            console.error('Credit Depleted Error Message:', res.message);
+                            toast.info(res.message);
+                        } else if (response.data.structure?.code === 404) {
+                            toast.error(response.data.structure.message);
+                        }
+                    } else if (platform === 'LinkedIn') {
+                        if (response.data.structure && response.data.structure.message) {
+                            const res = response.data.structure;
+                            toast.success(res.message);
+                        } else if (response.data.structure?.status === "error" && response.data.structure.code === 114) {
+                            const res = response.data.structure;
+                            console.error('Credit Depleted Error Message:', res.message);
+                            toast.info(res.message);
+                        } else if (response.data.structure?.code === 404) {
+                            toast.error(response.data.structure.message);
+                        }
                     }
                     return { platform, success: true };
                 } catch (error) {
                     toast.dismiss(loadingToasts[platforms.indexOf(platform)]);
                     const responseData = error.response?.data || {};
-
                     if (error.response?.status === 403) {
-                        // toast.error('Forbidden: You do not have permission to access this resource.');
-                    } else if (error.response?.status === 406) {
+                        toast.error('Forbidden: You do not have permission to access this resource.');
+                    } else if (platform === 'facebook') {
                         if (Array.isArray(responseData)) {
                             responseData.forEach(err => {
                                 if (err.status === "error" && err.code === 114) {
                                     console.error('Credit Depleted Error Message:', err.message);
-                                    toast.error(err.message);
+                                    toast.info(err.message);
                                 }
                             });
+                        } else if (responseData.structure?.code === 404) {
+                            toast.error(responseData.structure.message);
+                        }
+                    } else if (platform === 'instagram') {
+                        if (responseData.code === 116) {
+                            toast.error('Unsupported aspect ratio. Please use one of Instagram\'s formats: 4:5, 1:1, or 1.91:1.');
                         } else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
                             const err = responseData.structure;
                             console.error('Credit Depleted Error Message:', err.message);
-                            toast.error(err.message);
+                            toast.info(err.message);
+                        } else if (responseData.structure?.code === 404) {
+                            toast.error(responseData.structure.message);
                         }
-                    } else if (Array.isArray(responseData)) {
-                        responseData.forEach(err => {
-                            if (err.status === "error" && err.code === 114) {
-                                console.error('Credit Depleted Error Message:', err.message);
-                                toast.error(err.message);
-                            }
-                        });
-                    } else if (platform === 'facebook' && Array.isArray(responseData)) {
-                        responseData.forEach(err => {
-                            if (err.code === 404 && err.platform === platform.toLowerCase()) {
-                                toast.error(err.message);
-                            } else if (err.status === "error" && err.code === 114) {
-                                console.error('Credit Depleted Error Message:', err.message);
-                                toast.error(err.message);
-                            }
-                        });
-                    } else if (platform === 'instagram' && responseData.structure?.status === "error" && responseData.structure.code === 114) {
-                        const err = responseData.structure;
-                        console.error('Credit Depleted Error Message:', err.message);
-                        toast.error(err.message);
-                    } else if (platform === 'instagram' && responseData.structure?.code === 404) {
-                        toast.error(responseData.structure.message);
-                    } else if (platform === 'instagram' && responseData.code === 500) {
-                        toast.error("Instagram: Please Submit an Image with a Valid Aspect Ratio");
-                    } else if (platform === 'telegram' && responseData.structure?.code === 404) {
-                        toast.error(responseData.structure.message);
-                    } else if (platform === 'youtube' && responseData.structure?.code === 404) {
-                        toast.error(responseData.structure.message);
-                    } else if (platform === 'youtube' && responseData.structure?.code === 500) {
-                        toast.error("Youtube: The request cannot be completed because you have exceeded your Request Limits");
-                    } else if (platform === 'twitter' && responseData.structure?.code === 404) {
-                        toast.error(responseData.structure.message);
+                    } else if (platform === 'youtube') {
+                        if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
+                            const err = responseData.structure;
+                            console.error('Credit Depleted Error Message:', err.message);
+                            toast.info(err.message);
+                        } else if (responseData.structure?.code === 404) {
+                            toast.error(responseData.structure.message);
+                        } else if (responseData.structure?.code === 500) {
+                            toast.error('YouTube: Failed to send media, Quota Exceeded Please try again after 24 hrs.');
+                        }
+                    } else if (platform === 'telegram') {
+                        if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
+                            const err = responseData.structure;
+                            console.error('Credit Depleted Error Message:', err.message);
+                            toast.info(err.message);
+                        } else if (responseData.structure?.code === 404) {
+                            toast.error(responseData.structure.message);
+                        }
+                    } else if (platform === 'LinkedIn') {
+                        if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
+                            const err = responseData.structure;
+                            console.error('Credit Depleted Error Message:', err.message);
+                            toast.info(err.message);
+                        } else if (responseData.structure?.code === 404) {
+                            toast.error(responseData.structure.message);
+                        }
                     } else if (responseData.code === 115) {
                         toast.error("Token Expired, Please Login Again");
                         setTimeout(() => {
                             navigate("/login");
                         }, 4000);
                     } else {
+                        console.log('An error occurred while processing your request.');
                         toast.error('An error occurred while processing your request.');
                     }
                     return { platform, success: false };
                 }
             }));
             resetState();
+            setPostSubmitted(true);
         } catch (error) {
             console.error('Request failed:', error);
             toast.error('Request failed:', error.response?.data?.message || 'An unexpected error occurred.');
@@ -398,31 +523,69 @@ const Post = ({ onClose }) => {
         setChangesMade(false);
         setSelectedIcons([]);
         setMediaPlatform([]);
+        setImageUrl('')
     };
 
-    const handleChange = (e) => {
-        const selectedFile = e.target.files[0];
-        setFile(selectedFile);
-        setFileType(selectedFile?.type.startsWith('image') ? 'image' : 'video');
-        setShareButtonDisabled(false);
-        handleChangesMade();
-        console.log('File selected:', e.target.files[0]);
+    const convertImageToJPG = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (e) => {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    canvas.toBlob((blob) => {
+                        resolve(blob);
+                    }, 'image/jpeg');
+                };
+            };
+            reader.onerror = (err) => reject(err);
+        });
     };
 
-    const handle = (event) => {
-        setSelectedOption(event.target.value);
-        handleChangesMade();
+    const handleChange = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const isImage = file.type.startsWith('image/');
+            const isVideo = file.type.startsWith('video/');
+            const imageSizeLimit = 4.5 * 1024 * 1024;
+            const videoSizeLimit = 50 * 1024 * 1024;
+            if (isImage && file.size > imageSizeLimit) {
+                toast.error("Image size is too large! Maximum allowed is 4.5MB.");
+                return;
+            }
+            if (isVideo && file.size > videoSizeLimit) {
+                toast.error("Video size is too large! Maximum allowed is 50MB.");
+                return;
+            }
+            let processedFile = file;
+            if (isImage && file.type !== 'image/jpeg') {
+                toast("Converting image to JPG...");
+                processedFile = await convertImageToJPG(file);
+            }
+            if (isVideo && file.type !== 'video/mp4') {
+                toast.error("Only MP4 videos are supported. Please upload an MP4 file.");
+                return;
+            }
+            setFile(processedFile);
+            setFileType(isImage ? 'image' : 'video');
+            setShareButtonDisabled(false);
+            console.log('File selected:', processedFile);
+        }
     };
 
-    const handleTitleChange = (e) => {
-        setTitle(e.target.value);
-        handleChangesMade();
-    }
+    const handle = (event) => { setSelectedOption(event.target.value); handleChangesMade(); }
 
-    const handleCaptionChange = (e) => {
-        setCaption(e.target.value);
-        handleChangesMade();
-    };
+    const handleTitleChange = (e) => { setTitle(e.target.value); handleChangesMade(); }
+
+    const handleSubReddit = (e) => { setSr(e.target.value); handleChangesMade(); }
+
+    const handleCaptionChange = (e) => { setCaption(e.target.value); handleChangesMade(); };
 
     const addEmoji = (e) => {
         if (e.unified.startsWith('1F1E6')) {
@@ -514,11 +677,23 @@ const Post = ({ onClose }) => {
                         <Grid item lg={7} md={7} xs={12} sx={{ border: 1, borderStyle: 'ridge' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <h4 id="newPost">New Post</h4>
-                                <Media onMediaPlatform={handleSelectIconAndSendToParent} initialMediaPlatform={mediaPlatform} />
+                                <Media onMediaPlatform={handleSelectIconAndSendToParent} initialMediaPlatform={mediaPlatform} postSubmitted={postSubmitted} />
                             </div>
                             <div className="choose">
-                                {/* <textarea className="area" rows={12} placeholder="Add your Title here..." value={title} name="title" onChange={handleTitleChange}
-                                    style={{ width: '98%', height: '40px', border: '1px solid #ccc', borderRadius: '5px', resize: 'none', outline: 'none', fontSize: '12px', padding: '12px' }} /> */}
+                                <div style={{ display: 'flex', gap: '10px' }}>
+                                    {(mediaPlatform.includes('youtube') || mediaPlatform.includes('Reddit')) && (
+                                        <div style={{ display: 'flex', flexDirection: 'column', width: mediaPlatform.includes('Reddit') ? '48%' : '98%' }}>
+                                            <label style={{ fontSize: '12px', fontWeight: 'bold' }}>
+                                                Title <span style={{ color: 'red' }}>*</span>
+                                            </label>
+                                            <input required className="area" placeholder="Title ... [Only for YouTube and Reddit]" value={title} name="title" onChange={handleTitleChange} style={{ height: '40px', border: '1px solid #ccc', borderRadius: '5px', resize: 'none', outline: 'none', fontSize: '12px', padding: '12px' }} /></div>)}
+                                    {mediaPlatform.includes('Reddit') && (
+                                        <div style={{ display: 'flex', flexDirection: 'column', width: '48.5%' }}>
+                                            <label style={{ fontSize: '12px', fontWeight: 'bold' }}>SubReddit <span style={{ color: 'red' }}>*</span></label>
+                                            <input required className="area" placeholder="SubReddit ... [Reddit]" value={sr} name="subreddit" onChange={handleSubReddit} style={{
+                                                height: '40px', border: '1px solid #ccc', borderRadius: '5px', resize: 'none', outline: 'none', fontSize: '12px', padding: '12px'
+                                            }} /></div>)}
+                                </div>
                                 <textarea className="area" rows={12} placeholder="Add your Caption/Description here..." value={caption} name="caption" onChange={handleCaptionChange}
                                     style={{ width: '98%', border: '1px solid #ccc', borderRadius: '5px', resize: 'none', outline: 'none' }} id="textHere" />
                                 <div>
@@ -721,7 +896,6 @@ const Post = ({ onClose }) => {
                             <div style={{ background: '#fff', width: '95%', maxWidth: '100%', height: '100%', borderRadius: '10px' }}>
                                 <div className="main-preview" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '10px', background: '#fff' }}>
                                     <div className="file-preview-container" style={{ height: 'auto', width: '350px', padding: '1px', maxWidth: '100%', textAlign: 'center' }}>
-
                                         {fileType === 'image' && file && (
                                             <img src={URL.createObjectURL(file)} alt="File Preview" className="file-preview" style={{ maxHeight: '100%', maxWidth: '100%' }} />
                                         )}
@@ -740,9 +914,12 @@ const Post = ({ onClose }) => {
                                         )}
                                     </div>
                                 </div>
-                                <div className="text-preview" style={{ wordBreak: 'break-all', padding: '10px' }}>{title.split('\n').map((line, index) => (
-                                    <div key={index}>{line}</div>
-                                ))}</div>
+                                <div className="text-preview" style={{ wordBreak: 'break-all', padding: '10px' }}>
+                                    {(mediaPlatform.includes('youtube') || mediaPlatform.includes('Reddit')) && title.split('\n').map((line, index) => (
+                                        <div key={index}>{line}</div>
+                                    ))}
+                                    {mediaPlatform.includes('Reddit') && sr && <div>{`${sr}`}</div>}
+                                </div>
                                 <div className="text-preview" style={{ wordBreak: 'break-all', padding: '10px' }}>{caption.split('\n').map((line, index) => (
                                     <div key={index}>{line}</div>
                                 ))}</div>
@@ -751,26 +928,39 @@ const Post = ({ onClose }) => {
                     </Grid>
                 </DialogContent>
                 <DialogActions className="action">
-                    <div>
-                        <Button onClick={handleConfirmCloseOpen} color="error">
-                            Cancel
-                        </Button>
-                        <Button variant="contained" disabled={shareButtonDisabled} endIcon={<SendIcon />} onClick={handleClickOpen} sx={{ borderRadius: '20px' }}>
-                            Share
-                        </Button>
+                    <div style={{ display: 'flex' }}>
+                        {/* Warning Message and Tooltip */}
+                        {warningMessages.length > 0 && (
+                            <div style={{ display: 'flex' }}>
+                                <Tooltip
+                                    title={
+                                        <ul style={{ paddingLeft: '10px', margin: '0' }}>
+                                            {warningMessages.map((message, index) => (
+                                                <li key={index} style={{ fontSize: '12px' }}>
+                                                    {message}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    }
+                                    arrow
+                                    enterDelay={300}
+                                    leaveDelay={100}
+                                    placement="top"
+                                >
+                                    <WarningIcon style={{ color: 'red', cursor: 'pointer', marginTop: '5px' }} />
+                                </Tooltip>
+                                <span style={{ color: 'red', fontSize: '12px', marginLeft: '5px' }}></span>
+                            </div>
+                        )}
+                        <Button onClick={handleConfirmCloseOpen} color="error">Cancel</Button>
+                        <Button variant="contained" disabled={shareButtonDisabled} endIcon={<SendIcon />} onClick={handleClickOpen} sx={{ borderRadius: '20px' }}>Share</Button>
                         <Dialog open={open1} onClose={handleClose} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description" fullWidth>
                             <DialogContent>
-                                <DialogContentText sx={{ color: 'black', fontSize: '18px' }}>
-                                    Are you sure you want to Post?
-                                </DialogContentText>
+                                <DialogContentText sx={{ color: 'black', fontSize: '18px' }}>Are you sure you want to Post?</DialogContentText>
                             </DialogContent>
                             <DialogActions>
-                                <Button onClick={handleClose} color="primary">
-                                    Cancel
-                                </Button>
-                                <Button onClick={handleSubmit} color="primary" autoFocus>
-                                    Yes
-                                </Button>
+                                <Button onClick={handleClose} style={{ color: '#ba343b' }}>Cancel</Button>
+                                <Button onClick={handleSubmit} style={{ color: '#ba343b' }} autoFocus>Yes</Button>
                             </DialogActions>
                         </Dialog>
                     </div>

@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import './global.css';
 import Dashboard from './Sidebar/Dashboard';
 import Home from './Pages/Home';
@@ -11,8 +12,8 @@ import About from './Pages/About';
 import Features from './Pages/Features';
 import Pricing from './Pages/Pricing';
 import AccountOverview from './Sidebar/AccountOverview';
-import Analytics from './Sidebar/Analytics';    
-import QI from './Pages/QI';
+import Analytics from './Sidebar/Analytics';
+import QuantumAIPage from './Pages/QuantumAIPage';
 import SocialMediaLogin from './SocialMediaLogin/SocialMediaLogin';
 import YoutubeCallback from './SocialMediaLogin/YoutubeCallback';
 import PrivacyPolicy from './Pages/PrivacyPolicy';
@@ -20,31 +21,46 @@ import ConnectSocialMedia from './ConnectionInfo/ConnectSocialMedia';
 import PrivateRoute from './Helper/PrivateRoute';
 import ReferenceVideo from './Pages/ReferenceVideo';
 import LinkedInCallback from './SocialMediaLogin/LinkedInCallback';
+import ForgotPassword from './Sidebar/ForgotPassword';
+import ResetPassword from './Sidebar/ResetPassword';
+import UpdateVerification from './Sidebar/UpdateVerification';
+import LoginWithGoogle from './Navbar/LoginWithGoogle';
 
 const App = () => {
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route path='/' element={<Home />} />
-                <Route path='/login' element={<Login />} />
-                <Route path='/verify' element={<Verification />} />
-                <Route path='/signUp' element={<SignUp />} />
-                <Route path='/about' element={<About />} />
-                <Route path='/feature' element={<Features />} />
-                <Route path='/QAi' element={<QI />} />
-                <Route path='/pricing' element={<Pricing />}/>
-                <Route path='/privacy-policy' element={<PrivacyPolicy />} />
-                <Route path='/reference-video' element={<ReferenceVideo />} />
-                <Route path='/dashboard' element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-                <Route path='/social-integration' element={<PrivateRoute><SocialMediaLogin /></PrivateRoute>} />
-                <Route path='/account-overview' element={<PrivateRoute><AccountOverview /></PrivateRoute>} />
-                <Route path='/analytics' element={<PrivateRoute><Analytics /></PrivateRoute>} />
-                <Route path='/connect-socialmedia' element={<PrivateRoute><ConnectSocialMedia /></PrivateRoute>} />
-                <Route path='/youtube/callback/getChannelDetails' element={<PrivateRoute><YoutubeCallback /></PrivateRoute>} />
-                <Route path='/quantum-share/callback/success' element={<PrivateRoute><LinkedInCallback /></PrivateRoute>} />
-                <Route path="*" element={<Navigate to="/" />} />
-            </Routes>
-        </BrowserRouter>
+        <HelmetProvider>
+            <Helmet>
+                <title>Quantum Share - Simplify Social Media & File Sharing | Secure & Easy</title>
+                <meta name="description" content="Quantum Share offers a seamless and secure way to share files and posts across social media. Revolutionize your sharing experience with our easy-to-use, privacy-focused platform." />
+                <link rel="canonical" href='/home' />
+            </Helmet>
+
+            <BrowserRouter>
+                <Routes>
+                    <Route path='/' element={<Home />} />
+                    <Route path='/login' element={<Login />} />
+                    <Route path='/verify' element={<Verification />} />
+                    <Route path='/signUp' element={<SignUp />} />
+                    <Route path='/about' element={<About />} />
+                    <Route path='/feature' element={<Features />} />
+                    <Route path='/QAi' element={<QuantumAIPage />} />
+                    <Route path='/pricing' element={<Pricing />} />
+                    <Route path='/privacy-policy' element={<PrivacyPolicy />} />
+                    <Route path='/reference-video' element={<ReferenceVideo />} />
+                    <Route path='/forgot-password' element={<ForgotPassword />} />
+                    <Route path="/user/rest_password/request" element={<ResetPassword />} />
+                    <Route path='/verify/update' element={<UpdateVerification />} />
+                    <Route path='/dashboard' element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+                    <Route path='/social-integration' element={<PrivateRoute><SocialMediaLogin /></PrivateRoute>} />
+                    <Route path='/account-overview' element={<PrivateRoute><AccountOverview /></PrivateRoute>} />
+                    <Route path='/analytics' element={<PrivateRoute><Analytics /></PrivateRoute>} />
+                    <Route path='/connect-socialmedia' element={<PrivateRoute><ConnectSocialMedia /></PrivateRoute>} />
+                    <Route path='/quantum-share/linkedin/callback/success' element={<PrivateRoute><LinkedInCallback /></PrivateRoute>} />
+                    <Route path='/youtube/callback/getChannelDetails' element={<PrivateRoute><YoutubeCallback /></PrivateRoute>} />
+                    <Route path="*" element={<Navigate to="/" />} />
+                </Routes>
+            </BrowserRouter>
+        </HelmetProvider>
     );
 };
 

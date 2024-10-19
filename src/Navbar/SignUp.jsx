@@ -21,6 +21,11 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
+import { jwtDecode } from 'jwt-decode';
+import { GoogleLogin } from '@react-oauth/google';
+import { FetchUser } from '../Redux/FetchUser';
+import { useDispatch } from 'react-redux';
+import QS from '../Assets/QS.webp';
 
 const defaultTheme = createTheme({
     typography: {
@@ -37,6 +42,7 @@ const defaultTheme = createTheme({
 });
 
 const SignUp = () => {
+    const dispatch = useDispatch();
     let navigate = useNavigate()
     let [formData, setFormData] = useState({
         firstName: '',
@@ -151,7 +157,7 @@ const SignUp = () => {
     }
 
     const isPasswordValid = (password) => {
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#^@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*_`~<>;:'"{|},.+=()\[\]\/\\])[A-Za-z\d!@#$%^&*_`~<>;:'"{|},.+=()\[\]\/\\]{8,}$/;
         return passwordRegex.test(password);
     };
 
@@ -170,6 +176,38 @@ const SignUp = () => {
         setIsMuted(prev => !prev);
     };
 
+    const handleGoogleLoginSuccess = async (credentialResponse) => {
+        try {
+            const decoded = jwtDecode(credentialResponse?.credential);
+            const formData = {
+                email: decoded.email,
+                firstName: decoded.given_name,
+                lastName: decoded.family_name,
+            };
+            const endpoint = '/quantum-share/user/login/google/authentication';
+            const response = await axiosInstance.post(endpoint, formData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            console.log(response);
+            sessionStorage.setItem('token', response.data.data);
+            navigate('/dashboard');
+            await FetchUser(dispatch)
+        } catch (error) {
+            if (error.response) {
+                const status = error.response.status;
+                if (error.response.message && status === 406) {
+                    console.log(error.response.message);
+                    toast.error(error.response.message);
+                } else {
+                    console.error('Google Login Error:', error);
+                    toast.error('Error signing in with Google.');
+                }
+            }
+        }
+    };
+
     return (
         <ThemeProvider theme={defaultTheme}>
             {signupOpen && (
@@ -177,107 +215,188 @@ const SignUp = () => {
                     <CssBaseline />
                     <Grid item xs={false} sm={4} md={7} sx={{
                         backgroundColor: (t) =>
-                            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+                            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900], position: 'relative'
                     }}>
                         <video autoPlay loop muted={isMuted} style={{ width: '100%', height: '100%' }} src="https://quantumshare.quantumparadigm.in/vedio/SocialMedia.mp4"></video>
-                        <IconButton onClick={toggleMute} style={{ position: 'absolute', left: '10px', color: '#BA343B' }}>
-                            {isMuted ? <VolumeOffIcon /> : <VolumeUpIcon />}
-                        </IconButton>
+                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                            <img src={QS} alt="" style={{ position: 'absolute', top: '20px', left: '15px', height: 30 }} />
+                            <IconButton onClick={toggleMute} style={{ position: 'absolute', top: '10px', right: '5px', color: '#BA343B' }}>
+                                {isMuted ? <VolumeOffIcon /> : <VolumeUpIcon />}
+                            </IconButton>
+                        </Box>
                     </Grid>
                     <Grid item xs={12} sm={8} md={5} component={Paper} square>
                         <Box
-                            sx={{ my: -0.5, mx: 5, display: 'flex', flexDirection: 'column', alignItems: 'center', }}>
+                            sx={{ my: -0.5, mx: 5, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                             <CloseOutlinedIcon style={{
                                 position: 'absolute', top: 0, right: 0,
                                 fontSize: 30, color: '#ba343b', cursor: 'pointer',
                             }}
                                 onClick={handleCloseSignUp} />
                             <Avatar sx={{ m: 1, bgcolor: '#ba343b' }}>
-
                                 <LockOutlinedIcon />
                             </Avatar>
-                            <Typography component="h1" variant="h5"> Signup</Typography>
-                            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-                                <Grid container spacing={2}>
-                                    <Grid item xs={12} sm={6}>
+                            <Typography component="h1" variant="h6">Signup</Typography>
+                            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                                <Grid container spacing={1} justifyContent="center">
+                                    <Grid item xs={10} sm={5}>
                                         <TextField autoComplete="given-name" name="firstName" required fullWidth id="firstName" label="First Name" autoFocus value={firstName}
                                             onChange={handleChange}
                                             error={!!errors.firstName}
-                                            helperText={errors.firstName} />
+                                            helperText={errors.firstName}
+                                            InputProps={{
+                                                sx: {
+                                                    height: '50px',
+                                                    padding: '0 10px',
+                                                },
+                                            }}
+                                            InputLabelProps={{
+                                                sx: {
+                                                    fontSize: '14px',
+                                                },
+                                            }} />
                                     </Grid>
-                                    <Grid item xs={12} sm={6}>
+                                    <Grid item xs={10} sm={5}>
                                         <TextField required fullWidth id="lastName" label="Last Name" name="lastName" autoComplete="family-name" value={lastName}
                                             onChange={handleChange}
                                             error={!!errors.lastName}
-                                            helperText={errors.lastName} />
-
+                                            helperText={errors.lastName}
+                                            InputProps={{
+                                                sx: {
+                                                    height: '50px',
+                                                    padding: '0 10px',
+                                                },
+                                            }}
+                                            InputLabelProps={{
+                                                sx: {
+                                                    fontSize: '14px',
+                                                },
+                                            }} />
                                     </Grid>
-                                    <Grid item xs={12}>
+                                    <Grid item xs={10}>
                                         <TextField required fullWidth id="email" label="Email Address" name="email" autoComplete="email" value={email}
                                             onChange={handleChange}
                                             error={!!errors.email}
-                                            helperText={errors.email} />
-
+                                            helperText={errors.email}
+                                            InputProps={{
+                                                sx: {
+                                                    height: '50px',
+                                                    padding: '0 10px',
+                                                },
+                                            }}
+                                            InputLabelProps={{
+                                                sx: {
+                                                    fontSize: '14px',
+                                                },
+                                            }} />
                                     </Grid>
-                                    <Grid item xs={12}>
+                                    <Grid item xs={10}>
                                         <TextField required fullWidth name="phoneNo" label="Phone Number" id="phoneNo" value={phoneNo}
                                             onChange={handleChange}
                                             error={!!errors.phoneNo}
-                                            helperText={errors.phoneNo} />
-
+                                            helperText={errors.phoneNo}
+                                            InputProps={{
+                                                sx: {
+                                                    height: '50px',
+                                                    padding: '0 10px',
+                                                },
+                                            }}
+                                            InputLabelProps={{
+                                                sx: {
+                                                    fontSize: '14px',
+                                                },
+                                            }} />
                                     </Grid>
-                                    <Grid item xs={12}>
+                                    <Grid item xs={10}>
                                         <TextField required fullWidth name="password" label="Password" type={passwordVisible ? 'text' : 'password'} id="password" autoComplete="new-password" value={password}
                                             onChange={handleChange}
                                             error={!!errors.password}
                                             helperText={errors.password}
                                             InputProps={{
+                                                sx: {
+                                                    height: '50px',
+                                                    padding: '0 10px',
+                                                },
                                                 endAdornment: (
                                                     <EndAdornment
                                                         visible={passwordVisible}
                                                         setVisible={handleTogglePasswordVisibility}
                                                     />)
+                                            }}
+                                            InputLabelProps={{
+                                                sx: {
+                                                    fontSize: '14px',
+                                                },
                                             }} />
-
                                     </Grid>
-                                    <Grid item xs={12}>
+                                    <Grid item xs={10}>
                                         <TextField required fullWidth name="confirm_password" label="Confirm Password" type={confirmPasswordVisible ? 'text' : 'password'} id="confirm_password" autoComplete="new-password" value={confirm_password}
                                             onChange={handleChange}
                                             error={!!errors.confirm_password}
                                             helperText={errors.confirm_password}
                                             InputProps={{
+                                                sx: {
+                                                    height: '50px',
+                                                    padding: '0 10px',
+                                                },
                                                 endAdornment: (
                                                     <EndAdornment
                                                         visible={confirmPasswordVisible}
                                                         setVisible={handleToggleConfirmPasswordVisibility}
                                                     />)
+                                            }}
+                                            InputLabelProps={{
+                                                sx: {
+                                                    fontSize: '14px',
+                                                },
                                             }} />
                                     </Grid>
-                                    <Grid item xs={12}>
-                                        <TextField fullWidth name="company" label="Company Name" id="company" value={company} onChange={handleChange} />
+                                    <Grid item xs={10}>
+                                        <TextField fullWidth name="company" label="Company Name (Optional)" id="company" value={company} onChange={handleChange}
+                                            InputProps={{
+                                                sx: {
+                                                    height: '50px',
+                                                    padding: '0 10px',
+                                                },
+                                            }}
+                                            InputLabelProps={{
+                                                sx: {
+                                                    fontSize: '14px',
+                                                },
+                                            }} />
+                                    </Grid>
+                                    <Grid item xs={10}>
+                                        <Button
+                                            type="submit"
+                                            fullWidth
+                                            variant="contained"
+                                            sx={{
+                                                mt: 1, mb: 2, height: '50px', fontSize: '18px', bgcolor: '#ba343b',
+                                                '&:hover': { bgcolor: '#9e2b31' },
+                                            }}>
+                                            Sign Up
+                                        </Button>
                                     </Grid>
                                 </Grid>
-                                <Button
-                                    type="submit"
-                                    fullWidth
-                                    variant="contained"
-                                    sx={{
-                                        mt: 3, mb: 2, height: '50px', fontSize: '18px', bgcolor: '#ba343b',
-                                        '&:hover': { bgcolor: '#9e2b31' }
-                                    }}>
-                                    Sign Up
-                                </Button>
+                                <Box sx={{ width: 'fit-content', margin: '0 auto', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                    <GoogleLogin
+                                        onSuccess={handleGoogleLoginSuccess}
+                                        onError={() => {
+                                            console.log('Login Failed');
+                                        }}
+                                        style={{ width: '100%', borderRadius: '10px', overflow: 'hidden' }}
+                                        scope="openid email profile https://www.googleapis.com/auth/user.phonenumbers.read"
+                                    />
+                                </Box>
                                 <Grid container justifyContent="center">
                                     <Grid item>
-                                        <div style={{ marginTop: '10px' }}>
-
+                                        <div style={{ marginTop: '15px' }}>
                                             <div variant="body2" style={{ color: 'black' }}>
-                                                Already have an account?{' '}
+                                                Already have an account ?{' '}
                                                 <Link to="/login">
                                                     <span style={{ color: '#1976db' }}>Sign In</span>
                                                 </Link>
                                             </div>
-
                                         </div>
                                     </Grid>
                                 </Grid>

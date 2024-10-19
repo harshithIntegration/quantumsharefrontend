@@ -1,17 +1,25 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import axiosInstance from "../Helper/AxiosInstance";
+import axiosInstance from '../Helper/AxiosInstance';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { TailSpin } from 'react-loader-spinner';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
+import { setYoutubeProfile } from '../Redux/action/pageUrlsSlice';
+import { setYouName } from '../Redux/action/NameSlice';
+import { setYouLoggedIn } from '../Redux/action/loginStatusSilce';
 
 const YoutubeCallback = () => {
-    const token = localStorage.getItem('token');
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const token = sessionStorage.getItem('token');
+    const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
-    const [channelImageUrl, setChannelImageUrl] = useState('');
-    const [channelName, setChannelName] = useState('');
-    const [subscriberCount, setSubscriberCount] = useState('');
+    const [youtubeUrl, setYoutubeUrl] = useState('');
+    const [youtubeChannelName, setYoutubeChannelName] = useState('');
+    const [youtubeSubscriberCount, setYoutubeSubscriberCount] = useState('');
+    const [openDialog, setOpenDialog] = useState(false); 
+    const [dialogMessage, setDialogMessage] = useState(''); 
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -30,31 +38,69 @@ const YoutubeCallback = () => {
             const response = await axiosInstance.post(`/quantum-share/youtube/user/verify-token?code=${code}`, code, {
                 headers: {
                     Authorization: `Bearer ${token}`,
-                }
+                },
             });
-            const { channelImageUrl, channelName, subscriberCount } = response.data.data;
-            localStorage.setItem('channelImageUrl', channelImageUrl);
-            localStorage.setItem('channelName', channelName);
-            localStorage.setItem('subscriberCount', subscriberCount);
-            setChannelImageUrl(channelImageUrl);
-            setChannelName(channelName);
-            setSubscriberCount(subscriberCount);
-            setIsLoggedIn(true);
+            const { youtubeUrl, youtubeChannelName, youtubeSubscriberCount } = response.data.data;
+            setYoutubeUrl(youtubeUrl);
+            dispatch(setYoutubeProfile(youtubeUrl))
+            setYoutubeChannelName(youtubeChannelName);
+            setYoutubeSubscriberCount(youtubeSubscriberCount);
+            dispatch(setYouLoggedIn(true))
+            dispatch(setYouName(youtubeChannelName))
+            console.log('Youtube Connect:' , response)
             toast.success("Connected to YouTube!");
             navigate("/social-integration");
         } catch (error) {
             console.error('Error fetching channel details:', error);
-            toast.error("Error Connecting to Youtube. Please try again later.");
+            if (error.response && error.response.data.code === 404) {
+                setDialogMessage("Please create a YouTube channel and try again.");
+                setOpenDialog(true);
+            } else {
+                toast.error('Error Connecting to YouTube. Please try again later.');
+            }
         } finally {
-            setLoading(false);
+            setLoading(false); 
         }
+    };    
+
+    const handleCloseDialog = () => {
+        navigate('/social-integration');
     };
 
     return (
         <>
+            {loading ? (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                    <TailSpin
+                        height="60"
+                        width="60"
+                        color="#ba343b"
+                        ariaLabel="tail-spin-loading"
+                        radius="1"
+                        visible={true}
+                    />
+                </div>
+            ) : (
+                <>
+                
+                </>
+            )}
 
+            <Dialog open={openDialog} onClose={handleCloseDialog}>
+                <DialogTitle sx={{ color: '#ba343b', fontSize: '16px', textAlign: 'center', fontWeight: '600' }}>
+                    Oops! we couldn't find any YouTube channel in your account.
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText sx={{ color: 'black' }}>{dialogMessage}</DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog}>
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </>
-    )
-}
+    );
+};
 
-export default YoutubeCallback
+export default YoutubeCallback;

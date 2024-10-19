@@ -12,12 +12,15 @@ import fbicon from '../Assets/facebooksmall.svg';
 import { ReactSVG } from 'react-svg';
 import { toast } from 'react-toastify';
 import { Dialog, DialogActions, DialogContent, DialogContentText, MenuItem, Select } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { setPageUrls } from '../Redux/action/pageUrlsSlice';
+import { setFbName } from '../Redux/action/NameSlice';
+import { setIsLoggedIn } from '../Redux/action/loginStatusSilce';
 
 const FacebookLogin = () => {
-    const token = localStorage.getItem('token');
+    let token = sessionStorage.getItem("token");
     const [code, setCode] = useState('');
     const [open, setOpen] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loading, setLoading] = useState(false);
     const [disconnecting, setDisconnecting] = useState(false);
     const [facebookUrl, setFBProfileImage] = useState('');
@@ -25,20 +28,45 @@ const FacebookLogin = () => {
     const [facebookNumberofpages, setNumberOfPages] = useState('');
     const [pageData, setPageData] = useState([]);
     const [selectedPage, setSelectedPage] = useState('');
+    // const [processing, setProcessing] = useState(false);
+
+    const dispatch = useDispatch()
+    const { isLoggedIn } = useSelector((state) => state.loginStatus)
+
+    const fetchConnectedSocial = async () => {
+        try {
+            const endpoint = 'quantum-share/user/connected/socialmedia/facebook'
+            const response = await axiosInstance.get(endpoint, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            console.log(response.data.data)
+            if (response.data.status === 'success' && response.data.data.facebook) {
+                const { facebookUrl, facebookUsername, facebookNumberofpages, pages_url } = response.data.data.facebook;
+                const pageDataArray = Object.entries(pages_url).map(([pageName, pageUrl]) => ({
+                    pageName,
+                    pageUrl,
+                }));
+                setPageData(pageDataArray);
+                setFBProfileImage(facebookUrl);
+                const pageUrls = pageDataArray.map(({ pageUrl }) => pageUrl);
+                const pageNames = pageDataArray.map(({ pageName }) => pageName)
+                dispatch(setFbName(pageNames))
+                dispatch(setPageUrls(pageUrls));
+                dispatch(setIsLoggedIn(true))
+                setFBUsername(facebookUsername);
+                setNumberOfPages(facebookNumberofpages);
+            }
+        }
+        catch (error) {
+            console.error(error)
+        }
+    }
 
     useEffect(() => {
-        const storedUrl = localStorage.getItem('facebookUrl');
-        const storedUsername = localStorage.getItem('facebookUsername');
-        const storedPages = localStorage.getItem('facebookNumberofpages');
-        const storedPageData = localStorage.getItem('pageData');
-        if (storedUrl && storedUsername && storedPages && storedPageData) {
-            setIsLoggedIn(true);
-            setFBProfileImage(storedUrl);
-            setFBUsername(storedUsername);
-            setNumberOfPages(storedPages);
-            setPageData(JSON.parse(storedPageData));
-        }
-    }, [token]);
+        fetchConnectedSocial()
+    }, [token])
 
     const loadFacebookSdk = () => {
         return new Promise((resolve, reject) => {
@@ -47,8 +75,8 @@ const FacebookLogin = () => {
             } else {
                 window.fbAsyncInit = function () {
                     FB.init({
-                        // appId: '421449853704517',
-                        appId: '1397130744461736',
+                        appId: '421449853704517',
+                        // appId: '1397130744461736',
                         cookie: true,
                         xfbml: true,
                         version: 'v19.0'
@@ -83,7 +111,7 @@ const FacebookLogin = () => {
                         console.log('User canceled login or didn\'t authorize the app');
                         setLoading(false);
                     }
-                }, { scope: 'pages_show_list,pages_read_engagement,pages_manage_posts,business_management' });
+                }, { scope: 'pages_show_list,pages_read_engagement,pages_manage_posts,business_management,read_insights' });
             })
             .catch(error => {
                 console.error('Error loading Instagram SDK:', error);
@@ -105,12 +133,13 @@ const FacebookLogin = () => {
             const accessToken = response.authResponse.accessToken;
             await sendTokenToBackend(accessToken);
         } else {
-            setIsLoggedIn(false);
+            dispatch(setIsLoggedIn(false))
             setLoading(false);
         }
     };
 
     const sendTokenToBackend = async (accessToken) => {
+        // setProcessing(true); 
         try {
             const response = await axiosInstance.post(`/quantum-share/facebook/user/verify-token?code=${accessToken}`, accessToken, {
                 headers: {
@@ -127,19 +156,30 @@ const FacebookLogin = () => {
                     pageUrl,
                 }));
                 setPageData(pageDataArray);
-                console.log(pageDataArray);
-                localStorage.setItem('facebookUrl', facebookUrl);
-                localStorage.setItem('facebookUsername', facebookUsername);
-                localStorage.setItem('facebookNumberofpages', facebookNumberofpages);
-                localStorage.setItem('pageData', JSON.stringify(pageDataArray));
-                setIsLoggedIn(true);
+                const pageUrls = pageDataArray.map(({ pageUrl }) => pageUrl);
+                const pageNames = pageDataArray.map(({ pageName }) => pageName)
+                dispatch(setFbName(pageNames))
+                dispatch(setPageUrls(pageUrls));
+                dispatch(setIsLoggedIn(true))
+                setFBUsername(facebookUsername);
+                setNumberOfPages(facebookNumberofpages);
                 toast.success("Connected to Facebook!");
+                // const platform = response.data.platform;
+                // const platformResponse = await axiosInstance.get(`/quatumshare/fetch/all/post`, {
+                //     headers: {
+                //         Authorization: `Bearer ${token}`
+                //     },
+                //     params: { platform }
+                // });    
+                // console.log(platformResponse.data);
+                // setProcessing(false);
             }
         } catch (error) {
             console.error('Error sending token to backend:', error);
             toast.error("Error connecting to Facebook. Please try again later.");
         } finally {
             setLoading(false);
+            // setProcessing(false);
         }
     };
 
@@ -160,11 +200,7 @@ const FacebookLogin = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            localStorage.removeItem('facebookUrl');
-            localStorage.removeItem('facebookUsername');
-            localStorage.removeItem('facebookNumberofpages');
-            localStorage.removeItem('pageData');
-            setIsLoggedIn(false);
+            dispatch(setIsLoggedIn(false))
             setFBUsername('');
             setNumberOfPages('');
             setFBProfileImage('');
@@ -178,72 +214,107 @@ const FacebookLogin = () => {
         }
     };
 
+    const adjustFontSize = (username) => {
+        if (username.length > 20) return '0.875rem';
+        if (username.length > 15) return '0.962rem';
+        if (username.length > 10) return '1.2rem';
+        return '1.2rem';
+    };
+
     return (
         <>
             <section className='box-soc' style={{ paddingTop: '20px' }}>
                 {isLoggedIn ? (
-                    <div className="profile-container">
-                        <div className="profile-circle">
-                            <img
-                                src={facebookUrl}
-                                alt="User Profile"
-                                style={{ width: '3.9rem', height: '3.9rem', borderRadius: '50%' }}
-                            />
-                            <div className="instagram-icon">
-                                <ReactSVG src={fbicon} />
+                    <>
+                        <div className="profile-container">
+                            <div className="profile-circle">
+                                <img
+                                    src={facebookUrl}
+                                    alt="User Profile"
+                                    style={{ width: '3.9rem', height: '3.9rem', borderRadius: '50%' }}
+                                />
+                                <div className="instagram-icon">
+                                    <ReactSVG src={fbicon} />
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '10px' }}>
-                        <ReactSVG src={facebook1}></ReactSVG>
-                    </div>
-                )}
-                <div style={{ marginTop: isLoggedIn ? '-15px' : '15px' }}>
-                    <p style={{ marginTop: '1px', fontSize: '1.2rem' }}>
-                        <span style={{ color: 'gray' }}>
-                            {facebookUsername ? facebookUsername : 'Facebook'}
-                        </span>
-                    </p>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        {facebookNumberofpages && (
-                            <h5 style={{ marginRight: '6px' }}>Number Of Pages: {facebookNumberofpages}</h5>
-                        )}
-                        {isLoggedIn && pageData.length > 0 && (
-                            <Select
-                                value={selectedPage}
-                                onChange={(e) => setSelectedPage(e.target.value)}
-                                style={{ width: '40px', height: '20px' }}
+                        <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <div
+                                style={{
+                                    textAlign: 'center',
+                                    overflow: 'hidden',
+                                    whiteSpace: 'nowrap',
+                                    textOverflow: 'ellipsis',
+                                    maxWidth: '200px',
+                                    height: '2rem',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
                             >
-                                {/* <MenuItem value="" disabled>
+                                <p style={{ marginTop: '1px', fontSize: adjustFontSize(facebookUsername), overflow: 'visible' }}>
+                                    <span style={{ color: 'gray' }}>{facebookUsername}</span>
+                                </p>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                {facebookNumberofpages && (
+                                    <h5 style={{ marginRight: '6px' }}>Number Of Pages : {facebookNumberofpages}</h5>
+                                )}
+                                {isLoggedIn && pageData.length > 0 && (
+                                    <Select
+                                        value={selectedPage}
+                                        onChange={(e) => setSelectedPage(e.target.value)}
+                                        style={{ width: '40px', height: '20px' }}
+                                    >
+                                        {/* <MenuItem value="" disabled>
                                     Select Page
-                                </MenuItem> */}
-                                {pageData.map((page, index) => (
-                                    <MenuItem key={index} value={page.pageName}>
-                                        <img src={page.pageUrl} alt={page.pageName} style={{ width: '20px', height: '20px', marginRight: '8px', borderRadius: '50%' }} />
-                                        {page.pageName}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        )}
-                    </div>
-                </div>
+                                    </MenuItem> */}
+                                        {pageData.map((page, index) => (
+                                            <MenuItem key={index} value={page.pageName}>
+                                                <img src={page.pageUrl} alt={page.pageName} style={{ width: '20px', height: '20px', marginRight: '8px', borderRadius: '50%' }} />
+                                                {page.pageName}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                )}
+                            </div>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '10px' }}>
+                            <ReactSVG src={facebook1}></ReactSVG>
+                        </div>
+                        <div style={{ marginTop: '15px', textAlign: 'center', overflow: 'visible', whiteSpace: 'nowrap' }}>
+                            <p style={{ marginTop: '1px', fontSize: '1.2rem', overflow: 'visible' }}>
+                                <span style={{ color: 'gray' }}>Facebook</span>
+                            </p>
+                        </div>
+                    </>
+                )}
                 {loading || disconnecting ? (
                     <Button variant='contained' sx={{ marginTop: isLoggedIn ? '15px' : '30px', marginBottom: '10px', fontWeight: '600' }} disabled>
                         {loading ? 'Connecting...' : 'Disconnecting...'}
                     </Button>
                 ) : (
                     !isLoggedIn ? (
-                        <Button variant='contained' sx={{ marginTop: isLoggedIn ? '15px' : '30px', marginBottom: '10px', fontWeight: '600' }} value={code} name="code" onClick={handleFacebookLogin}>Connect</Button>
+                        <Button variant='contained' sx={{ marginTop: '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handleFacebookLogin}>Connect</Button>
                     ) : (
-                        <Button variant='contained' sx={{ marginTop: isLoggedIn ? '15px' : '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>Disconnect</Button>
+                        <Button variant='contained' sx={{ marginTop: '20px', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>Disconnect</Button>
                     )
                 )}
             </section>
+
+            {/* {processing && (
+                <div className="processing-overlay">
+                    <div className="processing-message">Processing...</div>
+                </div>
+            )} */}
+
             <Dialog open={open} onClose={handleClose} maxWidth='lg'>
                 <DialogContent>
                     <DialogContentText sx={{ color: 'black', fontSize: '17px' }}>
-                        Are you sure you want to disconnect from {facebookUsername} Facebook Profile ?
+                        Are you sure you want to disconnect from <b>{facebookUsername}</b> Facebook Profile ?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

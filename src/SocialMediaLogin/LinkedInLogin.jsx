@@ -6,44 +6,56 @@ import { ReactSVG } from 'react-svg';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
 import axiosInstance from '../Helper/AxiosInstance';
 import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
+import { setLinkLoggedIn } from '../Redux/action/loginStatusSilce';
+import { setLinkedInProfile } from '../Redux/action/pageUrlsSlice';
+import { setLinkName } from '../Redux/action/NameSlice';
 
 const LinkedInLogin = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const token = sessionStorage.getItem('token');
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const [disconnecting, setDisconnecting] = useState(false);
-    const [LinkedInUsername, setLinkedInUsername] = useState('');
-    const [selectedPage, setSelectedPage] = useState(''); // State to store selected page
-    const [openPageDisconnect, setOpenPageDisconnect] = useState(false); // State for page disconnect dialog
-    const [linkedPageImage, setLinkedPageImage] = useState('');
-    const [linkedProfileImage, setLinkedProfileImage] = useState('');
-    const [linkedInFollowers_count, setLinkedInFollowers_count] = useState('');
-    const token = localStorage.getItem('token');
+    const [linkedInProfilePic, setLinkedInProfilePic] = useState('');
+    const [linkedInUserName, setLinkedInUserName] = useState('');
+    const [selectedPage, setSelectedPage] = useState('');
+    const [linkedInFollowersCount, setLinkedInFollowersCount] = useState('');
+
+    const dispatch = useDispatch()
+    const { linkLoggedIn } = useSelector((state) => state.loginStatus)
+
+    const fetchConnectedSocial = async () => {
+        try {
+            const endpoint = 'quantum-share/user/connected/socialmedia/linkedIn'
+            const response = await axiosInstance.get(endpoint, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            console.log(response.data.data)
+            if (response.data.status === 'success' && response.data.data) {
+                const { linkedInUserName, linkedInProfilePic, linkedInFollowersCount } = response.data.data.linkedIn;
+                setLinkedInUserName(linkedInUserName);
+                dispatch(setLinkName(linkedInUserName))
+                setLinkedInProfilePic(linkedInProfilePic);
+                dispatch(setLinkedInProfile(linkedInProfilePic))
+                setLinkedInFollowersCount(linkedInFollowersCount);
+                dispatch(setLinkLoggedIn(true))
+            }
+        }
+        catch (error) {
+            console.error(error)
+        }
+    }
 
     useEffect(() => {
-        const storedUsername = localStorage.getItem('LinkedInUsername');
-        const storedLinkedProfileImage = localStorage.getItem('linkedProfileImage');
-        if (storedUsername && storedLinkedProfileImage) {
-            setIsLoggedIn(true);
-            setLinkedInUsername(storedUsername);
-            setLinkedProfileImage(storedLinkedProfileImage);
-        }
-
-        const storedPageName = localStorage.getItem('linkedinPageName');
-        const storedLinkedPageImage = localStorage.getItem('linkedPageImage');
-        const storedLinkedInFollowers_count = localStorage.getItem('linkedInFollowers_count');
-        if (storedPageName && storedLinkedPageImage && storedLinkedInFollowers_count) {
-            setIsLoggedIn(true);
-            setSelectedPage(storedPageName);
-            setLinkedPageImage(storedLinkedPageImage);
-            setLinkedInFollowers_count(storedLinkedInFollowers_count);
-        }
-    }, [token]);
+        fetchConnectedSocial()
+    }, [token])
 
     const handleLinkedInLogin = async () => {
         setLoading(true);
         try {
-            const response = await axiosInstance.get('/quantum-share/connect/linkedin', {
+            const response = await axiosInstance.get('/quantum-share/linkedin/user/connect', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Accept': 'application/json',
@@ -59,7 +71,6 @@ const LinkedInLogin = () => {
             window.location.href = authorizationUrl;
         } catch (error) {
             console.error("Failed to fetch LinkedIn authorization URL:", error);
-            // Handle error
         }
     };
 
@@ -80,10 +91,11 @@ const LinkedInLogin = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            localStorage.removeItem('LinkedInUsername');
-            localStorage.removeItem('linkedProfileImage');
-            setIsLoggedIn(false);
-            setLinkedInUsername('');
+            dispatch(setLinkLoggedIn(false))
+            setLinkedInUserName('');
+            setLinkedInProfilePic('');
+            setSelectedPage('');
+            setLinkedInFollowersCount('');
             toast.success("Disconnected from LinkedIn!");
         } catch (error) {
             console.error('Error disconnecting from LinkedIn:', error);
@@ -93,129 +105,91 @@ const LinkedInLogin = () => {
         }
     };
 
-    const handlePageDisconnect = () => {
-        setOpenPageDisconnect(true);
-    };
-
-    const handlePageClose = () => {
-        setOpenPageDisconnect(false);
-    };
-
-    const handleConfirmPageDisconnect = async () => {
-        handlePageClose();
-        setDisconnecting(true);
-        try {
-            const response = await axiosInstance.get('/quantum-share/disconnect/linkedin/page', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            localStorage.removeItem('linkedinPageName');
-            localStorage.removeItem('linkedPageImage');
-            localStorage.removeItem('linkedInFollowers_count');
-            setSelectedPage('');
-            setLinkedPageImage('');
-            setLinkedInFollowers_count('');
-            toast.success(response.data.data);
-        } catch (error) {
-            console.error('Error disconnecting LinkedIn page:', error);
-            toast.error("Error disconnecting LinkedIn page. Please try again later.");
-        } finally {
-            setDisconnecting(false);
-        }
+    const adjustFontSize = (username) => {
+        if (!username) return '1.2rem';
+        if (username.length > 20) return '0.875rem';
+        if (username.length > 15) return '0.962rem';
+        if (username.length > 10) return '1.2rem';
+        return '1.2rem';
     };
 
     return (
         <>
             <section className='box-soc' style={{ paddingTop: '20px' }}>
-                {isLoggedIn ? (
-                    <div className="profile-container">
-                        {linkedProfileImage || linkedPageImage ? (
+                {linkLoggedIn ? (
+                    <>
+                        <div className="profile-container">
                             <div className="profile-circle">
-                                {linkedProfileImage ? (
-                                    <div>
-                                        <img
-                                            src={linkedProfileImage}
-                                            alt="User Profile"
-                                            style={{ width: '3.9rem', height: '3.9rem', borderRadius: '50%' }}
-                                        />
-                                        <div className="instagram-icon">
-                                            <ReactSVG src={linkedinicon} />
-                                        </div>
-                                    </div>
+                                <img
+                                    src={linkedInProfilePic || linkedInProfilePic}
+                                    alt="User Profile"
+                                    style={{ width: '3.9rem', height: '3.9rem', borderRadius: '50%' }}
+                                />
+                                <div className="instagram-icon">
+                                    <ReactSVG src={linkedinicon} />
+                                </div>
+                            </div>
+                        </div>
+                        <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <div
+                                style={{
+                                    textAlign: 'center',
+                                    overflow: 'hidden',
+                                    whiteSpace: 'nowrap',
+                                    textOverflow: 'ellipsis',
+                                    maxWidth: '200px',
+                                    height: '2rem',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <p style={{ marginTop: '1px', fontSize: adjustFontSize(linkedInUserName) }}>
+                                    <span style={{ color: 'gray' }}>{linkedInUserName}</span>
+                                </p>
+                            </div>
+                            <div>
+                                {linkedInFollowersCount ? (
+                                    <h5>{`Followers : ${linkedInFollowersCount}`}</h5>
                                 ) : (
-                                    <div>
-                                        <img
-                                            src={linkedPageImage}
-                                            alt="Page Profile"
-                                            style={{ width: '3.9rem', height: '3.9rem', borderRadius: '50%' }}
-                                        />
-                                        <div className="instagram-icon">
-                                            <ReactSVG src={linkedinicon} />
-                                        </div>
-                                    </div>
+                                    <h5 style={{ visibility: 'hidden' }}>{'Followers : 0'}</h5>
                                 )}
                             </div>
-                        ) : <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            <ReactSVG src={linkedIn}></ReactSVG>
-                        </div>}
-                    </div>
+                        </div>
+                    </>
                 ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '10px' }}>
-                        <ReactSVG src={linkedIn}></ReactSVG>
-                    </div>
+                    <>
+                        <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '10px' }}>
+                            <ReactSVG src={linkedIn}></ReactSVG>
+                        </div>
+                        <div style={{ marginTop: '15px', textAlign: 'center', overflow: 'visible', whiteSpace: 'nowrap' }}>
+                            <p style={{ marginTop: '1px', fontSize: '1.2rem', overflow: 'visible' }}>
+                                <span style={{ color: 'gray' }}>LinkedIn</span>
+                            </p>
+                        </div>
+                    </>
                 )}
-                <div style={{ marginTop: '15px' }}>
-                    <p style={{ marginTop: '1px', fontSize: '1.2rem' }}>
-                        <span style={{ color: 'gray' }}>
-                            {LinkedInUsername || selectedPage || 'LinkedIn'}
-                        </span>
-                    </p>
-                    {selectedPage && (
-                        <span style={{ marginRight: '6px' }}>Followers Count: {linkedInFollowers_count}</span>
-                    )}
-                </div>
                 {loading || disconnecting ? (
-                    <Button variant='contained' sx={{ margin: '30px auto', marginBottom: '10px', fontWeight: '600' }} disabled>
+                    <Button variant='contained' sx={{ marginTop: linkLoggedIn ? '15px' : '30px', marginBottom: '10px', fontWeight: '600' }} disabled>
                         {loading ? 'Connecting...' : 'Disconnecting...'}
                     </Button>
                 ) : (
-                    <>
-                        {!LinkedInUsername && !selectedPage ? (
-                            <Button variant='contained' sx={{ margin: '30px auto', marginBottom: '10px', fontWeight: '600' }} onClick={handleLinkedInLogin} disabled>Connect</Button>
-                        ) : (
-                            <>
-                                {LinkedInUsername && (
-                                    <Button variant='contained' sx={{ margin: '30px auto', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>Disconnect</Button>
-                                )}
-                                {selectedPage && !LinkedInUsername && (
-                                    <Button variant='contained' sx={{ margin: '30px auto', marginBottom: '10px', fontWeight: '600' }} onClick={handlePageDisconnect}>Disconnect Page</Button>
-                                )}
-                            </>
-                        )}
-                    </>
+                    !linkLoggedIn ? (
+                        <Button variant='contained' sx={{ marginTop: '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handleLinkedInLogin}>Connect</Button>
+                    ) : (
+                        <Button variant='contained' sx={{ marginTop: '20px', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>Disconnect</Button>
+                    )
                 )}
             </section>
             <Dialog open={open} onClose={handleClose} maxWidth='lg'>
                 <DialogContent>
                     <DialogContentText sx={{ color: 'black', fontSize: '18px' }}>
-                        Are you sure you want to disconnect {LinkedInUsername} LinkedIn profile?
+                        Are you sure you want to disconnect from <b>{linkedInUserName}</b> LinkedIn ?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
                     <Button onClick={handleConfirmDisconnect} autoFocus>Yes</Button>
-                </DialogActions>
-            </Dialog>
-            <Dialog open={openPageDisconnect} onClose={handlePageClose} maxWidth='lg'>
-                <DialogContent>
-                    <DialogContentText sx={{ color: 'black', fontSize: '18px' }}>
-                        Are you sure you want to disconnect {selectedPage} LinkedIn page?
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handlePageClose}>Cancel</Button>
-                    <Button onClick={handleConfirmPageDisconnect} autoFocus>Yes</Button>
                 </DialogActions>
             </Dialog>
         </>

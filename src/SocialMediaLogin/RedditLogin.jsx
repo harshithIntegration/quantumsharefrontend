@@ -3,13 +3,13 @@
 import React, { useEffect, useState } from 'react'
 import Button from '@mui/material/Button';
 import axiosInstance from "../Helper/AxiosInstance";
-import twitter1 from '../Assets/twitter.svg';
-import twittericon from '../Assets/twittersmall.svg';
+import reddit1 from '../Assets/Reddit1.svg';
+import redditicon from '../Assets/redditSmall.svg';
 import { ReactSVG } from 'react-svg';
 import { toast } from 'react-toastify';
 import { Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
 
-const TwitterLogin = () => {
+const RedditLogin = () => {
     const token = sessionStorage.getItem('token');
     const [open, setOpen] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -19,33 +19,18 @@ const TwitterLogin = () => {
     const [channelName, setChannelName] = useState('');
     const [subscriberCount, setSubscriberCount] = useState('');
 
-    useEffect(() => {
-        const storedUrl = localStorage.getItem('channelImageUrl');
-        const storedChannelName = localStorage.getItem('channelName');
-        const storedSubscriberCount = localStorage.getItem('subscriberCount');
-        if (storedUrl && storedChannelName && storedSubscriberCount) {
-            setIsLoggedIn(true);
-            setChannelImageUrl(storedUrl);
-            setChannelName(storedChannelName);
-            setSubscriberCount(storedSubscriberCount);
-        }
-    }, [token]);
-
-    const handleTwitterLogin = async () => {
+    const handleRedditLogin = async () => {
         setLoading(true);
         try {
-            const response = await axiosInstance.get('/quantum-share/twitter/user/connect', {
+            const response = await axiosInstance.get('/quantum-share/reddit/user/connect', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 }
             });
             const oauthUrl = response.data.data;
-            console.log(oauthUrl);
-            // window.open(oauthUrl, '_blank');
-            window.location.href = oauthUrl;
         } catch (error) {
             console.error('Error', error);
-            toast.error('Error loading Youtube Login Page. Please try again later.');
+            toast.error('Error loading Reddit Login Page. Please try again later.');
         } 
     }    
 
@@ -61,18 +46,12 @@ const TwitterLogin = () => {
         handleClose();
         setDisconnecting(true)
         try {
-            await axiosInstance.get('/quantum-share/disconnect/twitter', {
+            await axiosInstance.get('/quantum-share/disconnect/youtube', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
-            localStorage.removeItem('channelImageUrl');
-            localStorage.removeItem('channelName');
-            localStorage.removeItem('subscriberCount');
             setIsLoggedIn(false);
-            setChannelName('');
-            setChannelImageUrl('');
-            setSubscriberCount('');
             toast.success("Disconnected from Youtube!");
         } catch (error) {
             console.error('Error disconnecting from Youtube:', error);
@@ -84,7 +63,7 @@ const TwitterLogin = () => {
     
     return (
         <>
-            <section className='box-soc' style={{ paddingTop: '25px' }}>
+            <section className='box-soc' style={{ paddingTop: '20px' }}>
                 {isLoggedIn ? (
                     <div className="profile-container">
                         <div className="profile-circle">
@@ -94,19 +73,19 @@ const TwitterLogin = () => {
                                 style={{ width: '3.9rem', height: '3.9rem', borderRadius: '50%' }}
                             />
                             <div className="instagram-icon">
-                                <ReactSVG src={twittericon} />
+                                <ReactSVG src={redditicon} />
                             </div>
                         </div>
                     </div>
                 ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '10px' }}>
-                        <ReactSVG src={twitter1}></ReactSVG>
+                        <ReactSVG src={reddit1}></ReactSVG>
                     </div>
                 )}
                 <div style={{ marginTop: '15px' }}>
-                    <p style={{ marginTop: '3px', fontSize: '1.2rem' }}>
+                    <p style={{ marginTop: '1px', fontSize: '1.2rem' }}>
                         <span style={{ color: 'gray' }}>
-                            {channelName ? channelName : 'Twitter'}
+                            {channelName ? channelName : 'Reddit'}
                         </span>
                     </p>
                     <h5>{subscriberCount ? `Subsrcibers Count : ${subscriberCount}` : ''}</h5>
@@ -117,7 +96,7 @@ const TwitterLogin = () => {
                     </Button>
                 ) : (
                     !isLoggedIn ? (
-                        <Button variant='contained' sx={{ margin: '33px auto', marginBottom: '10px', fontWeight: '600' }} onClick={handleTwitterLogin} disabled>Connect</Button>
+                        <Button variant='contained' sx={{ margin: '30px auto', marginBottom: '10px', fontWeight: '600' }} onClick={handleRedditLogin} disabled>Connect</Button>
                     ) : (
                         <Button variant='contained' sx={{ margin: '30px auto', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>Disconnect</Button>
                     )
@@ -125,8 +104,8 @@ const TwitterLogin = () => {
             </section>
             <Dialog open={open} onClose={handleClose} maxWidth='lg'>
                 <DialogContent>
-                    <DialogContentText sx={{ color: 'black', fontSize: '18px' }}>
-                        Are you sure you want to disconnect from Youtube?
+                    <DialogContentText sx={{ color: 'black', fontSize: '17px' }}>
+                        Are you sure you want to disconnect from {channelName} Youtube Channel ?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -138,4 +117,4 @@ const TwitterLogin = () => {
     );
 }
 
-export default TwitterLogin
+export default RedditLogin

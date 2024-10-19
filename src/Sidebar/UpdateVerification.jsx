@@ -9,7 +9,7 @@ import QS from "../Assets/QS.webp";
 import emg1 from '../Assets/msg.webp';
 import { Link } from 'react-router-dom';
 
-function Verification() {
+function UpdateVerification() {
     const location = useLocation();
     const [loading, setLoading] = useState(false);
     const [verificationResult, setVerificationResult] = useState(null);
@@ -25,7 +25,7 @@ function Verification() {
     const handleVerification = async (token) => {
         setLoading(true);
         try {
-            const response = await axiosInstance.get(`/quantum-share/user/verify?token=${token}`);
+            const response = await axiosInstance.get(`/quantum-share/user/verify/updated/email?token=${token}`);
             setVerificationResult(response.data);
             setSignupMessage(null);
         } catch (error) {
@@ -51,10 +51,10 @@ function Verification() {
                                 <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#ba343b', color: '#ffffff', marginLeft: '45%', marginBottom: '40px' }}>
                                     <DoneIcon style={{ fontSize: '60px', padding: '3px' }} />
                                 </div>
-                                <h2>{verificationResult ? "Email Verified!" : "Signup Successful! Verify Your Email"}</h2>
+                                <h2>{verificationResult ? "Email Verified!" : "Update Successful! Verify Your Email"}</h2>
                                 {verificationResult ? (
                                     <div>
-                                        <p style={{ marginTop: '12px', color: 'gray', fontSize: '18px' }}>Your email <b style={{ color: '#ba343b' }}>{verificationResult.data.user.email}</b> has been successfully verified. You can now log in to access the platform.</p>
+                                        <p style={{ marginTop: '12px', color: 'gray', fontSize: '18px' }}>Your email <b style={{ color: '#ba343b' }}>{verificationResult.data.email}</b> has been successfully updated. You can now log in to access the platform.</p>
                                         <Link to='/login'><button style={{ backgroundColor: '#ba343b', color: '#fff', padding: '10px 20px', borderRadius: '15px', border: 'none', cursor: 'pointer', fontSize: '18px', fontWeight: '600', margin: '30px' }}>Login</button></Link>
                                     </div>
                                 ) : (
@@ -69,4 +69,4 @@ function Verification() {
     );
 }
 
-export default Verification;
+export default UpdateVerification;

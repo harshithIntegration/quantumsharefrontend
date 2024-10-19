@@ -1,4 +1,5 @@
 import React from 'react'
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import Nav from '../Navbar/Nav';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -13,11 +14,18 @@ import { Link } from 'react-router-dom';
 import { Typography } from '@mui/material';
 import { FaCirclePlay } from "react-icons/fa6";
 
-const QI = () => {
-    const token = localStorage.getItem('token')
+const QuantumAIPage = () => {
+    const token = sessionStorage.getItem('token')
 
     return (
         <>
+            <HelmetProvider>
+                <Helmet>
+                    <title>Quantum AI - Unleash Your Creativity with Intelligent Content Creation</title>
+                    <meta name="description" content="Discover the transformative power of Quantum AI, your ultimate companion for generating stunning visuals and compelling text effortlessly. With advanced capabilities in AI text creation, Quantum crafts high-quality content that engages and resonates with your audience. Elevate your projects with stunning images and innovative graphics that bring your ideas to life. Experience seamless creativity and watch your visions become reality with Quantum AI, where imagination meets cutting-edge technology." />
+                    <link rel="canonical" href='/Features' />
+                </Helmet>
+            </HelmetProvider>
             <div>
                 <Nav />
                 <Box sx={{ flexGrow: 1 }}>
@@ -38,7 +46,7 @@ const QI = () => {
                                     <h1>AI Text Creation</h1>
                                     <img src={text} alt="" style={{ margin: '20px', width: '900px', maxWidth: '100%' }} />
                                     <p style={{ marginTop: '10px', fontSize: 20, margin: '20px', marginBottom: '40px' }}>
-                                    Quantum, the AI marvel designed to craft high-quality text with precision and creativity. Whether you need engaging articles, captivating stories, or persuasive copy, Quantum delivers content that resonates with your audience. Empower your writing projects with the advanced capabilities of Quantum AI, ensuring every word counts.
+                                        Quantum, the AI marvel designed to craft high-quality text with precision and creativity. Whether you need engaging articles, captivating stories, or persuasive copy, Quantum delivers content that resonates with your audience. Empower your writing projects with the advanced capabilities of Quantum AI, ensuring every word counts.
                                     </p>
                                 </div>
                             </Grid>
@@ -84,4 +92,4 @@ const Footer = () => {
     );
 }
 
-export default QI
+export default QuantumAIPage
