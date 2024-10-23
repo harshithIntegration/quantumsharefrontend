@@ -18,10 +18,8 @@ import { Link } from 'react-router-dom';
 import sto from '../Assets/ais.webp'
 import AutoFixHighRoundedIcon from '@mui/icons-material/AutoFixHighRounded';
 import ContentCutRoundedIcon from '@mui/icons-material/ContentCutRounded';
-import EventAvailableRoundedIcon from '@mui/icons-material/EventAvailableRounded';
 import TextFieldsRoundedIcon from '@mui/icons-material/TextFieldsRounded';
 import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
-import ManageHistoryIcon from '@mui/icons-material/ManageHistory';
 import { CgPlayButtonO } from "react-icons/cg";
 
 const About = () => {
@@ -69,7 +67,6 @@ const About = () => {
                                             <Typography style={{ color: 'white' }}>With Quantum Share, we aim to streamline this process and empower users like you to effortlessly distribute content, connect with others, and amplify your online presence.</Typography>
                                         </div>
                                     </div>
-
                                     <Typography sx={{ fontSize: 15, fontWeight: '400', paddingTop: '20px', marginLeft: '5%' }} gutterBottom>
                                         <span style={{ borderRadius: '3px ', backgroundColor: '#ba343b', color: 'white', marginLeft: '10px', height: '35px', padding: '15px', borderTopLeftRadius: '20px', borderBottomLeftRadius: '20px' }}>Watch Now</span>
                                         <IconButton>
@@ -82,7 +79,7 @@ const About = () => {
                                             >
                                                 <DialogContent>
                                                     <video autoPlay loop muted={isMuted} style={{ width: '100%', height: 'auto' }}>
-                                                        <source src="https://quantumshare.quantumparadigm.in/vedio/SocialMedia.mp4" type="video/mp4" />
+                                                        <source src="https://quantumshare.quantumparadigm.in/vedio/QP%20ADD%20VDIEO%202024.mp4" type="video/mp4" />
                                                         Your browser does not support the video tag.
                                                     </video>
                                                     <IconButton onClick={toggleMute} style={{ position: 'absolute', left: '10px', color: '#BA343B' }}>
@@ -321,54 +318,27 @@ const About = () => {
                     </Box>
                 </Box>
             </div >
-            <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                minHeight: '100vh',
-                backgroundColor: '#f0f0f0',
-                marginLeft: '50px' 
-            }}>
-                <div style={{
-                    width: '90%',
-                    maxWidth: '400px',
-                    maxHeight: '608px',
-                    overflowY: 'auto',
-                    border: '2px solid white',
-                    backgroundColor: '#b61a1d',
-                    borderRadius: '8px',
-                    padding: '20px',
-                    boxShadow: '0px 4px 10px rgba(0,0,0,0.2)',
-                    textAlign: 'center'
-                }}>
-                    <Grid item xs="auto" sx={{ borderBottom: "1px solid white", marginBottom: '20px', marginLeft: '10px', marginRight: '40px' }}>
-                        <h1 style={{ color: "white", margin: 0 }}>Why Choose Quantum Share?</h1>
-                    </Grid>
-                    <Grid container spacing={1} sx={{ paddingBottom: "20px", marginLeft: '10px', marginRight: '40px' }}>
-                        <Grid item xs={12} sx={{ borderBottom: "1px solid white", padding: '10px 20px' }}>
-                            <h3 style={{ color: "white", textAlign: 'start', fontSize: '18px' }}>Save Time and Effort</h3>
-                            <p style={{ color: "white", fontSize: "14px", marginTop: '5%', marginBottom: '40px' }}>
-                                Forget about logging in and out of multiple accounts. With Quantum Share, you can share your content across all your social media platforms in one go, saving you valuable time and effort.
-                            </p>
-                        </Grid>
-                        <Grid item xs={12} sx={{ borderBottom: "1px solid white", padding: '10px 20px' }}>
-                            <h3 style={{ color: "white", textAlign: 'start', fontSize: '18px' }}>Maximize Reach</h3>
-                            <p style={{ color: "white", fontSize: "14px", marginTop: '5%', marginBottom: '40px' }}>
-                                Expand your reach by distributing your content across various social media networks at the same time. Enhance your online presence seamlessly with Quantum Share.
-                            </p>
-                        </Grid>
-                        <Grid item xs={12} sx={{ padding: '10px 20px' }}>
-                            <h3 style={{ color: "white", textAlign: 'start', fontSize: '18px' }}>Streamlined Workflow</h3>
-                            <p style={{ color: "white", fontSize: "14px", marginTop: '5%', marginBottom: '40px' }}>
-                                Simplify your content distribution process with Quantum Share's intuitive interface and powerful features. Focus on creating great content while we handle the rest.
-                            </p>
-                        </Grid>
-                    </Grid>
+            <div  >
+                <Grid item xs="auto" sx={{ borderRight: "1px solid white", backgroundColor: "#b61a1d", textAlign: "center" }}>
+                    <h1 style={{ color: "white", fontFamily: 'Poppins', paddingTop: '15px' }}>Why Choose Quantum Share ?</h1>
+                </Grid>
+                <Grid container spacing={1} sx={{ backgroundColor: "#b61a1d", paddingTop: "50px", paddingBottom: "50px" }}>
 
-                </div>
+                    <Grid item xs={4} sx={{ borderRight: "1px solid white", paddingLeft: '35px' }}>
+                        <h3 style={{ color: "white", textAlign: 'start', fontSize: '16px', fontFamily: 'Poppins', paddingLeft: "60px" }}>Save Time and Effort</h3>
+                        <p style={{ paddingLeft: "60px", color: "white", fontSize: "14px", marginTop: '5%', paddingRight: "8px" }}>Forget about logging in and out of multiple accounts. With Quantum Share, you can share your content across all your social media platforms in one go, saving you valuable time and effort.</p>
+                    </Grid>
+                    <Grid item xs={4} sx={{ borderRight: "1px solid white" }}>
+
+                        <h3 style={{ color: "white", paddingLeft: "25px", textAlign: 'start', fontSize: '16px', fontFamily: 'Poppins' }}>Maximize Reach</h3>
+                        <p style={{ paddingLeft: "25px", color: "white", fontSize: "14px", marginTop: '5%', paddingRight: "8px" }}>Reach a wider audience by broadcasting your content across various social media channels simultaneously. Expand your online presence effortlessly with Quantum Share.</p>
+                    </Grid>
+                    <Grid item xs={4}>
+                        <h3 style={{ color: "white", paddingLeft: "25px", textAlign: 'start', fontSize: '16px', fontFamily: 'Poppins' }}>Streamlined Workflow</h3>
+                        <p style={{ paddingLeft: "25px", color: "white", fontSize: "14px", marginTop: '5%' }}>Simplify your content distribution process with Quantum Share's intuitive interface and powerful features. Focus on creating great content while we handle the rest.</p>
+                    </Grid>
+                </Grid>
             </div>
-
-
             <div className="icon-container">
                 <Link to='/reference-video'><FaCirclePlay className="circle-icon" /></Link>
                 <div className="hover-content">reference video</div>
