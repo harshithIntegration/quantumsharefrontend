@@ -28,9 +28,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import { FaVideo } from "react-icons/fa";
-import { setRemainingCredits } from '../Redux/action/dataslice'
 import { useDispatch, useSelector } from "react-redux";
 import WarningIcon from '@mui/icons-material/Warning';
+import { clearAiText, updateCaption } from "../Redux/action/AiTextSlice";
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import QI from './QI'
 
 const Post = ({ onClose }) => {
     const navigate = useNavigate()
@@ -58,7 +60,6 @@ const Post = ({ onClose }) => {
     const [showBox, setShowBox] = useState(false);
     const [disableMainTooltip, setDisableMainTooltip] = useState(false);
     const [showCamera, setShowCamera] = useState(false);
-    // const [capturedImage, setCapturedImage] = useState('');
     const boxRef = useRef(null);
     const tooltipTimerRef = useRef(null);
     const webcamRef = useRef(null)
@@ -67,9 +68,9 @@ const Post = ({ onClose }) => {
     const [isRecording, setIsRecording] = useState(false);
     const [sr, setSr] = useState('');
     const [postSubmitted, setPostSubmitted] = useState(false)
-
+    const [AIopen, setAIopen] = useState(false)
     const dispatch = useDispatch()
-    // const { remainingCredits } = useSelector((state) => state.data)
+    const AiText = useSelector((state) => state.Aitext.AiText)
 
     const handleSelectIconAndSendToParent = (selectedIcons, mediaPlatform) => {
         setSelectedIcons(selectedIcons);
@@ -169,10 +170,23 @@ const Post = ({ onClose }) => {
         onClose();
     };
 
+    // const handleConfirmCloseOpen = () => {
+    //     if (changesMade) {
+    //         setConfirmCloseOpen(true);
+    //     } else {
+    //         closeDialog();
+    //     }
+    // };
+
     const handleConfirmCloseOpen = () => {
         if (changesMade) {
-            setConfirmCloseOpen(true);
+            setCaption('');
+            dispatch(clearAiText());
+            setChangesMade(false);
+            closeDialog();
         } else {
+            setCaption('');
+            dispatch(clearAiText());
             closeDialog();
         }
     };
@@ -352,7 +366,34 @@ const Post = ({ onClose }) => {
                             response.data.forEach(async res => {
                                 if (res.status === "success" && res.platform === "facebook") {
                                     toast.success(res.message);
-                                    const postId = res.data.id;                                    
+                                    const postId = res.data.response.id;
+                                    var delay = 0;
+                                    console.log("before");
+
+                                    const contentType = res.data.mediaType;
+                                    console.log("content type : " + contentType);
+
+                                    if (contentType.startsWith('video')) {
+                                        console.log("video section");
+                                        const contentlength = res.data.mediaSize;
+                                        var sizeInMB = contentlength / (1024 * 1024);
+                                        sizeInMB = Math.round(sizeInMB * 10) / 10;
+                                        console.log("type " + contentlength);
+                                        console.log("mb " + sizeInMB);
+                                        delay = 40000;
+                                        if (sizeInMB <= 10) {
+                                            delay = 12000;
+                                        } else if (sizeInMB <= 20) {
+                                            delay = 15000;
+                                        } else if (sizeInMB <= 30) {
+                                            delay = 30000;
+                                        } else if (sizeInMB <= 40) {
+                                            delay = 40000;
+                                        }
+                                    } else if (contentType.startsWith('image')) {
+                                        console.log("image section");
+                                        delay = 5000;
+                                    }
                                     setTimeout(async () => {
                                         await axiosInstance.get(`/quatumshare/socialmedia/get/recent/post`, {
                                             headers: {
@@ -361,7 +402,7 @@ const Post = ({ onClose }) => {
                                             },
                                             params: { postId }
                                         });
-                                    }, 40000);
+                                    }, delay);
                                 } else if (res.status === "error" && res.code === 114) {
                                     console.error('Credit Depleted Error Message:', res.message);
                                     toast.info(res.message);
@@ -554,13 +595,13 @@ const Post = ({ onClose }) => {
             const isImage = file.type.startsWith('image/');
             const isVideo = file.type.startsWith('video/');
             const imageSizeLimit = 4.5 * 1024 * 1024;
-            const videoSizeLimit = 50 * 1024 * 1024;
+            const videoSizeLimit = 40 * 1024 * 1024;
             if (isImage && file.size > imageSizeLimit) {
                 toast.error("Image size is too large! Maximum allowed is 4.5MB.");
                 return;
             }
             if (isVideo && file.size > videoSizeLimit) {
-                toast.error("Video size is too large! Maximum allowed is 50MB.");
+                toast.error("Video size is too large! Maximum allowed is 40MB.");
                 return;
             }
             let processedFile = file;
@@ -585,7 +626,7 @@ const Post = ({ onClose }) => {
 
     const handleSubReddit = (e) => { setSr(e.target.value); handleChangesMade(); }
 
-    const handleCaptionChange = (e) => { setCaption(e.target.value); handleChangesMade(); };
+    const handleCaptionChange = (e) => { setCaption(e.target.value); dispatch(updateCaption(e.target.value)); setChangesMade(true); };
 
     const addEmoji = (e) => {
         if (e.unified.startsWith('1F1E6')) {
@@ -669,6 +710,20 @@ const Post = ({ onClose }) => {
         }
     }, [image1]);
 
+    const handleAIComponent = () => {
+        setAIopen(!AIopen)
+    }
+
+    const handleAIClose = () => {
+        setAIopen(false)
+    }
+
+    useEffect(() => {
+        if (AiText) {
+            setCaption(AiText)
+        }
+    }, [AiText])
+
     return (
         <>
             <Dialog className="postContent" open={open} onClose={closeDialog} fullWidth maxWidth="lg">
@@ -694,8 +749,10 @@ const Post = ({ onClose }) => {
                                                 height: '40px', border: '1px solid #ccc', borderRadius: '5px', resize: 'none', outline: 'none', fontSize: '12px', padding: '12px'
                                             }} /></div>)}
                                 </div>
-                                <textarea className="area" rows={12} placeholder="Add your Caption/Description here..." value={caption} name="caption" onChange={handleCaptionChange}
-                                    style={{ width: '98%', border: '1px solid #ccc', borderRadius: '5px', resize: 'none', outline: 'none' }} id="textHere" />
+                                <div>
+                                    <textarea className="area" rows={12} placeholder="Add your Caption/Description here..." value={caption} name="caption" onChange={handleCaptionChange}
+                                        style={{ width: '98%', border: '1px solid #ccc', borderRadius: '5px', resize: 'none', outline: 'none' }} id="textHere" />
+                                </div>
                                 <div>
                                     <Stack direction="row" alignItems="center" spacing={1} sx={{ flexWrap: 'wrap' }}>
                                         <div style={{ position: 'relative', display: 'inline-block' }}>
@@ -860,6 +917,50 @@ const Post = ({ onClose }) => {
                                                 <SellOutlinedIcon />
                                             </IconButton>
                                         </Tooltip>
+                                        <Tooltip>
+                                            <IconButton
+                                                onClick={handleAIComponent}
+                                                sx={{
+                                                    margin: '20px',
+                                                    padding: '8px 14px',
+                                                    border: '2px solid',
+                                                    borderColor: '#ba343b',
+                                                    outline: 'none',
+                                                    backgroundColor: 'transparent',
+                                                    color: '#333',
+                                                    cursor: 'pointer',
+                                                    position: 'relative',
+                                                    borderRadius: '12px',
+                                                    fontSize: '14px',
+                                                    fontWeight: '500',
+                                                    zIndex: 0,
+                                                    animation: 'blinker 2s ease-in-out infinite',
+                                                    transition: 'color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease',
+                                                    '&:hover': {
+                                                        color: 'black',
+                                                        backgroundColor: '#FF7300',
+                                                        boxShadow: '0 0 10px rgba(255, 115, 0, 0.6)',
+                                                        borderColor: '#ba343b',
+                                                    },
+                                                    '@keyframes blinker': {
+                                                        '0%': { backgroundColor: 'transparent' },
+                                                        '50%': { backgroundColor: '#FAFAD2' },
+                                                        '100%': { backgroundColor: 'transparent' },
+                                                    },
+                                                }}
+                                            >
+                                                Compose with AI <AutoAwesomeIcon sx={{
+                                                    fontSize: '16px',
+                                                    marginLeft: '5px',
+                                                    animation: 'iconBlinker 2s ease-in-out infinite',
+                                                    '@keyframes iconBlinker': {
+                                                        '0%, 100%': { color: 'white' },
+                                                        '50%': { color: '#ba343b' },
+                                                    },
+                                                }} />
+                                            </IconButton>
+                                        </Tooltip>
+                                        {AIopen && <QI onAiClose={handleAIClose} />}
                                     </Stack>
                                     <FormControl className="option" sx={{ mt: 3, width: 300, maxWidth: '100%' }}>
                                         <InputLabel id="demo-select-small-label">Select an Option</InputLabel>

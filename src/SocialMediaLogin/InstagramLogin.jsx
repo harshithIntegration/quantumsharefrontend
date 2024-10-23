@@ -7,7 +7,7 @@ import axiosInstance from "../Helper/AxiosInstance";
 import instagram1 from '../Assets/instagram1.svg';
 import instaicon from '../Assets/instagramsmall.svg';
 import { ReactSVG } from 'react-svg';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Typography } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -285,7 +285,6 @@ const InstagramLogin = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
-
             <Dialog open={open1} onClose={handleClose} maxWidth='lg'>
                 <DialogContent>
                     <DialogContentText sx={{ color: 'black', fontSize: '17px' }}>
