@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { MdDashboardCustomize } from "react-icons/md";
@@ -11,7 +10,6 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { RiSendPlaneFill } from "react-icons/ri";
 import { Outlet } from 'react-router-dom';
 import DitiAI from '../Sidebar/QI';
-
 const Sidenav = ({ children }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [openPost, setOpenPost] = useState(false);
@@ -36,15 +34,13 @@ const Sidenav = ({ children }) => {
     const handleClosePost = () => {
         setOpenPost(false);
     };
+    const handleAi = () => {
+        setOpenAi(!openAi)
+    };
 
-    // const handleAi = () => {
-    //     setOpenAi(!openAi)
-    // };
-
-    // const handleCloseAi = () => {
-    //     setOpenAi(false)
-    // };
-
+    const handleCloseAi = () => {
+        setOpenAi(false)
+    };
     const menuItem = [
         {
             name: "Dashboard",
@@ -60,10 +56,10 @@ const Sidenav = ({ children }) => {
             name: <div onClick={handlePublish}>Publish</div>,
             icon: <RiSendPlaneFill onClick={handlePublish} />
         },
-        // {
-        //     name: <div onClick={handleAi}>Quantum AI</div>,
-        //     icon: <AutoAwesomeIcon onClick={handleAi} />
-        // },
+        {
+            name: <div onClick={handleAi}>Quantum AI</div>,
+            icon: <AutoAwesomeIcon onClick={handleAi} />
+        },
         {
             name: "Analytics",
             icon: <EqualizerOutlinedIcon />,
@@ -82,7 +78,7 @@ const Sidenav = ({ children }) => {
                 className="sidebar"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
-                style={{ width: isOpen ? "240px" : "50px" }}>
+                style={{ width: isOpen ? "260px" : "80px" }}>
                 <div className="top_section">
                     <div style={{ marginLeft: isOpen ? "40px" : "0px" }} className="bars"></div>
                 </div>
@@ -91,6 +87,7 @@ const Sidenav = ({ children }) => {
                         <NavLink to={item.path} key={index} className='prat'>
                             <div className="icon">{item.icon}</div>
                             <div style={{ display: isOpen ? "block" : "none" }} className="link_text">{item.name}</div>
+                            <div style={{ display: isOpen ? "none" : "block" }} className="name_below_icon">{item.name}</div>
                         </NavLink>
                     ))
                 }
@@ -98,7 +95,8 @@ const Sidenav = ({ children }) => {
             <main>{children}</main>
             <Outlet />
             {openPost && <Post onClose={handleClosePost} />}
-            {/* {openAi && <DitiAI onClose={handleCloseAi} />} */}
+            {openAi && <DitiAI onClose={handleCloseAi} />}
+
         </div>
     );
 };

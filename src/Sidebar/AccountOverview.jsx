@@ -396,9 +396,9 @@ const AccountOverview = () => {
                                     <h1>User Profile</h1>
                                     <div className="avatar-container">
                                         {profile ? (
-                                            <img src={profile} alt="Profile" className='avatar' />
+                                            <img src={profile} alt="" className='avatar' />
                                         ) : (
-                                            <img src={blankimage} alt="Profile" className='avatar' />
+                                            <img src={blankimage} alt="" className='avatar' />
                                         )}
                                         <input
                                             type="file"
