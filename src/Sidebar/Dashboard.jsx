@@ -152,7 +152,7 @@ const Dashboard = () => {
                                             </IconButton>
                                         </CardContent>
                                     </Card>
-                                    <Card sx={{ width: 250, height: 100, margin: 1, cursor: 'pointer' }} onClick={handleSocialClick}>
+                                    <Card sx={{ width: 250, height: 100, margin: 1, cursor: 'pointer' }} onClick={handlePost}>
                                         <CardContent sx={{ display: 'flex', justifyContent: 'space-around' }}>
                                             <Typography sx={{ fontSize: 18, paddingTop: '20px' }} gutterBottom>
                                                 Social Media Post

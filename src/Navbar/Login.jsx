@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import * as React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -23,6 +23,10 @@ import { toast, ToastContainer } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { FetchUser } from '../Redux/FetchUser';
 import QS from '../Assets/QS.webp';
+import { jwtDecode } from 'jwt-decode';
+import { GoogleLogin } from '@react-oauth/google';
+import { TailSpin } from 'react-loader-spinner';
+import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 
 const defaultTheme = createTheme({
     typography: {
@@ -39,17 +43,21 @@ const defaultTheme = createTheme({
 });
 
 const Login = () => {
+    const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     let navigate = useNavigate();
-    const [formData, setFormData] = React.useState({
+    const [formData, setFormData] = useState({
         emph: '',
         password: '',
+        confirm_password: '',
         rememberMe: false,
     });
-    const [isOpen, setIsOpen] = React.useState(true);
-    const [errors, setErrors] = React.useState({});
-    const { emph, password } = formData;
-    const [passwordVisible, setPasswordVisible] = React.useState(false);
+    const { emph, password, confirm_password } = formData;
+    const [isOpen, setIsOpen] = useState(true);
+    const [errors, setErrors] = useState({});
+    const [passwordVisible, setPasswordVisible] = useState(false);
+    const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
     const handleCloseSignUp = () => {
         setIsOpen(false);
@@ -83,7 +91,15 @@ const Login = () => {
             await FetchUser(dispatch)
         } catch (error) {
             console.error('Error submitting:', error);
-            toast.error(error.response.data.message);
+            const errorCode = error.response?.data?.code;
+            const errorMessage = error.response?.data?.message;
+            const email = error.response?.data?.data;
+
+            if (errorCode === 120) {
+                navigate('/regenerate-password', { state: { email } });
+            } else {
+                toast.error(errorMessage || 'An error occurred');
+            }
         }
     };
 
@@ -96,91 +112,297 @@ const Login = () => {
         setIsMuted(prev => !prev);
     };
 
+    const handleTogglePasswordVisibility = () => {
+        setPasswordVisible(!passwordVisible);
+    };
+
+    const handleToggleConfirmPasswordVisibility = () => {
+        setConfirmPasswordVisible(!confirmPasswordVisible);
+    };
+
+    const EndAdornment = ({ visible, setVisible }) => {
+        return (
+            <InputAdornment position='end'>
+                <IconButton onClick={() => setVisible(!visible)}>
+                    {visible ? <VisibilityOutlinedIcon /> : <VisibilityOffOutlinedIcon />}
+                </IconButton>
+            </InputAdornment>
+        )
+    }
+
+    const [userDetails, setUserDetails] = useState({ email: '', firstName: '', lastName: '' });
+
+    const checkEmailExistence = async (email) => {
+        try {
+            const endpoint = `/quantum-share/user/google/verify/email?email=${email}`;
+            const response = await axiosInstance.get(endpoint, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.data.status === 'success' && response.data.message === 'Account already exists with this email') {
+                return { exists: true, passwordNull: false, token: response.data.data };
+            }
+            return { exists: false, passwordNull: false, token: null };
+        } catch (error) {
+            if (error.response && error.response.data.status === 'error' && error.response.data.message === 'Password null') {
+                return { exists: true, passwordNull: true, email: error.response.data.data };
+            }
+            console.error('Error verifying email:', error);
+            toast.error('Error checking email existence.');
+            return { exists: false, passwordNull: false, token: null };
+        }
+    };
+
+    const handleGoogleLoginSuccess = async (credentialResponse) => {
+        try {
+            const decoded = jwtDecode(credentialResponse?.credential);
+            console.log('Decoded JWT:', decoded);
+
+            const { exists, passwordNull, token, email } = await checkEmailExistence(decoded.email);
+            console.log('Email existence check:', { exists, passwordNull, token });
+
+            if (exists) {
+                if (passwordNull) {
+                    navigate('/regenerate-password', { state: { email: decoded.email } });
+                } else {
+                    if (token) {
+                        sessionStorage.setItem('token', token);
+                        navigate('/dashboard');
+                    } else {
+                        console.error('Token is null. Cannot store in sessionStorage.');
+                        toast.error('Unexpected error: Token is missing.');
+                    }
+                }
+                return;
+            }
+            setUserDetails({
+                email: decoded.email,
+                firstName: decoded.given_name,
+                lastName: decoded.family_name,
+            });
+            setOpen(true);
+        } catch (error) {
+            console.error('Google Login Error:', error);
+            toast.error('Error signing in with Google.');
+        }
+    };
+
+    const isPasswordValid = (password) => {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*_`~<>;:'"{|},.+=()\[\]\/\\])[A-Za-z\d!@#$%^&*_`~<>;:'"{|},.+=()\[\]\/\\]{8,}$/;
+        return passwordRegex.test(password);
+    };
+
+    const handleGoogleSubmit = async () => {
+        setLoading(true);
+        setErrors({});
+
+        if (!isPasswordValid(password)) {
+            setErrors({ password: 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one numeric digit, and one special character' });
+            setLoading(false);
+            return;
+        }
+
+        if (password !== confirm_password) {
+            setErrors({ confirm_password: 'Passwords do not match' });
+            setLoading(false);
+            return;
+        }
+
+        try {
+            const formData = {
+                email: userDetails.email,
+                firstName: userDetails.firstName,
+                lastName: userDetails.lastName,
+                password: password,
+            };
+            console.log('FormData', formData)
+            const endpoint = '/quantum-share/user/login/google/authentication';
+            const response = await axiosInstance.post(endpoint, formData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            console.log(response);
+            sessionStorage.setItem('token', response.data.data);
+            setOpen(false);
+            navigate('/dashboard');
+            await FetchUser(dispatch);
+        } catch (error) {
+            toast.error('Error signing in with Google.');
+            console.error('Google Login Error:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
-        <ThemeProvider theme={defaultTheme}>
-            {isOpen && (
-                <Grid container component="main" sx={{ height: '100vh' }}>
-                    <CssBaseline />
-                    <Grid item xs={false} sm={4} md={7} sx={{
-                        backgroundColor: (t) =>
-                            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900], position: 'relative'
-                    }}>
-                        <video autoPlay loop muted={isMuted} style={{ width: '100%', height: '100%' }} src="https://quantumshare.quantumparadigm.in/vedio/SocialMedia.mp4"></video>
-                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                            <img src={QS} alt="" style={{ position: 'absolute', top: '20px', left: '15px', height: 30 }} />
-                            <IconButton onClick={toggleMute} style={{ position: 'absolute', top: '10px', right: '5px', color: '#BA343B' }}>
-                                {isMuted ? <VolumeOffIcon /> : <VolumeUpIcon />}
-                            </IconButton>
-                        </Box>
-                    </Grid>
-                    <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-                        <Box
-                            sx={{ my: 8, mx: 4, display: 'flex', flexDirection: 'column', alignItems: 'center', }}>
-                            <CloseOutlinedIcon style={{
-                                position: 'absolute', top: 0, right: 0,
-                                fontSize: 30, color: '#ba343b', cursor: 'pointer',
-                            }}
-                                onClick={handleCloseSignUp} />
-                            <Avatar sx={{ m: 1, bgcolor: '#ba343b' }}>
-                                <LockOutlinedIcon />
-                            </Avatar>
-                            <Typography component="h1" variant="h6">
-                                Login
-                            </Typography>
-                            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-                                <Grid container spacing={0} justifyContent="center">
-                                    <Grid item xs={10}>
-                                        <TextField margin="normal" required fullWidth id="emph" label="E-mail / Phone Number" name="emph" value={emph} onChange={handleChange} error={!!errors.emph} helperText={errors.emph} autoFocus />
-                                    </Grid>
-                                    <Grid item xs={10}>
-                                        <TextField margin="normal" required fullWidth name="password" label="Password" type={passwordVisible ? 'text' : 'password'} id="password" value={password} onChange={handleChange} error={!!errors.password} helperText={errors.password} autoComplete="current-password"
-                                            InputProps={{
-                                                endAdornment: (
-                                                    <InputAdornment position="end">
-                                                        <IconButton onClick={togglePasswordVisibility}>
-                                                            {passwordVisible ? <VisibilityOutlinedIcon /> : < VisibilityOffOutlinedIcon />} </IconButton>
-                                                    </InputAdornment>
-                                                )
-                                            }} />
-                                    </Grid>
-                                    <Grid item xs={10} sx={{ textAlign: 'right' }}>
-                                        <Link to="/forgot-password" style={{ textDecoration: 'none', color: '#1976db', fontSize: 15 }}>
-                                            Forgot Password ?
-                                        </Link>
-                                    </Grid>
-                                    <Grid item xs={10}>
-                                        <Button type="submit" fullWidth variant="contained"
-                                            sx={{
-                                                mb: 1, height: '50px', marginTop: '40px', fontSize: '18px', bgcolor: '#ba343b',
-                                                '&:hover': { bgcolor: '#9e2b31' }
-                                            }}> Log In
-                                        </Button>
-                                    </Grid>
-                                    <Grid item xs={10}>
-                                        <Typography sx={{ fontSize: '12px', textAlign: 'center' }}>
-                                            By signing up, you agree to the <Link to='/privacy-policy' style={{ textDecoration: 'none', color: '#1976db' }}>Privacy Policy</Link> of Quantum Share.
-                                        </Typography>
-                                    </Grid>
-                                </Grid>
-                                <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
-                                    <Grid item>
-                                        <div style={{ marginTop: '40px' }}>
-                                            <Link to="/signUp">
-                                                <div variant="body2" style={{ color: 'black', textDecoration: 'none', cursor: 'pointer' }}>
-                                                    Don't have an account ?{' '}
-                                                    <span style={{ color: '#1976db' }}>Sign Up</span>
-                                                </div>
-                                            </Link>
-                                        </div>
-                                    </Grid>
-                                </Grid>
+        <>
+            <ThemeProvider theme={defaultTheme}>
+                {isOpen && (
+                    <Grid container component="main" sx={{ height: '100vh' }}>
+                        <CssBaseline />
+                        <Grid item xs={false} sm={4} md={7} sx={{
+                            backgroundColor: (t) =>
+                                t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900], position: 'relative'
+                        }}>
+                            <video autoPlay loop muted={isMuted} style={{ width: '100%', height: '100%' }} src="https://quantumshare.quantumparadigm.in/vedio/QP%20ADD%20VDIEO%202024.mp4"></video>
+                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                <img src={QS} alt="" style={{ position: 'absolute', top: '20px', left: '15px', height: 30 }} />
+                                <IconButton onClick={toggleMute} style={{ position: 'absolute', top: '10px', right: '5px', color: '#BA343B' }}>
+                                    {isMuted ? <VolumeOffIcon /> : <VolumeUpIcon />}
+                                </IconButton>
                             </Box>
-                        </Box>
+                        </Grid>
+                        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+                            <Box
+                                sx={{ my: 8, mx: 4, display: 'flex', flexDirection: 'column', alignItems: 'center', }}>
+                                <CloseOutlinedIcon style={{
+                                    position: 'absolute', top: 0, right: 0,
+                                    fontSize: 30, color: '#ba343b', cursor: 'pointer',
+                                }}
+                                    onClick={handleCloseSignUp} />
+                                <Avatar sx={{ m: 0, bgcolor: '#ba343b' }}>
+                                    <LockOutlinedIcon />
+                                </Avatar>
+                                <Typography component="h1" variant="h6">
+                                    Login
+                                </Typography>
+                                <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 0 }}>
+                                    <Grid container spacing={0} justifyContent="center">
+                                        <Grid item xs={10}>
+                                            <TextField margin="normal" required fullWidth id="emph" label="E-mail / Phone Number" name="emph" value={emph} onChange={handleChange} error={!!errors.emph} helperText={errors.emph} autoFocus />
+                                        </Grid>
+                                        <Grid item xs={10}>
+                                            <TextField margin="normal" required fullWidth name="password" label="Password" type={passwordVisible ? 'text' : 'password'} id="password" value={password} onChange={handleChange} error={!!errors.password} helperText={errors.password} autoComplete="current-password"
+                                                InputProps={{
+                                                    endAdornment: (
+                                                        <InputAdornment position="end">
+                                                            <IconButton onClick={togglePasswordVisibility}>
+                                                                {passwordVisible ? <VisibilityOutlinedIcon /> : < VisibilityOffOutlinedIcon />} </IconButton>
+                                                        </InputAdornment>
+                                                    )
+                                                }} />
+                                        </Grid>
+                                        <Grid item xs={10} sx={{ textAlign: 'right' }}>
+                                            <Link to="/forgot-password" style={{ textDecoration: 'none', color: '#1976db', fontSize: 15 }}>
+                                                Forgot Password ?
+                                            </Link>
+                                        </Grid>
+                                        <Grid item xs={10}>
+                                            <Button type="submit" fullWidth variant="contained"
+                                                sx={{
+                                                    mb: 1, height: '50px', marginTop: '20px', fontSize: '18px', bgcolor: '#ba343b',
+                                                    '&:hover': { bgcolor: '#9e2b31' }
+                                                }}> Log In
+                                            </Button>
+                                        </Grid>
+                                        <Grid item xs={10}>
+                                            <Typography sx={{ fontSize: '12px', textAlign: 'center' }}>
+                                                By signing up, you agree to the <Link to='/privacy-policy' style={{ textDecoration: 'none', color: '#1976db' }}>Privacy Policy</Link> of Quantum Share.
+                                            </Typography>
+                                        </Grid>
+                                        <Box sx={{ width: 'fit-content', margin: '25px auto', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                            <GoogleLogin
+                                                onSuccess={handleGoogleLoginSuccess}
+                                                onError={() => {
+                                                    console.log('Login Failed');
+                                                }}
+                                                style={{ width: '100%', borderRadius: '10px', overflow: 'hidden' }}
+                                            />
+                                        </Box>
+                                    </Grid>
+                                    <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
+                                        <Grid item>
+                                            <div style={{ marginTop: '10px' }}>
+                                                <Link to="/signUp">
+                                                    <div variant="body2" style={{ color: 'black', textDecoration: 'none', cursor: 'pointer' }}>
+                                                        Don't have an account ?{' '}
+                                                        <span style={{ color: '#1976db' }}>Sign Up</span>
+                                                    </div>
+                                                </Link>
+                                            </div>
+                                        </Grid>
+                                    </Grid>
+                                </Box>
+                            </Box>
+                        </Grid>
                     </Grid>
-                </Grid>
-            )}
-            <ToastContainer />
-        </ThemeProvider>
+                )}
+                <ToastContainer />
+            </ThemeProvider>
+            <Dialog open={open} fullWidth maxWidth="sm" sx={{ height: '100%' }}>
+                <DialogContent sx={{ height: '100%' }}>
+                    <Typography
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}>
+                        <img src={QS} alt="" style={{ height: 35, marginTop: '5px' }} />
+                    </Typography>
+                    <DialogTitle sx={{ m: 0, p: 2, color: '#ba343b', fontSize: '20px', textAlign: 'center' }}>
+                        Set your Password
+                    </DialogTitle>
+                    <Box component="form" noValidate sx={{ mt: 2 }}>
+                        <Grid container spacing={2} justifyContent="center">
+                            <Grid item xs={11}>
+                                <TextField required fullWidth name="password" label="Password" type={passwordVisible ? 'text' : 'password'} id="password" autoComplete="new-password" value={password}
+                                    onChange={handleChange}
+                                    error={!!errors.password}
+                                    helperText={errors.password}
+                                    InputProps={{
+                                        sx: {
+                                            height: '50px',
+                                            padding: '0 10px',
+                                        },
+                                        endAdornment: (
+                                            <EndAdornment
+                                                visible={passwordVisible}
+                                                setVisible={handleTogglePasswordVisibility}
+                                            />)
+                                    }}
+                                    InputLabelProps={{
+                                        sx: {
+                                            fontSize: '14px',
+                                        },
+                                    }} />
+                            </Grid>
+                            <Grid item xs={11}>
+                                <TextField required fullWidth name="confirm_password" label="Confirm Password" type={confirmPasswordVisible ? 'text' : 'password'} id="confirm_password" autoComplete="new-password" value={confirm_password}
+                                    onChange={handleChange}
+                                    error={!!errors.confirm_password}
+                                    helperText={errors.confirm_password}
+                                    InputProps={{
+                                        sx: {
+                                            height: '50px',
+                                            padding: '0 10px',
+                                        },
+                                        endAdornment: (
+                                            <EndAdornment
+                                                visible={confirmPasswordVisible}
+                                                setVisible={handleToggleConfirmPasswordVisibility}
+                                            />)
+                                    }}
+                                    InputLabelProps={{
+                                        sx: {
+                                            fontSize: '14px',
+                                        },
+                                    }} />
+                            </Grid>
+                            <Grid item xs={11}>
+                                <Button fullWidth variant="contained" onClick={handleGoogleSubmit} sx={{ bgcolor: '#ba343b', color: 'white', height: 50, fontSize: 16, '&:hover': { bgcolor: '#9e2b31', }, mt: 15, '&:disabled': { bgcolor: '#e0e0e0', color: '#a0a0a0', } }}
+                                    disabled={!password || !confirm_password || loading}
+                                >
+                                    {loading ? <TailSpin color="#ba343b" height={25} width={25} /> : 'Submit'}
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                </DialogContent>
+            </Dialog>
+        </>
     );
 }
 

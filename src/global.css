@@ -277,6 +277,8 @@
 #textHere {
     font-size: 12px;
     padding: 13px;
+    position: relative;
+    top: 4px;
 }
 
 a {
@@ -1403,11 +1405,4 @@ ul {
 
 .list {
     list-style: none;
-}
-
-#textHere {
-    font-size: 12px;
-    padding: 13px;
-    position: relative;
-    top: 10px;
 }

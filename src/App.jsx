@@ -21,10 +21,10 @@ import ConnectSocialMedia from './ConnectionInfo/ConnectSocialMedia';
 import PrivateRoute from './Helper/PrivateRoute';
 import ReferenceVideo from './Pages/ReferenceVideo';
 import LinkedInCallback from './SocialMediaLogin/LinkedInCallback';
-import ForgotPassword from './Sidebar/ForgotPassword';
-import ResetPassword from './Sidebar/ResetPassword';
-import UpdateVerification from './Sidebar/UpdateVerification';
-import LoginWithGoogle from './Navbar/LoginWithGoogle';
+import ForgotPassword from './Navbar/ForgotPassword';
+import ResetPassword from './Navbar/ResetPassword';
+import UpdateVerification from './Navbar/UpdateVerification';
+import RegeneratePassword from './Navbar/RegeneratePassword';
 
 const App = () => {
     return (
@@ -47,6 +47,7 @@ const App = () => {
                     <Route path='/pricing' element={<Pricing />} />
                     <Route path='/privacy-policy' element={<PrivacyPolicy />} />
                     <Route path='/reference-video' element={<ReferenceVideo />} />
+                    <Route path='/regenerate-password' element={<RegeneratePassword />} />
                     <Route path='/forgot-password' element={<ForgotPassword />} />
                     <Route path="/user/rest_password/request" element={<ResetPassword />} />
                     <Route path='/verify/update' element={<UpdateVerification />} />

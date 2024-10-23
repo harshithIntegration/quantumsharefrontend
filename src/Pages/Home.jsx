@@ -77,7 +77,7 @@ const Home = () => {
                     </div>
                     <div className='homeMainDiv02'>
                         <Typography className='homeTypography01' gutterBottom>
-                            <span className='homeSpan01' style={{ fontSize: '20px' }}>WatchNow</span>
+                            <span className='homeSpan01' style={{ fontSize: '19px' }}>Watch Now</span>
                             <IconButton>
                                 <CgPlayButtonO className='homeCgPlayButtonO' onClick={handleClickOpen} />
                                 <Dialog
@@ -88,7 +88,7 @@ const Home = () => {
                                 >
                                     <DialogContent>
                                         <video autoPlay loop muted={isMuted} style={{ width: '100%', height: 'auto' }}>
-                                            <source src="https://quantumshare.quantumparadigm.in/vedio/SocialMedia.mp4" type="video/mp4" />
+                                            <source src="https://quantumshare.quantumparadigm.in/vedio/QP%20ADD%20VDIEO%202024.mp4" type="video/mp4" />
                                             Your browser does not support the video tag.
                                         </video>
                                         <IconButton onClick={toggleMute} style={{ position: 'absolute', left: '10px', color: '#BA343B' }}>
