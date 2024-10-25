@@ -94,11 +94,11 @@ const Dashboard = () => {
                 <Nav />
                 <div style={{ display: 'flex' }}>
                     <Sidenav />
-                    <Box sx={{ flexGrow: 1, marginLeft: '1rem' }}>
+                    <Box sx={{ flexGrow: 1, marginLeft: '2rem' }}>
                         <Grid container spacing={2}>
                             <Grid item xs={12} md={12} lg={12}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', backgroundColor: 'white' }}>
-                                    <h2 style={{ padding: '10px', color: 'grey' }}>Welcome!</h2>
+                                    <h2 style={{ padding: '10px', color: 'grey', marginLeft: '1rem' }}>Welcome!</h2>
                                     <div style={{ display: 'flex', justifyContent: 'flex-end', backgroundColor: 'white', padding: '10px' }}>
                                         {remainingDays !== null && (
                                             <Button
@@ -175,7 +175,7 @@ const Dashboard = () => {
                                     </Card>
                                 </div>
                                 <h3 style={{ padding: '30px', backgroundColor: 'white', margin: '10px', textAlign: 'center', fontSize: 24, color: '#ba343b' }}>Stay tuned for upcoming features</h3>
-                                <h4 style={{ padding: '10px', backgroundColor: 'white', margin: '10px', marginBottom: '0', borderRadius: '5px', marginTop: '15px', fontSize: 20, color: '#ba343b' }}>Analytics Overview</h4>
+                                <h4 style={{ padding: '10px', backgroundColor: 'white', margin: '10px', marginLeft: '1rem', borderRadius: '5px', marginTop: '15px', fontSize: 20, color: '#ba343b' }}>Analytics Overview</h4>
                             </Grid>
                             <Grid item xs={12} md={6} lg={6}>
                                 <div className='charts' style={{ background: 'white', padding: '20px', margin: '10px', marginTop: '0px' }}>

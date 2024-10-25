@@ -392,83 +392,7 @@ a {
 .menu-icon {
     display: none;
 }
-
 /* End Header  */
-
-/* Sidebar  */
-.sidebar {
-    background: #ffffff;
-    color: #c7c8c9;
-    height: 100vh;
-    width: 80px;
-    transition: all 0.5s;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.sidebar:hover {
-    width: 240px;
-}
-
-.top_section {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
-}
-
-.logo {
-    font-size: 30px;
-}
-
-.bars {
-    display: flex;
-    font-size: 25px;
-    margin-left: 50px;
-}
-
-.prat {
-    display: flex;
-    color: #626364;
-    padding: 10px 0;
-    /* gap: 3px; */
-    transition: all 0.5s;
-    align-items: center;
-}
-
-.sidebar:hover .prat {
-    flex-direction: row;
-    justify-content: flex-start;
-    text-align: left;
-}
-
-.icon {
-    font-size: 30px;
-}
-
-.link_text {
-    display: block;
-    font-size: 12px;
-    margin-top: 5px; /* Space between icon and name */
-    opacity: 1;
-    transition: all 0.5s;
-}
-
-.sidebar:hover .link_text {
-    margin-top: 0; /* Remove margin when hovering */
-    margin-left: 7px;
-    font-size: 17px;
-    opacity: 1;
-}
-.name_below_icon{
-    font-size: 11px;
-    color: #000;
-}
-
-/* End Sidebar  */
 
 /* Main  */
 .main-container {
@@ -840,62 +764,6 @@ main {
 }
 
 /* Sidenav */
-/* .sidebar {
-    background: #ffffff;
-    color: #c7c8c9;
-    height: 100vh;
-    width: 200px;
-    transition: all 0.5s;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    z-index: 2;
-}
-
-.top_section {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
-}
-
-.logo {
-    font-size: 30px;
-}
-
-.bars {
-    display: flex;
-    font-size: 25px;
-    margin-left: 50px;
-}
-
-.link {
-    display: flex;
-    color: #626364;
-    padding: 5px 15px;
-    gap: 10px;
-    transition: all 0.5s;
-    font-weight: bolder;
-}
-
-.icon {
-    font-size: 25px;
-}
-
-.prat {
-    display: flex;
-    color: #626364;
-    padding: 3px 15px;
-    gap: 10px;
-    transition: all 0.5s;
-}
-
-.link_text {
-    width: 100%;
-    padding: 5px 5px;
-    margin-top: -2px;
-    border-radius: 10px;
-    display: none;
-    font-size: 17px;
-} */
 .sidebar {
     background: #ffffff;
     color: #c7c8c9;
@@ -912,7 +780,7 @@ main {
 
 .sidebar:hover {
     width: 260px;
-    align-items: flex-start; /* Align items to the left on hover */
+    align-items: flex-start;
 }
 
 .top_section {
@@ -934,48 +802,52 @@ main {
 .prat {
     display: flex;
     color: #626364;
-    padding: 10px 15px; /* Adjust padding to ensure uniform spacing */
-    gap: 10px; /* Add space between the icon and text */
+    padding: 10px 15px;
+    gap: 0px;
     transition: all 0.5s;
     flex-direction: column;
-    align-items: center; /* Center align icons by default */
+    align-items: center; 
     text-align: center;
 }
 
 .sidebar:hover .prat {
-    flex-direction: row; /* Align horizontally on hover */
+    flex-direction: row; 
     justify-content: flex-start;
-    align-items: center; /* Ensure items stay aligned horizontally */
+    align-items: center;
     text-align: left;
-    width: 100%; /* Ensure items stretch across the sidebar */
+    width: 100%; 
 }
 
 .icon {
     font-size: 30px;
-    min-width: 40px; /* Ensure all icons have the same width */
+    min-width: 40px; 
     display: flex;
     justify-content: center;
 }
 
 .sidebar:hover .icon {
-    justify-content: flex-start; /* Align icon to the left when hovered */
+    justify-content: flex-start; 
 }
 
 .link_text {
     display: block;
     font-size: 15px;
-    margin-top: 5px; /* Space between icon and name in column mode */
+    margin-top: 5px;
     opacity: 1;
     transition: all 0.5s;
 }
 
 .sidebar:hover .link_text {
-    margin-top: 0; /* Remove margin when hovering */
+    margin-top: 0; 
     margin-left: 10px;
     font-size: 17px;
     opacity: 1;
 }
 
+.name_below_icon{
+    font-size: 11px;
+    color: #000;
+}
 
 /* Account Overview */
 #accountOverview {
