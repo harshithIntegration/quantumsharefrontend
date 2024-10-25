@@ -228,7 +228,7 @@ const Home = () => {
                 <Grid item xs={12} md={5.9} lg={5.9} sx={{ paddingTop: "15px", backgroundColor: '#fbf4f5', marginBottom: "40px", borderRadius: '16px', width: '80%' }}>
                     <Typography sx={{ fontSize: 17, marginTop: '7px', paddingBottom: "15px" }} style={{ paddingRight: '15px', marginRight: "20px", paddingLeft: '10px', paddingTop: '8px', fontWeight: '500' }} color="black" gutterBottom>
                         Quantum Share simplifies social media management through a streamlined and user-friendly process. To get started, users click the Quantum Share link
-                        to open the web app, where they sign pu by providing their email and creating a password. After completing email verification,
+                        to open the web app, where they sign up by providing their email and creating a password. After completing email verification,
                         users log in and access the dashboard.From there,navigating to 'social integration' from the drop-down menu allows user to
                         select and connect their desired social media profiles.</Typography>
                     <Typography sx={{ fontSize: 17, marginTop: '7px', paddingBottom: "15px", paddingTop: "10px" }} style={{ paddingRight: '15px', marginRight: "20px", paddingLeft: '10px', fontWeight: '500' }} color="black" gutterBottom>

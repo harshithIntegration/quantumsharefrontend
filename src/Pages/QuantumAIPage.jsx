@@ -45,7 +45,7 @@ const QuantumAIPage = () => {
                                 <div style={{ textAlign: 'center' }}>
                                     <h1>AI Text Creation</h1>
                                     <img src={text} alt="" style={{ margin: '20px', width: '900px', maxWidth: '100%' }} />
-                                    <p style={{ marginTop: '10px', fontSize: 20, margin: '20px', marginBottom: '40px' }}>
+                                    <p style={{ marginTop: '10px', fontSize: 20, margin: '20px', marginBottom: '40px', marginLeft: '50px' }}>
                                         Quantum, the AI marvel designed to craft high-quality text with precision and creativity. Whether you need engaging articles, captivating stories, or persuasive copy, Quantum delivers content that resonates with your audience. Empower your writing projects with the advanced capabilities of Quantum AI, ensuring every word counts.
                                     </p>
                                 </div>
@@ -54,8 +54,9 @@ const QuantumAIPage = () => {
                                 <div style={{ textAlign: 'center' }}>
                                     <h1>AI Image Generate</h1>
                                     <img src={img} alt="" style={{ margin: '20px', width: '900px', maxWidth: '100%' }} />
-                                    <p style={{ marginTop: '10px', fontSize: 20, margin: '20px', marginBottom: '40px' }}>
-                                        Experience the visual creativity of Quantum AI, your go-to solution for generating stunning images. From detailed illustrations to dynamic graphics, Quantum transforms your ideas into visual masterpieces. Elevate your projects with the innovative power of Quantum AI, where imagination meets technology."                                    </p>
+                                    <p style={{ marginTop: '10px', fontSize: 20, margin: '20px', marginBottom: '40px', marginLeft: '50px' }}>
+                                        Experience the visual creativity of Quantum AI, your go-to solution for generating stunning images. From detailed illustrations to dynamic graphics, Quantum transforms your ideas into visual masterpieces. Elevate your projects with the innovative power of Quantum AI, where imagination meets technology."
+                                    </p>
                                 </div>
                             </Grid>
                             <Grid item xs={12} md={12} lg={12}>

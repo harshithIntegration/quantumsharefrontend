@@ -9,11 +9,12 @@ import Post from '../Sidebar/Post';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { RiSendPlaneFill } from "react-icons/ri";
 import { Outlet } from 'react-router-dom';
-import DitiAI from '../Sidebar/QI';
+import QI from '../Sidebar/QI';
+
 const Sidenav = ({ children }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [openPost, setOpenPost] = useState(false);
-    const [openAi, setOpenAi] = useState(false)
+    const [AIopen, setAIopen] = useState(false)
 
     const handleMouseEnter = () => {
         setIsOpen(true);
@@ -34,13 +35,15 @@ const Sidenav = ({ children }) => {
     const handleClosePost = () => {
         setOpenPost(false);
     };
-    const handleAi = () => {
-        setOpenAi(!openAi)
-    };
 
-    const handleCloseAi = () => {
-        setOpenAi(false)
-    };
+    const handleAIComponent = () => {
+        setAIopen(!AIopen)
+    }
+
+    const handleAIClose = () => {
+        setAIopen(false)
+    }
+
     const menuItem = [
         {
             name: "Dashboard",
@@ -57,8 +60,8 @@ const Sidenav = ({ children }) => {
             icon: <RiSendPlaneFill onClick={handlePublish} />
         },
         {
-            name: <div onClick={handleAi}>Quantum AI</div>,
-            icon: <AutoAwesomeIcon onClick={handleAi} />
+            name: <div onClick={handleAIComponent}>Quantum AI</div>,
+            icon: <AutoAwesomeIcon onClick={handleAIComponent} />
         },
         {
             name: "Analytics",
@@ -78,7 +81,7 @@ const Sidenav = ({ children }) => {
                 className="sidebar"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
-                style={{ width: isOpen ? "260px" : "80px" }}>
+                style={{ width: isOpen ? "250px" : "80px" }}>
                 <div className="top_section">
                     <div style={{ marginLeft: isOpen ? "40px" : "0px" }} className="bars"></div>
                 </div>
@@ -95,8 +98,7 @@ const Sidenav = ({ children }) => {
             <main>{children}</main>
             <Outlet />
             {openPost && <Post onClose={handleClosePost} />}
-            {openAi && <DitiAI onClose={handleCloseAi} />}
-
+            {AIopen && <QI onAiClose={handleAIClose} />}
         </div>
     );
 };

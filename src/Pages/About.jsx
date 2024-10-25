@@ -55,47 +55,105 @@ const About = () => {
                         {token && <Sidenav />}
                         <Grid container spacing={2}>
                             <Grid item xs={12} md={12} lg={12}>
-                                <div style={{
-                                    height: '600px', width: '100%', backgroundImage: `url(${sto})`,
-                                    backgroundSize: 'cover',
-                                    backgroundPosition: 'center', textAlign: 'left',
-                                }}>
-                                    <div style={{ textAlign: 'center', paddingTop: '50px', paddingBottom: '50px', paddingRight: '50px', paddingLeft: '10px' }}>
-                                        <p style={{ color: 'white', fontSize: '2rem', margin: '0' }}>Revolutionize Your</p>
-                                        <p style={{ color: 'white', fontSize: '2rem', margin: '20px 0' }}>Social Sharing Experience</p>
-                                        <div style={{ width: '100%', maxWidth: '600px', margin: '0 auto', fontSize: '1rem' }}>
-                                            <Typography style={{ color: 'white' }}>With Quantum Share, we aim to streamline this process and empower users like you to effortlessly distribute content, connect with others, and amplify your online presence.</Typography>
+                                <div
+                                    style={{
+                                        height: '80vh',
+                                        width: '100%',
+                                        backgroundImage: `url(${sto})`,
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: 'center',
+                                        textAlign: 'left',
+                                        marginRight: '1rem'
+                                    }}
+                                >
+                                    <div
+                                        style={{
+                                            textAlign: 'center',
+                                            paddingTop: '50px',
+                                            paddingBottom: '50px',
+                                            paddingRight: '50px',
+                                            paddingLeft: '10px',
+                                        }}
+                                    >
+                                        <p
+                                            style={{
+                                                color: 'white',
+                                                fontSize: '2rem',
+                                                margin: '0',
+                                            }}
+                                            className="responsiveText"
+                                        >
+                                            Revolutionize Your
+                                        </p>
+                                        <p
+                                            style={{
+                                                color: 'white',
+                                                fontSize: '2rem',
+                                                margin: '20px 0',
+                                            }}
+                                            className="responsiveText"
+                                        >
+                                            Social Sharing Experience
+                                        </p>
+                                        <div style={{ width: '100%', maxWidth: '600px', margin: '0 auto', fontSize: '1.5rem' }}>
+                                            <Typography style={{ color: 'white' }}>
+                                                With Quantum Share, we aim to streamline this process and empower users like you,
+                                                to effortlessly distribute content, connect with others, and amplify your online presence.
+                                            </Typography>
                                         </div>
                                     </div>
-                                    <Typography sx={{ fontSize: 15, fontWeight: '400', paddingTop: '20px', marginLeft: '5%' }} gutterBottom>
-                                        <span style={{ borderRadius: '3px ', backgroundColor: '#ba343b', color: 'white', marginLeft: '10px', height: '35px', padding: '15px', borderTopLeftRadius: '20px', borderBottomLeftRadius: '20px' }}>Watch Now</span>
-                                        <IconButton>
-                                            <CgPlayButtonO className='homeCgPlayButtonO' onClick={handleClickOpen} />
-                                            <Dialog
-                                                open={open}
-                                                onClose={handleClose}
-                                                aria-labelledby="alert-dialog-title"
-                                                aria-describedby="alert-dialog-description"
+                                    <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '20px' }}>
+                                        <Typography
+                                            sx={{ fontSize: 15, fontWeight: '400' }}
+                                            gutterBottom
+                                            className="watchNowButtonContainer"
+                                        >
+                                            <span
+                                                style={{
+                                                    borderRadius: '3px',
+                                                    backgroundColor: '#ba343b',
+                                                    color: 'white',
+                                                    padding: '15px',
+                                                    borderTopLeftRadius: '20px',
+                                                    borderBottomLeftRadius: '20px',
+                                                }}
                                             >
-                                                <DialogContent>
-                                                    <video autoPlay loop muted={isMuted} style={{ width: '100%', height: 'auto' }}>
-                                                        <source src="https://quantumshare.quantumparadigm.in/vedio/QP%20ADD%20VDIEO%202024.mp4" type="video/mp4" />
-                                                        Your browser does not support the video tag.
-                                                    </video>
-                                                    <IconButton onClick={toggleMute} style={{ position: 'absolute', left: '10px', color: '#BA343B' }}>
-                                                        {isMuted ? <VolumeOffIcon /> : <VolumeUpIcon />}
-                                                    </IconButton>
-                                                </DialogContent>
-                                            </Dialog>
-                                        </IconButton>
-                                    </Typography>
+                                                Watch Now
+                                            </span>
+                                            <IconButton>
+                                                <CgPlayButtonO className="homeCgPlayButtonO" onClick={handleClickOpen} />
+                                                <Dialog
+                                                    open={open}
+                                                    onClose={handleClose}
+                                                    aria-labelledby="alert-dialog-title"
+                                                    aria-describedby="alert-dialog-description"
+                                                >
+                                                    <DialogContent>
+                                                        <video autoPlay loop muted={isMuted} style={{ width: '100%', height: 'auto' }}>
+                                                            <source
+                                                                src="https://quantumshare.quantumparadigm.in/vedio/SocialMedia.mp4"
+                                                                type="video/mp4"
+                                                            />
+                                                            Your browser does not support the video tag.
+                                                        </video>
+                                                        <IconButton
+                                                            onClick={toggleMute}
+                                                            style={{ position: 'absolute', left: '10px', color: '#BA343B' }}
+                                                        >
+                                                            {isMuted ? <VolumeOffIcon /> : <VolumeUpIcon />}
+                                                        </IconButton>
+                                                    </DialogContent>
+                                                </Dialog>
+                                            </IconButton>
+                                        </Typography>
+                                    </div>
                                 </div>
                             </Grid>
                             <Grid item xs={12} md={6} lg={6} sx={{ paddingTop: "15px", backgroundColor: "#1c0205" }}>
                                 <Grid item xs={12} md={12} lg={12} sx={{ textAlign: 'start' }}>
-                                    <h1 style={{ color: 'white', marginLeft: "30px", paddingBottom: "30px", paddingTop: "30px" }}>Why Choose Quantum Share?</h1>
+                                    <h1 style={{ color: 'white', marginLeft: "60px", paddingBottom: "30px", paddingTop: "30px" }}>Why Choose Quantum Share?</h1>
                                 </Grid>
-                                <div style={{ display: 'flex', marginLeft: "30px", marginRight: "40px" }}>
+                                <div style={{ display: 'flex', marginLeft: "60px", marginRight: "40px" }}>
                                     <div>
                                         <Typography style={{ color: 'white', fontSize: '18px' }}> Quantum Share is the ultimate solution for seamless social media
                                             sharingmultiple social This powerful platform simplifies the process of
@@ -104,7 +162,7 @@ const About = () => {
                                             Quantum Share empowers you to effortlessly reach your audience.</Typography>
                                     </div>
                                 </div>
-                                <div><p style={{ color: 'white', border: '2px solid white', width: '150px', height: '40px', fontFamily: 'Poppins', fontSize: 16, borderRadius: '5px', textAlign: 'center', marginTop: '5%', paddingTop: '7px', marginLeft: '5%' }}>Request a demo</p></div>
+                                <div><p style={{ color: 'white', border: '2px solid white', width: '150px', height: '40px', fontFamily: 'Poppins', fontSize: 16, borderRadius: '5px', textAlign: 'center', marginTop: '5%', paddingTop: '7px', marginLeft: '60px' }}>Request a demo</p></div>
                             </Grid>
                             <Grid item xs={12} md={6} lg={6} sx={{ display: 'flex', justifyContent: 'center', backgroundColor: "#1c0205", paddingBottom: "0px" }}>
                                 <img style={{ width: "100%", height: "100%", display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: "auto", marginRight: 'auto' }} src={why} alt="image" />
@@ -325,8 +383,8 @@ const About = () => {
                 <Grid container spacing={1} sx={{ backgroundColor: "#b61a1d", paddingTop: "50px", paddingBottom: "50px" }}>
 
                     <Grid item xs={4} sx={{ borderRight: "1px solid white", paddingLeft: '35px' }}>
-                        <h3 style={{ color: "white", textAlign: 'start', fontSize: '16px', fontFamily: 'Poppins', paddingLeft: "60px" }}>Save Time and Effort</h3>
-                        <p style={{ paddingLeft: "60px", color: "white", fontSize: "14px", marginTop: '5%', paddingRight: "8px" }}>Forget about logging in and out of multiple accounts. With Quantum Share, you can share your content across all your social media platforms in one go, saving you valuable time and effort.</p>
+                        <h3 style={{ color: "white", textAlign: 'start', fontSize: '16px', fontFamily: 'Poppins', paddingLeft: "95px" }}>Save Time and Effort</h3>
+                        <p style={{ paddingLeft: "95px", color: "white", fontSize: "14px", marginTop: '5%', paddingRight: "8px" }}>Forget about logging in and out of multiple accounts. With Quantum Share, you can share your content across all your social media platforms in one go, saving you valuable time and effort.</p>
                     </Grid>
                     <Grid item xs={4} sx={{ borderRight: "1px solid white" }}>
 
@@ -335,7 +393,7 @@ const About = () => {
                     </Grid>
                     <Grid item xs={4}>
                         <h3 style={{ color: "white", paddingLeft: "25px", textAlign: 'start', fontSize: '16px', fontFamily: 'Poppins' }}>Streamlined Workflow</h3>
-                        <p style={{ paddingLeft: "25px", color: "white", fontSize: "14px", marginTop: '5%' }}>Simplify your content distribution process with Quantum Share's intuitive interface and powerful features. Focus on creating great content while we handle the rest.</p>
+                        <p style={{ paddingLeft: "25px", color: "white", fontSize: "14px", marginTop: '5%', paddingRight: "50px" }}>Simplify your content distribution process with Quantum Share's intuitive interface and powerful features. Focus on creating great content while we handle the rest.</p>
                     </Grid>
                 </Grid>
             </div>
