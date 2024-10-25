@@ -756,38 +756,7 @@ const Post = ({ onClose }) => {
                                 <div>
                                     <Stack direction="row" alignItems="center" spacing={1} sx={{ flexWrap: 'wrap' }}>
                                         <div style={{ position: 'relative', display: 'inline-block' }}>
-                                            <Tooltip
-                                                TransitionComponent={Zoom}
-                                                title="Attach Photo or Video"
-                                                enterDelay={100}
-                                                leaveDelay={100}
-                                                placement="bottom">
-                                                <IconButton onClick={handleButtonClick}>
-                                                    <AddPhotoAlternateOutlinedIcon />
-                                                    <input
-                                                        id="fileInput"
-                                                        type="file"
-                                                        accept="image/, video/"
-                                                        style={{ display: "none" }}
-                                                        onChange={handleChange}
-                                                        name="mediaFile" />
-                                                </IconButton>
-                                            </Tooltip>
-                                            {showBox && (
-                                                <div
-                                                    ref={boxRef}
-                                                    style={{
-                                                        border: '0.1px solid #d3d3d3',
-                                                        padding: '1px',
-                                                        position: 'absolute',
-                                                        bottom: '100%',
-                                                        left: '50%',
-                                                        transform: 'translateX(-50%)',
-                                                        backgroundColor: 'white',
-                                                        zIndex: 1
-                                                    }}
-                                                >
-                                                    <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+
                                                         <Tooltip title="Take Photo" placement="top">
                                                             <IconButton onClick={handleCameraClick}>
                                                                 <PhotoCameraIcon />
@@ -798,9 +767,8 @@ const Post = ({ onClose }) => {
                                                                 <InsertPhotoIcon />
                                                             </IconButton>
                                                         </Tooltip>
-                                                    </div>
-                                                </div>
-                                            )}
+                                                  
+                                           
                                             <input
                                                 id="fileInput"
                                                 type="file"

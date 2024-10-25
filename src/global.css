@@ -840,62 +840,6 @@ main {
 }
 
 /* Sidenav */
-/* .sidebar {
-    background: #ffffff;
-    color: #c7c8c9;
-    height: 100vh;
-    width: 200px;
-    transition: all 0.5s;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    z-index: 2;
-}
-
-.top_section {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
-}
-
-.logo {
-    font-size: 30px;
-}
-
-.bars {
-    display: flex;
-    font-size: 25px;
-    margin-left: 50px;
-}
-
-.link {
-    display: flex;
-    color: #626364;
-    padding: 5px 15px;
-    gap: 10px;
-    transition: all 0.5s;
-    font-weight: bolder;
-}
-
-.icon {
-    font-size: 25px;
-}
-
-.prat {
-    display: flex;
-    color: #626364;
-    padding: 3px 15px;
-    gap: 10px;
-    transition: all 0.5s;
-}
-
-.link_text {
-    width: 100%;
-    padding: 5px 5px;
-    margin-top: -2px;
-    border-radius: 10px;
-    display: none;
-    font-size: 17px;
-} */
 .sidebar {
     background: #ffffff;
     color: #c7c8c9;
