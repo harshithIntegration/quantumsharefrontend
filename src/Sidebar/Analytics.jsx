@@ -1202,7 +1202,7 @@ const Analytics = () => {
                                                                                                 top: '50%',
                                                                                                 left: '50%',
                                                                                                 transform: 'translate(-50%, -50%)',
-                                                                                                width: '840px',
+                                                                                                width: '40px',
                                                                                                 height: '40px',
                                                                                                 borderRadius: '50%',
                                                                                                 backgroundColor: 'rgba(0, 0, 0, 0.6)',
