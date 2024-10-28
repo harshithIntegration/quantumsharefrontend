@@ -429,7 +429,7 @@ const maxCaptionCharacters=500;
                         } else if (response.data.code === 116) {
                             const res = response.data;
                             console.error('Unsupported Aspect Ratio:', res.message);
-                            toast.error(res.message);
+                            toast.info(res.message);
                         } else if (response.data.structure?.status === "error" && response.data.structure.code === 114) {
                             const res = response.data.structure;
                             console.error('Credit Depleted Error Message:', res.message);
@@ -502,7 +502,7 @@ const maxCaptionCharacters=500;
                         }
                     } else if (platform === 'instagram') {
                         if (responseData.code === 116) {
-                            toast.error('Unsupported aspect ratio. Please use one of Instagram\'s formats: 4:5, 1:1, or 1.91:1.');
+                            toast.info('Unsupported aspect ratio. Please use one of Instagram\'s formats: 4:5, 1:1, or 1.91:1.');
                         } else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
                             const err = responseData.structure;
                             console.error('Credit Depleted Error Message:', err.message);
@@ -857,11 +857,6 @@ const maxCaptionCharacters=500;
                                                         </Button>
                                                     </div>
                                                 </Popover>
-                                            </IconButton>
-                                        </Tooltip>
-                                        <Tooltip TransitionComponent={Zoom} title="Tag People" enterDelay={100} leaveDelay={100} placement="top-end">
-                                            <IconButton>
-                                                <SellOutlinedIcon />
                                             </IconButton>
                                         </Tooltip>
                                         <Tooltip>

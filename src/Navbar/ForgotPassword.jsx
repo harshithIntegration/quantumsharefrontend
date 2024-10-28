@@ -78,7 +78,9 @@ const ForgotPassword = () => {
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
-                    height: { xs: '80vh', md: '90vh' },
+                    width: { xs: '90%', sm: '80%', md: '70%' },
+                    height: { xs: 'auto', md: 'auto' },
+                    maxHeight: '90vh',
                     bgcolor: 'white',
                     color: '#1C1C1C',
                     boxShadow: 5,
@@ -88,9 +90,11 @@ const ForgotPassword = () => {
                     flexDirection: 'column',
                     justifyContent: 'space-between',
                     filter: successModalOpen ? 'blur(4px)' : 'none',
-                }}>
+                    overflowY: 'auto',
+                }}
+            >
                 <IconButton
-                    sx={{ position: 'absolute', top: 2, right: 2, color: '#ba343b' }}
+                    sx={{ position: 'absolute', top: 8, right: 8, color: '#ba343b' }}
                     onClick={handleClose}
                 >
                     <CloseIcon />
@@ -101,23 +105,23 @@ const ForgotPassword = () => {
                             display: 'flex',
                             justifyContent: 'center',
                             alignItems: 'center',
-                        }} >
-                        <img src={QS} alt="" style={{ height: 35, marginTop: '5px' }} />
+                            mb: 2
+                        }}>
+                        <img src={QS} alt="" style={{ height: 35 }} />
                     </Typography>
-                    <Typography sx={{ m: 0, p: 2, color: '#ba343b', fontSize: '20px', textAlign: 'center' }} >
+                    <Typography sx={{ color: '#ba343b', fontSize: '20px', textAlign: 'center' }}>
                         Find your Quantum Share account
                     </Typography>
                     <Typography
                         variant="body2"
-                        textAlign="start"
-                        sx={{ margin: '5px 0', color: 'gray' }}
+                        textAlign="center"
+                        sx={{ margin: '10px 0', color: 'gray' }}
                     >
-                        Enter your email-id associated with your account to
-                        change your password.
+                        Enter your email-id associated with your account to change your password.
                     </Typography>
                     <Box component="form" noValidate sx={{ mt: 2 }}>
                         <Grid container spacing={2} justifyContent="center">
-                            <Grid item xs={11}>
+                            <Grid item xs={12}>
                                 <TextField
                                     required
                                     fullWidth
@@ -139,22 +143,17 @@ const ForgotPassword = () => {
                                         },
                                     }} />
                             </Grid>
-                            <Grid item xs={11}>
+                            <Grid item xs={12}>
                                 <Button
                                     fullWidth
                                     variant="contained"
                                     onClick={handleNext}
                                     sx={{
-                                        position: 'fixed',
-                                        bottom: 25,
-                                        width: '500px',
-                                        mx: 'auto',
-                                        left: 0,
-                                        right: 0,
                                         bgcolor: '#ba343b',
                                         color: 'white',
                                         height: 50,
                                         fontSize: 16,
+                                        mt: 3,
                                         '&:hover': { bgcolor: '#9e2b31' },
                                         '&:disabled': { bgcolor: '#e0e0e0', color: '#a0a0a0' },
                                     }}
@@ -166,7 +165,7 @@ const ForgotPassword = () => {
                         </Grid>
                     </Box>
                 </Box>
-            </Box>
+            </Box >
             <Modal
                 open={successModalOpen}
                 onClose={handleSuccessModalClose}
@@ -179,7 +178,7 @@ const ForgotPassword = () => {
                         top: '50%',
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
-                        width: { xs: 300, sm: 400 },
+                        width: { xs: '90%', sm: 400 }, 
                         bgcolor: 'white',
                         boxShadow: 24,
                         p: 4,
@@ -187,16 +186,25 @@ const ForgotPassword = () => {
                         textAlign: 'center'
                     }}
                 >
-                    <Typography id="success-modal-title" variant="h6" component="h2" sx={{ color: 'green' }} >
+                    <Typography id="success-modal-title" variant="h6" component="h2" sx={{ color: 'green' }}>
                         Email Sent!
                     </Typography>
-                    <Typography id="success-modal-description" sx={{ mt: 2 }} >
+                    <Typography
+                        id="success-modal-description"
+                        sx={{
+                            mt: 2,
+                            wordWrap: 'break-word', 
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis', 
+                            whiteSpace: 'normal', 
+                        }}
+                    >
                         A reset password link has been sent to your email <b style={{ color: '#ba343b' }}>{submittedEmail}</b>
                     </Typography>
                     <Button
                         onClick={handleSuccessModalClose}
                         sx={{
-                            mt: 5,
+                            mt: 3,
                             bgcolor: '#ba343b',
                             color: 'white',
                             '&:hover': {
