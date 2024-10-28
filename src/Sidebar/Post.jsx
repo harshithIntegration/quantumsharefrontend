@@ -170,14 +170,6 @@ const Post = ({ onClose }) => {
         onClose();
     };
 
-    // const handleConfirmCloseOpen = () => {
-    //     if (changesMade) {
-    //         setConfirmCloseOpen(true);
-    //     } else {
-    //         closeDialog();
-    //     }
-    // };
-
     const handleConfirmCloseOpen = () => {
         if (changesMade) {
             setCaption('');
@@ -188,19 +180,6 @@ const Post = ({ onClose }) => {
             setCaption('');
             dispatch(clearAiText());
             closeDialog();
-        }
-    };
-
-    const handleButtonClick = () => {
-        if (!showBox && !disableMainTooltip) {
-            setShowBox(true);
-            tooltipTimerRef.current = setTimeout(() => {
-                setDisableMainTooltip(true);
-            }, 1000);
-        } else {
-            setShowBox(false);
-            setDisableMainTooltip(false);
-            clearTimeout(tooltipTimerRef.current);
         }
     };
 
@@ -426,7 +405,7 @@ const Post = ({ onClose }) => {
                         } else if (response.data.code === 116) {
                             const res = response.data;
                             console.error('Unsupported Aspect Ratio:', res.message);
-                            toast.error(res.message);
+                            toast.info(res.message);
                         } else if (response.data.structure?.status === "error" && response.data.structure.code === 114) {
                             const res = response.data.structure;
                             console.error('Credit Depleted Error Message:', res.message);
@@ -499,7 +478,7 @@ const Post = ({ onClose }) => {
                         }
                     } else if (platform === 'instagram') {
                         if (responseData.code === 116) {
-                            toast.error('Unsupported aspect ratio. Please use one of Instagram\'s formats: 4:5, 1:1, or 1.91:1.');
+                            toast.info('Unsupported aspect ratio. Please use one of Instagram\'s formats: 4:5, 1:1, or 1.91:1.');
                         } else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
                             const err = responseData.structure;
                             console.error('Credit Depleted Error Message:', err.message);
@@ -757,18 +736,18 @@ const Post = ({ onClose }) => {
                                     <Stack direction="row" alignItems="center" spacing={1} sx={{ flexWrap: 'wrap' }}>
                                         <div style={{ position: 'relative', display: 'inline-block' }}>
 
-                                                        <Tooltip title="Take Photo" placement="top">
-                                                            <IconButton onClick={handleCameraClick}>
-                                                                <PhotoCameraIcon />
-                                                            </IconButton>
-                                                        </Tooltip>
-                                                        <Tooltip title="Select Photo or Video" placement="top">
-                                                            <IconButton onClick={handleGalleryClick}>
-                                                                <InsertPhotoIcon />
-                                                            </IconButton>
-                                                        </Tooltip>
-                                                  
-                                           
+                                            <Tooltip title="Take Photo" placement="top">
+                                                <IconButton onClick={handleCameraClick}>
+                                                    <PhotoCameraIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title="Select Photo or Video" placement="top">
+                                                <IconButton onClick={handleGalleryClick}>
+                                                    <InsertPhotoIcon />
+                                                </IconButton>
+                                            </Tooltip>
+
+
                                             <input
                                                 id="fileInput"
                                                 type="file"
@@ -878,11 +857,6 @@ const Post = ({ onClose }) => {
                                                         </Button>
                                                     </div>
                                                 </Popover>
-                                            </IconButton>
-                                        </Tooltip>
-                                        <Tooltip TransitionComponent={Zoom} title="Tag People" enterDelay={100} leaveDelay={100} placement="top-end">
-                                            <IconButton>
-                                                <SellOutlinedIcon />
                                             </IconButton>
                                         </Tooltip>
                                         <Tooltip>

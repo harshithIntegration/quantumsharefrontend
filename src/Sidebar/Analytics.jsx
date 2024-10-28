@@ -1202,7 +1202,7 @@ const Analytics = () => {
                                                                                                 top: '50%',
                                                                                                 left: '50%',
                                                                                                 transform: 'translate(-50%, -50%)',
-                                                                                                width: '840px',
+                                                                                                width: '40px',
                                                                                                 height: '40px',
                                                                                                 borderRadius: '50%',
                                                                                                 backgroundColor: 'rgba(0, 0, 0, 0.6)',
@@ -1532,8 +1532,6 @@ const Analytics = () => {
                                                 </div>
                                             </div>
                                         </Grid>
-
-
                                     </Grid>
                                 </Box>
                             </>
@@ -1567,7 +1565,7 @@ const Analytics = () => {
                                         onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}
                                     >
                                         {post.mediaType.startsWith('video') ? (
-                                            post.platformName === "facebook" ? (
+                                            post.platformName === "facebook" || post.platformName === "youtube" ? (
                                                 <div style={{ position: 'relative', width: '100%', height: '180px' }}>
                                                     <img
                                                         src={post.imageUrl}

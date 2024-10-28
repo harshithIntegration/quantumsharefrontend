@@ -82,28 +82,114 @@ const SignUp = () => {
         setConfirmPasswordVisible(!confirmPasswordVisible);
     };
 
+    // const handleSubmit = async (event) => {
+    //     event.preventDefault();
+
+    //     const newErrors = {};
+    //     if (!formData || formData.firstName.trim() === '') {
+    //         newErrors.firstName = 'First name is required';
+    //     }
+    //     if (!formData || formData.lastName.trim() === '') {
+    //         newErrors.lastName = 'Last name is required';
+    //     }
+    //     if (!formData || formData.email.trim() === '') {
+    //         newErrors.email = 'Email is required';
+    //     }
+    //     const phoneRegex = /^\d{10}$/;
+    //     if (!formData || !phoneRegex.test(formData.phoneNo.trim())) {
+    //         newErrors.phoneNo = 'Please enter a valid 10-digit phone number';
+    //     }
+    //     if (!formData || formData.password.trim() === '') {
+    //         newErrors.password = 'Password is required';
+    //     } else if (!isPasswordValid(formData.password)) {
+    //         newErrors.password = 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one numeric digit, and one special character';
+    //     }
+    //     if (!formData || formData.confirm_password.trim() === '') {
+    //         newErrors.confirm_password = 'Confirm Password is required';
+    //     } else if (formData.password !== formData.confirm_password) {
+    //         newErrors.confirm_password = 'Passwords do not match';
+    //     }
+
+    //     setErrors(newErrors);
+
+    //     if (Object.keys(newErrors).length === 0) {
+    //         const loadingToast = toast.loading("Signing Up..........")
+
+    //         let payload = {
+    //             firstName: formData.firstName,
+    //             lastName: formData.lastName,
+    //             email: formData.email,
+    //             phoneNo: formData.phoneNo,
+    //             password: formData.password,
+    //             company: formData.company
+    //         };
+
+    //         const endpoint = '/quantum-share/user/signup';
+    //         try {
+    //             const response = await axiosInstance.post(endpoint, payload, {
+    //                 headers: {
+    //                     'Accept': 'application/json',
+    //                     'method': 'POST'
+    //                 }
+    //             });
+    //             toast.success("Successfully signed up, please verify your email.");
+    //             toast.dismiss(loadingToast);
+    //             navigate("/verify");
+    //         } catch (error) {
+    //             console.error('Error submitting:', error);
+    //             toast.dismiss(loadingToast);
+    //             if (error.response) {
+    //                 const status = error.response.status;
+    //                 if (status === 406) {
+    //                     console.log("Account already exists.");
+    //                     toast.error("Account already exists.");
+    //                 } else if (status === 500) {
+    //                     console.log("Mail server connection failed. Please check your internet connection.");
+    //                     toast.error("Mail server connection failed. Please check your internet connection.");
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         const newErrors = {};
+        const nameRegex = /^[A-Za-z\s]+$/; 
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
+        const phoneRegex = /^\d{10}$/; 
+
         if (!formData || formData.firstName.trim() === '') {
             newErrors.firstName = 'First name is required';
+        } else if (!nameRegex.test(formData.firstName.trim())) {
+            newErrors.firstName = 'First name should contain only alphabets';
         }
+
         if (!formData || formData.lastName.trim() === '') {
             newErrors.lastName = 'Last name is required';
+        } else if (!nameRegex.test(formData.lastName.trim())) {
+            newErrors.lastName = 'Last name should contain only alphabets';
         }
+
         if (!formData || formData.email.trim() === '') {
             newErrors.email = 'Email is required';
+        } else if (!emailRegex.test(formData.email.trim())) {
+            newErrors.email = 'Please enter a valid email address';
         }
-        const phoneRegex = /^\d{10}$/;
-        if (!formData || !phoneRegex.test(formData.phoneNo.trim())) {
+
+        if (!formData || formData.phoneNo.trim() === '') {
+            newErrors.phoneNo = 'Phone number is required';
+        } else if (!phoneRegex.test(formData.phoneNo.trim())) {
             newErrors.phoneNo = 'Please enter a valid 10-digit phone number';
         }
+
         if (!formData || formData.password.trim() === '') {
             newErrors.password = 'Password is required';
         } else if (!isPasswordValid(formData.password)) {
             newErrors.password = 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one numeric digit, and one special character';
         }
+
         if (!formData || formData.confirm_password.trim() === '') {
             newErrors.confirm_password = 'Confirm Password is required';
         } else if (formData.password !== formData.confirm_password) {
@@ -113,7 +199,7 @@ const SignUp = () => {
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length === 0) {
-            const loadingToast = toast.loading("Signing Up..........")
+            const loadingToast = toast.loading("Signing Up..........");
 
             let payload = {
                 firstName: formData.firstName,
@@ -183,7 +269,7 @@ const SignUp = () => {
                     'Content-Type': 'application/json',
                 },
             });
-    
+
             if (response.data.status === 'success' && response.data.message === 'Account already exists with this email') {
                 return { exists: true, passwordNull: false, token: response.data.data };
             }
@@ -197,15 +283,15 @@ const SignUp = () => {
             return { exists: false, passwordNull: false, token: null };
         }
     };
-    
+
     const handleGoogleLoginSuccess = async (credentialResponse) => {
         try {
             const decoded = jwtDecode(credentialResponse?.credential);
             console.log('Decoded JWT:', decoded);
-    
+
             const { exists, passwordNull, token, email } = await checkEmailExistence(decoded.email);
             console.log('Email existence check:', { exists, passwordNull, token });
-    
+
             if (exists) {
                 if (passwordNull) {
                     navigate('/regenerate-password', { state: { email: decoded.email } });
@@ -220,7 +306,7 @@ const SignUp = () => {
                 }
                 return;
             }
-                setUserDetails({
+            setUserDetails({
                 email: decoded.email,
                 firstName: decoded.given_name,
                 lastName: decoded.family_name,
@@ -230,8 +316,8 @@ const SignUp = () => {
             console.error('Google Login Error:', error);
             toast.error('Error signing in with Google.');
         }
-    };    
-        
+    };
+
     const handleGoogleSubmit = async () => {
         setLoading(true);
         setErrors({});
