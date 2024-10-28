@@ -110,7 +110,7 @@ const Dashboard = () => {
                                                 }}
                                                 variant="outlined"
                                             >
-                                                Trail Expires in {remainingDays} Days
+                                                Trial Expires in {remainingDays} Days
                                             </Button>
                                         )}
                                         {remainingCredits !== null && (

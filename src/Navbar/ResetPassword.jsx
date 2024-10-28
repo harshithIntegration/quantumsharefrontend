@@ -28,7 +28,6 @@ const ResetPassword = () => {
         setToken(query.get('token') || '');
     }, [location.search]);
 
-
     const handleClose = () => {
         setOpen(false);
         navigate("/forgot-password");
@@ -103,7 +102,8 @@ const ResetPassword = () => {
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
-                    height: { xs: '80vh', md: '90vh' },
+                    width: { xs: '90%', sm: '80%', md: '70%' },
+                    height: { xs: 'auto', md: 'auto' },
                     bgcolor: 'white',
                     color: '#1C1C1C',
                     boxShadow: 5,
@@ -115,7 +115,7 @@ const ResetPassword = () => {
                 }}
             >
                 <IconButton
-                    sx={{ position: 'absolute', top: 2, right: 2, color: '#ba343b' }}
+                    sx={{ position: 'absolute', top: 8, right: 8, color: '#ba343b' }}
                     onClick={handleClose}
                 >
                     <CloseIcon />
@@ -129,21 +129,21 @@ const ResetPassword = () => {
                         }}>
                         <img src={QS} alt="" style={{ height: 35, marginTop: '5px' }} />
                     </Typography>
-                    <Typography sx={{ m: 0, p: 2, color: '#ba343b', fontSize: '20px', textAlign: 'center' }}>
+                    <Typography sx={{ m: 0, p: 2, color: '#ba343b', fontSize: { xs: '18px', md: '20px' }, textAlign: 'center' }}>
                         Reset your Password
                     </Typography>
                     <Typography
                         variant="body2"
                         textAlign="start"
-                        sx={{ margin: '5px 0', color: 'gray' }}
+                        sx={{ margin: '5px 0', color: 'gray', fontSize: { xs: '14px', md: '16px' }} }
                     >
                         Enter your new password and confirm it to reset your password for Quantum Share application.
                     </Typography>
                     <Box component="form" noValidate sx={{ mt: 2 }}>
                         <Grid container spacing={2} justifyContent="center">
-                            <Grid item xs={11}>
+                            <Grid item xs={12}>
                                 <TextField
-                                    required 
+                                    required
                                     fullWidth
                                     label="New Password"
                                     type={passwordVisible ? 'text' : 'password'}
@@ -155,7 +155,6 @@ const ResetPassword = () => {
                                     InputProps={{
                                         sx: {
                                             height: '50px',
-                                            padding: '0 10px',
                                         },
                                         endAdornment: (
                                             <EndAdornment
@@ -171,9 +170,9 @@ const ResetPassword = () => {
                                     }}
                                 />
                             </Grid>
-                            <Grid item xs={11}>
+                            <Grid item xs={12}>
                                 <TextField
-                                    required 
+                                    required
                                     fullWidth
                                     label="Confirm New Password"
                                     type={confirmPasswordVisible ? 'text' : 'password'}
@@ -184,7 +183,6 @@ const ResetPassword = () => {
                                     InputProps={{
                                         sx: {
                                             height: '50px',
-                                            padding: '0 10px',
                                         },
                                         endAdornment: (
                                             <EndAdornment
@@ -200,18 +198,13 @@ const ResetPassword = () => {
                                     }}
                                 />
                             </Grid>
-                            <Grid item xs={11}>
+                            <Grid item xs={12}>
                                 <Button
                                     fullWidth
                                     variant="contained"
                                     onClick={handleUpdate}
                                     sx={{
-                                        position: 'fixed',
-                                        bottom: 25,
-                                        width: '500px', 
-                                        mx: 'auto', 
-                                        left: 0, 
-                                        right: 0,
+                                        mt: 3,
                                         bgcolor: '#ba343b',
                                         color: 'white',
                                         height: 50,

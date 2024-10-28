@@ -111,7 +111,8 @@ const RegeneratePassword = () => {
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
-                    height: { xs: '80%', md: '90%' },
+                    width: { xs: '90%', sm: '80%', md: '70%' },
+                    height: { xs: 'auto', md: 'auto' },
                     bgcolor: 'white',
                     color: '#1C1C1C',
                     boxShadow: 5,
@@ -120,7 +121,8 @@ const RegeneratePassword = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
-                }}>
+                }}
+            >
                 <Box >
                     <Typography
                         sx={{
@@ -136,104 +138,97 @@ const RegeneratePassword = () => {
                     <Typography
                         variant="body2"
                         textAlign="center"
-                        sx={{ margin: '5px 0', color: 'gray' }}
+                        sx={{ margin: '5px 0', color: 'gray', fontSize: { xs: '14px', md: '16px' }} }
                     >
-                        Update your password to ensure a more secure authentication process.
-                    </Typography>
-                    <Box component="form" noValidate sx={{ mt: 2 }}>
-                        <Grid container spacing={2} justifyContent="center">
-                            <Grid item xs={11}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    name="password"
-                                    label="Password"
-                                    type={passwordVisible ? 'text' : 'password'}
-                                    id="password"
-                                    autoComplete="new-password"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    error={!!errors.password}
-                                    helperText={errors.password}
-                                    InputProps={{
-                                        sx: {
-                                            height: '50px',
-                                            padding: '0 10px',
-                                        },
-                                        endAdornment: (
-                                            <EndAdornment
-                                                visible={passwordVisible}
-                                                setVisible={handleTogglePasswordVisibility}
-                                            />
-                                        ),
-                                    }}
-                                    InputLabelProps={{
-                                        sx: {
-                                            fontSize: '14px',
-                                        },
-                                    }}
-                                />
-                            </Grid>
-                            <Grid item xs={11}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    name="confirm_password"
-                                    label="Confirm Password"
-                                    type={confirmPasswordVisible ? 'text' : 'password'}
-                                    id="confirm_password"
-                                    autoComplete="new-password"
-                                    value={formData.confirm_password}
-                                    onChange={handleChange}
-                                    error={!!errors.confirm_password}
-                                    helperText={errors.confirm_password}
-                                    InputProps={{
-                                        sx: {
-                                            height: '50px',
-                                            padding: '0 10px',
-                                        },
-                                        endAdornment: (
-                                            <EndAdornment
-                                                visible={confirmPasswordVisible}
-                                                setVisible={handleToggleConfirmPasswordVisibility}
-                                            />
-                                        ),
-                                    }}
-                                    InputLabelProps={{
-                                        sx: {
-                                            fontSize: '14px',
-                                        },
-                                    }}
-                                />
-                            </Grid>
-                            <Grid item xs={11}>
-                                <Button
-                                    fullWidth
-                                    variant="contained"
-                                    onClick={handleRegenratePassword}
-                                    sx={{
-                                        position: 'fixed',
-                                        bottom: 25,
-                                        width: '500px', 
-                                        mx: 'auto', 
-                                        left: 0, 
-                                        right: 0,
-                                        bgcolor: '#ba343b',
-                                        color: 'white',
-                                        height: 50,
-                                        fontSize: 16,
-                                        '&:hover': { bgcolor: '#9e2b31' },
-                                        '&:disabled': { bgcolor: '#e0e0e0', color: '#a0a0a0' },
-                                    }}
-                                    disabled={!formData.password || !formData.confirm_password || loading}
-                                >
-                                    {loading ? <TailSpin color="#ba343b" height={25} width={25} /> : 'Submit'}
-                                </Button>
-                            </Grid>
+                    Update your password to ensure a more secure authentication process.
+                </Typography>
+                <Box component="form" noValidate sx={{ mt: 2 }}>
+                    <Grid container spacing={2} justifyContent="center">
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                fullWidth
+                                name="password"
+                                label="Password"
+                                type={passwordVisible ? 'text' : 'password'}
+                                id="password"
+                                autoComplete="new-password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                error={!!errors.password}
+                                helperText={errors.password}
+                                InputProps={{
+                                    sx: {
+                                        height: '50px',
+                                    },
+                                    endAdornment: (
+                                        <EndAdornment
+                                            visible={passwordVisible}
+                                            setVisible={handleTogglePasswordVisibility}
+                                        />
+                                    ),
+                                }}
+                                InputLabelProps={{
+                                    sx: {
+                                        fontSize: '14px',
+                                    },
+                                }}
+                            />
                         </Grid>
-                    </Box>
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                fullWidth
+                                name="confirm_password"
+                                label="Confirm Password"
+                                type={confirmPasswordVisible ? 'text' : 'password'}
+                                id="confirm_password"
+                                autoComplete="new-password"
+                                value={formData.confirm_password}
+                                onChange={handleChange}
+                                error={!!errors.confirm_password}
+                                helperText={errors.confirm_password}
+                                InputProps={{
+                                    sx: {
+                                        height: '50px',
+                                    },
+                                    endAdornment: (
+                                        <EndAdornment
+                                            visible={confirmPasswordVisible}
+                                            setVisible={handleToggleConfirmPasswordVisibility}
+                                        />
+                                    ),
+                                }}
+                                InputLabelProps={{
+                                    sx: {
+                                        fontSize: '14px',
+                                    },
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Button
+                                fullWidth
+                                variant="contained"
+                                onClick={handleRegenratePassword}
+                                sx={{
+                                    mt: 3,
+                                    bgcolor: '#ba343b',
+                                    color: 'white',
+                                    height: 50,
+                                    fontSize: 16,
+                                    '&:hover': { bgcolor: '#9e2b31' },
+                                    '&:disabled': { bgcolor: '#e0e0e0', color: '#a0a0a0' },
+                                }}
+                                disabled={!formData.password || !formData.confirm_password || loading}
+                            >
+                                {loading ? <TailSpin color="#ba343b" height={25} width={25} /> : 'Submit'}
+                            </Button>
+                        </Grid>
+                    </Grid>
                 </Box>
             </Box>
+        </Box >
         </>
     )
 }
