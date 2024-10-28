@@ -226,7 +226,7 @@
 .circle-icon {
     font-size: 50px;
     color: #ba343b;
-    box-shadow: 0 2px 20px red;
+    box-shadow: 0 2px 20px rgb(133, 131, 131);
     border-radius: 50%;
     transition: box-shadow 0.05s ease;
     position: fixed;
@@ -278,7 +278,7 @@
     font-size: 12px;
     padding: 13px;
     position: relative;
-    top: 4px;
+    top: 0.4rem;
 }
 
 a {
