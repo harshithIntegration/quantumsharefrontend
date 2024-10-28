@@ -194,11 +194,34 @@ const Post = ({ onClose }) => {
         document.getElementById('fileInput').click();
     };
 
-    const handleFileChange = (event) => {
-        const selectedFile = event.target.files[0];
-        if (selectedFile) {
-            setFile(selectedFile);
-            setFileType(selectedFile.type.startsWith('image') ? 'image' : 'video');
+    const handleFileChange = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const isImage = file.type.startsWith('image/');
+            const isVideo = file.type.startsWith('video/');
+            const imageSizeLimit = 4.5 * 1024 * 1024;
+            const videoSizeLimit = 40 * 1024 * 1024;
+            if (isImage && file.size > imageSizeLimit) {
+                toast.error("Image size is too large! Maximum allowed is 4.5MB.");
+                return;
+            }
+            if (isVideo && file.size > videoSizeLimit) {
+                toast.error("Video size is too large! Maximum allowed is 40MB.");
+                return;
+            }
+            let processedFile = file;
+            if (isImage && file.type !== 'image/jpeg') {
+                toast("Converting image to JPG...");
+                processedFile = await convertImageToJPG(file);
+            }
+            if (isVideo && file.type !== 'video/mp4') {
+                toast.error("Only MP4 videos are supported. Please upload an MP4 file.");
+                return;
+            }
+            setFile(processedFile);
+            setFileType(isImage ? 'image' : 'video');
+            setShareButtonDisabled(false);
+            console.log('File selected:', processedFile);
         }
     };
 
@@ -568,36 +591,7 @@ const Post = ({ onClose }) => {
         });
     };
 
-    const handleChange = async (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const isImage = file.type.startsWith('image/');
-            const isVideo = file.type.startsWith('video/');
-            const imageSizeLimit = 4.5 * 1024 * 1024;
-            const videoSizeLimit = 40 * 1024 * 1024;
-            if (isImage && file.size > imageSizeLimit) {
-                toast.error("Image size is too large! Maximum allowed is 4.5MB.");
-                return;
-            }
-            if (isVideo && file.size > videoSizeLimit) {
-                toast.error("Video size is too large! Maximum allowed is 40MB.");
-                return;
-            }
-            let processedFile = file;
-            if (isImage && file.type !== 'image/jpeg') {
-                toast("Converting image to JPG...");
-                processedFile = await convertImageToJPG(file);
-            }
-            if (isVideo && file.type !== 'video/mp4') {
-                toast.error("Only MP4 videos are supported. Please upload an MP4 file.");
-                return;
-            }
-            setFile(processedFile);
-            setFileType(isImage ? 'image' : 'video');
-            setShareButtonDisabled(false);
-            console.log('File selected:', processedFile);
-        }
-    };
+
 
     const handle = (event) => { setSelectedOption(event.target.value); handleChangesMade(); }
 
