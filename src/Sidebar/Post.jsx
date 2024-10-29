@@ -211,7 +211,7 @@ const maxCaptionCharacters=500;
             }
             let processedFile = file;
             if (isImage && file.type !== 'image/jpeg') {
-                toast("Converting image to JPG...");
+                // toast("Converting image to JPG...");
                 processedFile = await convertImageToJPG(file);
             }
             if (isVideo && file.type !== 'video/mp4') {
@@ -593,11 +593,13 @@ const maxCaptionCharacters=500;
     };
 
     const handle = (event) => { setSelectedOption(event.target.value); handleChangesMade(); }
+
     const handleTitleChange = (e) => {
         const newTitle = e.target.value;
         if (newTitle.length <= maxTitleCharacters) {setTitle(newTitle);handleChangesMade(); }};
 
     const handleSubReddit = (e) => { setSr(e.target.value); handleChangesMade(); }
+    
     const handleCaptionChange = (e) => {
         const newCaption = e.target.value;
         if(newCaption.length <= maxCaptionCharacters){setCaption(newCaption);dispatch(updateCaption(e.target.value));setChangesMade(true);}}

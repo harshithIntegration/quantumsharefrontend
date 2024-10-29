@@ -24,17 +24,15 @@ import { CgPlayButtonO } from "react-icons/cg";
 
 const About = () => {
     const token = sessionStorage.getItem('token')
-    const [open, setOpen] = useState(false);
+    const [openWatchNow, setOpenWatchNow] = useState(false);
+    const [openDemo, setOpenDemo] = useState(false);
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    const [isMuted, setIsMuted] = React.useState(false);
+    const handleOpenWatchNow = () => setOpenWatchNow(true);
+    const handleCloseWatchNow = () => setOpenWatchNow(false);
+    const handleOpenDemo = () => setOpenDemo(true);
+    const handleCloseDemo = () => setOpenDemo(false);
+    
+    const [isMuted, setIsMuted] = useState(false);
     const toggleMute = () => {
         setIsMuted(prev => !prev);
     };
@@ -121,10 +119,10 @@ const About = () => {
                                                 Watch Now
                                             </span>
                                             <IconButton>
-                                                <CgPlayButtonO className="homeCgPlayButtonO" onClick={handleClickOpen} />
+                                                <CgPlayButtonO className="homeCgPlayButtonO" onClick={handleOpenWatchNow} />
                                                 <Dialog
-                                                    open={open}
-                                                    onClose={handleClose}
+                                                    open={openWatchNow}
+                                                    onClose={handleCloseWatchNow}
                                                     aria-labelledby="alert-dialog-title"
                                                     aria-describedby="alert-dialog-description"
                                                 >
@@ -149,20 +147,71 @@ const About = () => {
                                     </div>
                                 </div>
                             </Grid>
-                            <Grid item xs={12} md={6} lg={6} sx={{ paddingTop: "15px", backgroundColor: "#1c0205" }}>
+                            <Grid
+                                item
+                                xs={12}
+                                md={6}
+                                lg={6}
+                                sx={{ paddingTop: "15px", backgroundColor: "#1c0205" }}
+                            >
                                 <Grid item xs={12} md={12} lg={12} sx={{ textAlign: 'start' }}>
-                                    <h1 style={{ color: 'white', marginLeft: "60px", paddingBottom: "30px", paddingTop: "30px" }}>Why Choose Quantum Share?</h1>
+                                    <h1 style={{ color: 'white', marginLeft: "60px", paddingBottom: "30px", paddingTop: "30px" }}>
+                                        Why Choose Quantum Share?
+                                    </h1>
                                 </Grid>
                                 <div style={{ display: 'flex', marginLeft: "60px", marginRight: "40px" }}>
-                                    <div>
-                                        <Typography style={{ color: 'white', fontSize: '18px' }}> Quantum Share is the ultimate solution for seamless social media
-                                            sharingmultiple social This powerful platform simplifies the process of
-                                            publishing your creative content across media channels simultaneously.
-                                            Whether you are a digital artist, content creator, marketer, or business
-                                            Quantum Share empowers you to effortlessly reach your audience.</Typography>
-                                    </div>
+                                    <Typography style={{ color: 'white', fontSize: '18px' }}>
+                                        Quantum Share is the ultimate solution for seamless social media
+                                        sharing. This powerful platform simplifies the process of
+                                        publishing your creative content across multiple media channels
+                                        simultaneously. Whether you are a digital artist, content creator,
+                                        marketer, or business, Quantum Share empowers you to effortlessly
+                                        reach your audience.
+                                    </Typography>
                                 </div>
-                                <div><p style={{ color: 'white', border: '2px solid white', width: '150px', height: '40px', fontFamily: 'Poppins', fontSize: 16, borderRadius: '5px', textAlign: 'center', marginTop: '5%', paddingTop: '7px', marginLeft: '60px' }}></p></div>
+                                <div style={{ display: 'flex', alignItems: 'center', marginTop: '20px', marginLeft: '60px' }}>
+                                    <Typography
+                                        sx={{
+                                            fontSize: 16,
+                                            fontFamily: 'Poppins',
+                                            color: 'white',
+                                            border: '2px solid white',
+                                            width: '150px',
+                                            height: '40px',
+                                            borderRadius: '5px',
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            cursor: 'pointer',
+                                            mr: 2
+                                        }}
+                                        onClick={handleOpenDemo}
+                                    >
+                                        Demo Video
+                                    </Typography>
+                                    <Dialog
+                                        open={openDemo}
+                                        onClose={handleCloseDemo}
+                                        aria-labelledby="alert-dialog-title"
+                                        aria-describedby="alert-dialog-description"
+                                    >
+                                        <DialogContent>
+                                            <video autoPlay loop muted={isMuted} style={{ width: '100%', height: 'auto' }}>
+                                                <source
+                                                    src="https://quantumshare.quantumparadigm.in/vedio/InShot_20241028_163827308.mp4"
+                                                    type="video/mp4"
+                                                />
+                                                Your browser does not support the video tag.
+                                            </video>
+                                            <IconButton
+                                                onClick={toggleMute}
+                                                style={{ position: 'absolute', left: '10px', color: '#BA343B' }}
+                                            >
+                                                {isMuted ? <VolumeOffIcon /> : <VolumeUpIcon />}
+                                            </IconButton>
+                                        </DialogContent>
+                                    </Dialog>
+                                </div>
                             </Grid>
                             <Grid item xs={12} md={6} lg={6} sx={{ display: 'flex', justifyContent: 'center', backgroundColor: "#1c0205", paddingBottom: "0px" }}>
                                 <img style={{ width: "100%", height: "100%", display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: "auto", marginRight: 'auto' }} src={why} alt="image" />
