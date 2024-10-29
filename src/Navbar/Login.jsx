@@ -58,6 +58,7 @@ const Login = () => {
     const [errors, setErrors] = useState({});
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+    const [error, setError] = useState('');
 
     const handleCloseSignUp = () => {
         setIsOpen(false);
@@ -74,6 +75,12 @@ const Login = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        if (!emph || !password) {
+            setError('Please enter your email & password');
+            return;
+        }
+        setError('');
+
         const params = {
             emph: formData.emph,
             password: formData.password,
@@ -264,14 +271,19 @@ const Login = () => {
                                     fontSize: 30, color: '#ba343b', cursor: 'pointer',
                                 }}
                                     onClick={handleCloseSignUp} />
-                                <Avatar sx={{ m: 0, bgcolor: '#ba343b' }}>
+                                <Avatar sx={{ mt: -4, bgcolor: '#ba343b' }}>
                                     <LockOutlinedIcon />
                                 </Avatar>
-                                <Typography component="h1" variant="h6">
+                                <Typography component="h1" variant="h6" sx={{ mt: 1 }}>
                                     Login
                                 </Typography>
-                                <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 0 }}>
+                                <Box component="form" noValidate onSubmit={handleSubmit} >
                                     <Grid container spacing={0} justifyContent="center">
+                                        {error && (
+                                            <Typography color="error" variant="body2" sx={{ mt: 1, fontSize: '12px' }}>
+                                                {error}
+                                            </Typography>
+                                        )}
                                         <Grid item xs={10}>
                                             <TextField margin="normal" required fullWidth id="emph" label="E-mail / Phone Number" name="emph" value={emph} onChange={handleChange} error={!!errors.emph} helperText={errors.emph} autoFocus />
                                         </Grid>

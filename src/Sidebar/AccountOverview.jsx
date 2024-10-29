@@ -236,9 +236,9 @@ const AccountOverview = () => {
                             <DialogContent className="dialog-content">
                                 <div className="avatar-container-in">
                                     {profile ? (
-                                        <img src={profile} alt="Profile" className="avatar-in" />
+                                        <img src={profile} alt="" className="avatar-in" />
                                     ) : (
-                                        <img src={blankimage} alt="Profile" className="avatar-in" />
+                                        <img src={blankimage} alt="" className="avatar-in" />
                                     )}
                                     <div
                                         style={{
