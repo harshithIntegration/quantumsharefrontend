@@ -131,7 +131,7 @@ const About = () => {
                                                     <DialogContent>
                                                         <video autoPlay loop muted={isMuted} style={{ width: '100%', height: 'auto' }}>
                                                             <source
-                                                                src="https://quantumshare.quantumparadigm.in/vedio/SocialMedia.mp4"
+                                                                src="https://quantumshare.quantumparadigm.in/vedio/QP%20ADD%20VDIEO%202024.mp4"
                                                                 type="video/mp4"
                                                             />
                                                             Your browser does not support the video tag.
@@ -162,7 +162,7 @@ const About = () => {
                                             Quantum Share empowers you to effortlessly reach your audience.</Typography>
                                     </div>
                                 </div>
-                                <div><p style={{ color: 'white', border: '2px solid white', width: '150px', height: '40px', fontFamily: 'Poppins', fontSize: 16, borderRadius: '5px', textAlign: 'center', marginTop: '5%', paddingTop: '7px', marginLeft: '60px' }}>Demo Video</p></div>
+                                <div><p style={{ color: 'white', border: '2px solid white', width: '150px', height: '40px', fontFamily: 'Poppins', fontSize: 16, borderRadius: '5px', textAlign: 'center', marginTop: '5%', paddingTop: '7px', marginLeft: '60px' }}></p></div>
                             </Grid>
                             <Grid item xs={12} md={6} lg={6} sx={{ display: 'flex', justifyContent: 'center', backgroundColor: "#1c0205", paddingBottom: "0px" }}>
                                 <img style={{ width: "100%", height: "100%", display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: "auto", marginRight: 'auto' }} src={why} alt="image" />

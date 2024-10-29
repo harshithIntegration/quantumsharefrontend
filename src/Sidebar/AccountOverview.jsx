@@ -283,11 +283,6 @@
 
 // export default AccountOverview;
 
-
-
-
-
-
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from 'react';
@@ -370,6 +365,88 @@ const AccountOverview = () => {
         setErrors({});
     };
 
+    // const handleSaveChanges = async () => {
+    //     setLoading(true);
+    //     const formData = new FormData();
+    //     const newErrors = {};
+    //     const nameRegex = /^[A-Za-z\s]+$/;
+    //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    //     const phoneRegex = /^\d{10}$/;
+
+    //     if (firstname && firstname !== userData.name.split(' ')[0]) {
+    //         if (!nameRegex.test(firstname.trim())) {
+    //             newErrors.firstname = 'First name should contain only alphabets';
+    //         } else {
+    //             formData.append('firstname', firstname);
+    //         }
+    //     }
+
+    //     if (lastname && lastname !== userData.name.split(' ')[1]) {
+    //         if (!nameRegex.test(lastname.trim())) {
+    //             newErrors.lastname = 'Last name should contain only alphabets';
+    //         } else {
+    //             formData.append('lastname', lastname);
+    //         }
+    //     }
+
+    //     if (phoneNo && phoneNo !== userData.mobile) {
+    //         if (!phoneRegex.test(phoneNo.trim())) {
+    //             newErrors.phoneNo = 'Please enter a valid 10-digit phone number';
+    //         } else {
+    //             formData.append('phoneNo', phoneNo);
+    //         }
+    //     }
+
+    //     if (email && email !== userData.email) {
+    //         if (!emailRegex.test(email.trim())) {
+    //             newErrors.email = 'Please enter a valid email address';
+    //         } else {
+    //             formData.append('email', email);
+    //         }
+    //     }
+
+    //     if (company && company !== userData.company_name) {
+    //         formData.append('company', company);
+    //     }
+
+    //     if (fileInputRef.current && fileInputRef.current.files[0]) {
+    //         formData.append('file', fileInputRef.current.files[0]);
+    //     }
+
+    //     if (Object.keys(newErrors).length > 0) {
+    //         setLoading(false);
+    //         setErrors(newErrors);
+    //         toast.error('Please fix the validation errors');
+    //         return;
+    //     }
+
+    //     if (!formData.has('firstname') && !formData.has('lastname') && !formData.has('phoneNo') &&
+    //         !formData.has('company') && !formData.has('file') && !formData.has('email')) {
+    //         toast.error("No changes to update.");
+    //         setLoading(false);
+    //         return;
+    //     }
+
+    //     try {
+    //         const response = await axiosInstance.post('/quantum-share/user/account-overview', formData, {
+    //             headers: {
+    //                 'Authorization': `Bearer ${token}`,
+    //                 'Content-Type': 'multipart/form-data',
+    //             },
+    //         });
+
+    //         toast.success(response.data.message);
+    //         handleClose();
+    //         if (email && email !== userData.email) {
+    //             navigate('/verify/update');
+    //         }
+    //     } catch (error) {
+    //         toast.error('Error updating profile: ' + error.message);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+
     const handleSaveChanges = async () => {
         setLoading(true);
         const formData = new FormData();
@@ -377,7 +454,7 @@ const AccountOverview = () => {
         const nameRegex = /^[A-Za-z\s]+$/;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const phoneRegex = /^\d{10}$/;
-
+    
         if (firstname && firstname !== userData.name.split(' ')[0]) {
             if (!nameRegex.test(firstname.trim())) {
                 newErrors.firstname = 'First name should contain only alphabets';
@@ -385,7 +462,7 @@ const AccountOverview = () => {
                 formData.append('firstname', firstname);
             }
         }
-
+    
         if (lastname && lastname !== userData.name.split(' ')[1]) {
             if (!nameRegex.test(lastname.trim())) {
                 newErrors.lastname = 'Last name should contain only alphabets';
@@ -393,7 +470,7 @@ const AccountOverview = () => {
                 formData.append('lastname', lastname);
             }
         }
-
+    
         if (phoneNo && phoneNo !== userData.mobile) {
             if (!phoneRegex.test(phoneNo.trim())) {
                 newErrors.phoneNo = 'Please enter a valid 10-digit phone number';
@@ -401,7 +478,7 @@ const AccountOverview = () => {
                 formData.append('phoneNo', phoneNo);
             }
         }
-
+    
         if (email && email !== userData.email) {
             if (!emailRegex.test(email.trim())) {
                 newErrors.email = 'Please enter a valid email address';
@@ -409,29 +486,28 @@ const AccountOverview = () => {
                 formData.append('email', email);
             }
         }
-
+    
         if (company && company !== userData.company_name) {
             formData.append('company', company);
         }
-
+    
         if (fileInputRef.current && fileInputRef.current.files[0]) {
             formData.append('file', fileInputRef.current.files[0]);
         }
-
+    
         if (Object.keys(newErrors).length > 0) {
             setLoading(false);
             setErrors(newErrors);
             toast.error('Please fix the validation errors');
             return;
         }
-
+    
         if (!formData.has('firstname') && !formData.has('lastname') && !formData.has('phoneNo') &&
             !formData.has('company') && !formData.has('file') && !formData.has('email')) {
             toast.error("No changes to update.");
             setLoading(false);
             return;
         }
-
         try {
             const response = await axiosInstance.post('/quantum-share/user/account-overview', formData, {
                 headers: {
@@ -439,19 +515,23 @@ const AccountOverview = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-
+    
             toast.success(response.data.message);
             handleClose();
             if (email && email !== userData.email) {
                 navigate('/verify/update');
             }
         } catch (error) {
-            toast.error('Error updating profile: ' + error.message);
+            if (error.response && error.response.status === 406) {
+                toast.error("Account already exists with this email address");
+            } else {
+                toast.error('Error updating profile: ' + error.message);
+            }
         } finally {
             setLoading(false);
         }
     };
-
+    
     return (
         <>
             <div>
