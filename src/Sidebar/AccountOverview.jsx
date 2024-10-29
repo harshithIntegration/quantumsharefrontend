@@ -126,25 +126,24 @@ const AccountOverview = () => {
         if (tempData.company && tempData.company !== userData.company_name) {
             formData.append('company', tempData.company);
         }
-
+    
         if (fileInputRef.current && fileInputRef.current.files[0]) {
             formData.append('file', fileInputRef.current.files[0]);
         }
-
+    
         if (Object.keys(newErrors).length > 0) {
             setLoading(false);
             setErrors(newErrors);
             toast.error('Please fix the validation errors');
             return;
         }
-
+    
         if (!formData.has('firstname') && !formData.has('lastname') && !formData.has('phoneNo') &&
             !formData.has('company') && !formData.has('file') && !formData.has('email')) {
             toast.error("No changes to update.");
             setLoading(false);
             return;
         }
-
         try {
             const response = await axiosInstance.post('/quantum-share/user/account-overview', formData, {
                 headers: {
@@ -152,7 +151,7 @@ const AccountOverview = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-
+    
             toast.success(response.data.message);
             handleClose();
 
@@ -177,7 +176,7 @@ const AccountOverview = () => {
             setLoading(false);
         }
     };
-
+    
     return (
         <>
             <div>
