@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-/* global FB */
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axiosInstance from '../Helper/AxiosInstance';
@@ -17,6 +16,7 @@ const LinkedInCallback = () => {
     const [pages, setPages] = useState([]);
     const [linkedInUserName, setLinkedInUserName] = useState('');
     const [linkedInProfilePic, setLinkedInProfilePic] = useState('');
+    const [linkedInProfile, setLinkedInProfile] = useState('');
     const [linkedInFollowersCount, setLinkedInFollowersCount] = useState('');
     const [activeSelection, setActiveSelection] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -52,6 +52,10 @@ const LinkedInCallback = () => {
                 if (linkedInProfile) {
                     setLinkedInUserName(linkedInProfile.name);
                     setLinkedInProfilePic(linkedInProfile.profile_image);
+                    setLinkedInProfile({
+                        urn: linkedInProfile.urn,
+                        accessToken: linkedInProfile.accessToken,
+                    });
                 }
                 if (linkedInPages && Array.isArray(linkedInPages)) {
                     setPages(linkedInPages);
@@ -109,10 +113,10 @@ const LinkedInCallback = () => {
         setIsSubmitting(true);
         if (activeSelection === 'profile') {
             handleSelection('profile', {
-                urn: "",
+                urn: linkedInProfile.urn,
                 name: linkedInUserName,
                 profile_image: linkedInProfilePic,
-                accessToken: "",
+                accessToken: linkedInProfile.accessToken,
             }).finally(() => setIsSubmitting(false));
         } else {
             const selectedPage = pages.find(page => page.urn === activeSelection);
@@ -121,7 +125,7 @@ const LinkedInCallback = () => {
                 name: selectedPage.name,
                 profile_image: selectedPage.profile_image,
                 accessToken: selectedPage.accessToken
-            }).finally(() => setIsSubmitting(false)); 
+            }).finally(() => setIsSubmitting(false));
         }
     };
 

@@ -87,7 +87,7 @@ const Post = ({ onClose }) => {
 
     const [warningMessages, setWarningMessages] = useState([]);
     const maxTitleCharacters = 100;
-const maxCaptionCharacters=500;
+    const maxCaptionCharacters = 500;
     const validatePlatforms = () => {
         let newWarningMessages = [];
         let shouldDisableShare = false;
@@ -170,6 +170,7 @@ const maxCaptionCharacters=500;
         setMediaPlatform([]);
         onClose();
     };
+
     const handleConfirmCloseOpen = () => {
         if (changesMade) {
             setCaption('');
@@ -223,7 +224,6 @@ const maxCaptionCharacters=500;
             setShareButtonDisabled(false);
             console.log('File selected:', processedFile);
         }
-
     };
 
     const handleClickOutside = (event) => {
@@ -596,13 +596,15 @@ const maxCaptionCharacters=500;
 
     const handleTitleChange = (e) => {
         const newTitle = e.target.value;
-        if (newTitle.length <= maxTitleCharacters) {setTitle(newTitle);handleChangesMade(); }};
+        if (newTitle.length <= maxTitleCharacters) { setTitle(newTitle); handleChangesMade(); }
+    };
 
     const handleSubReddit = (e) => { setSr(e.target.value); handleChangesMade(); }
-    
+
     const handleCaptionChange = (e) => {
         const newCaption = e.target.value;
-        if(newCaption.length <= maxCaptionCharacters){setCaption(newCaption);dispatch(updateCaption(e.target.value));setChangesMade(true);}}
+        if (newCaption.length <= maxCaptionCharacters) { setCaption(newCaption); dispatch(updateCaption(e.target.value)); setChangesMade(true); }
+    }
 
     const addEmoji = (e) => {
         if (e.unified.startsWith('1F1E6')) {
@@ -706,7 +708,7 @@ const maxCaptionCharacters=500;
                 <DialogContent>
                     <Grid container spacing={1}>
                         <Grid item lg={7} md={7} xs={12} >
-                       
+
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <h4 id="newPost">New Post</h4>
                                 <Media onMediaPlatform={handleSelectIconAndSendToParent} initialMediaPlatform={mediaPlatform} postSubmitted={postSubmitted} />
@@ -718,9 +720,9 @@ const maxCaptionCharacters=500;
                                             <label style={{ fontSize: '12px', fontWeight: 'bold' }}>
                                                 Title <span style={{ color: 'red' }}>*</span>
                                             </label>
-                                            <input required className="area" placeholder="Title ... [Only for YouTube and Reddit]" value={title} name="title" onChange={handleTitleChange} style={{ height: '40px', width: '100%', border: '1px solid #ccc', borderRadius: '5px', resize: 'none', outline: 'none', fontSize: '12px', padding: '12px', paddingRight: '50px', boxSizing: 'border-box'}}/>
-                                            <span style={{ position: 'relative',top:'5px', fontSize: '10px',color: title.length === maxTitleCharacters ? 'red' : '#666'}}>{title.length}/{maxTitleCharacters}</span>
-                                           </div>)}            
+                                            <input required className="area" placeholder="Title ... [Only for YouTube and Reddit]" value={title} name="title" onChange={handleTitleChange} style={{ height: '40px', width: '100%', border: '1px solid #ccc', borderRadius: '5px', resize: 'none', outline: 'none', fontSize: '12px', padding: '12px', paddingRight: '50px', boxSizing: 'border-box' }} />
+                                            <span style={{ position: 'relative', top: '5px', fontSize: '10px', color: title.length === maxTitleCharacters ? 'red' : '#666' }}>{title.length}/{maxTitleCharacters}</span>
+                                        </div>)}
                                     {mediaPlatform.includes('Reddit') && (
                                         <div style={{ display: 'flex', flexDirection: 'column', width: '48.5%' }}>
                                             <label style={{ fontSize: '12px', fontWeight: 'bold' }}>SubReddit <span style={{ color: 'red' }}>*</span></label>
@@ -731,7 +733,7 @@ const maxCaptionCharacters=500;
                                 <div>
                                     <textarea className="area" rows={12} placeholder="Add your Caption/Description here..." value={caption} name="caption" onChange={handleCaptionChange}
                                         style={{ width: '98%', border: '1px solid #ccc', borderRadius: '5px', resize: 'none', outline: 'none' }} id="textHere" />
-                                    <span style={{ position: 'relative', fontSize: '10px',color: caption.length === maxCaptionCharacters ? 'red' : '#666'}}>{caption.length}/{maxCaptionCharacters}</span>
+                                    <span style={{ position: 'relative', fontSize: '10px', color: caption.length === maxCaptionCharacters ? 'red' : '#666' }}>{caption.length}/{maxCaptionCharacters}</span>
 
                                 </div>
                                 <div>
@@ -930,7 +932,7 @@ const maxCaptionCharacters=500;
                                                 sx={{ mt: 1 }}/></LocalizationProvider></div>)} */}
 
                             </div>
-                        
+
                         </Grid>
                         <Grid item lg={5} md={5} xs={12} sx={{ border: 1, borderStyle: 'ridge', display: 'flex', flexDirection: 'column', background: '#f5f5f5' }}>
                             <div className="preview" style={{ padding: '8px' }}>
