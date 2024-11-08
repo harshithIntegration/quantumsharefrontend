@@ -23,6 +23,8 @@ const LinkedInCallback = () => {
     const [isPageConnecting, setIsPageConnecting] = useState(false);
     const [isSubmitVisible, setIsSubmitVisible] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [selectedUrn, setSelectedUrn] = useState('');
+    const [selectedAccessToken, setSelectedAccessToken] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -102,6 +104,8 @@ const LinkedInCallback = () => {
     const handleProfileClick = () => {
         setActiveSelection('profile');
         setIsSubmitVisible(true);
+        setSelectedUrn(selectedUrn); // Update with actual LinkedIn profile urn
+        setSelectedAccessToken(selectedAccessToken);
     };
 
     const handlePageSelect = (page) => {
