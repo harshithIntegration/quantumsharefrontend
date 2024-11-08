@@ -20,4 +20,5 @@ createRoot(document.getElementById("root")).render(
                 <App />
             </GoogleOAuthProvider>
         </Provider>
-    </ImageProvider>);
+    </ImageProvider>
+);

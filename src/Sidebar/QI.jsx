@@ -57,8 +57,42 @@ const QI = ({ onAiClose }) => {
         }
     }
 
-    const handleSubmit = () => {
-        setAiOpen(true)
+    // const handleSubmit = () => {
+    //     setAiOpen(true)
+    // }
+
+    const handleSubmit = async () => {
+        try {
+            setLoading(true)
+            const formData = new FormData();
+            formData.append('textPromt', input);
+
+            const endpoint = "/quantum-share/generate-image";
+            const response = await axiosInstance.post(endpoint, formData, {
+                responseType: 'arraybuffer',
+                headers: {
+                    'Accept': 'application/json',
+                },
+            });
+            console.log(response);
+            const blob = new Blob([response.data], { type: 'image/png' });
+            console.log(blob);
+            const imageUrl = URL.createObjectURL(blob);
+            url = imageUrl;
+            console.log(url);
+            console.log(imageUrl);
+            setImageSrc(imageUrl);
+            setError('');
+        } catch (error) {
+            console.error(error);
+            if (error.response && error.response.data && error.response.data.message) {
+                setError(error.response.data.message);
+            } else {
+                setError('Error generating image');
+            }
+        } finally {
+            setLoading(false);
+        }
     }
 
     const [copied, setCopied] = useState(false);
@@ -84,6 +118,7 @@ const QI = ({ onAiClose }) => {
 
     const handleSend = () => {
         dispatch(setAiText(textResponse))
+        setImage1(imageSrc)
         onAiClose(false)
     }
 
