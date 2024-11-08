@@ -187,7 +187,7 @@ const About = () => {
                                         }}
                                         onClick={handleOpenDemo}
                                     >
-                                        Demo Video
+                                        App Demo Video
                                     </Typography>
                                     <Dialog
                                         open={openDemo}

@@ -189,7 +189,7 @@ const SignUp = () => {
         setIsMuted(prev => !prev);
     };
 
-    const [userDetails, setUserDetails] = useState({ email: '', firstName: '', lastName: '' });
+    const [userDetails, setUserDetails] = useState({ email: '', firstName: '', lastName: '', profilePic: '' });
 
     const checkEmailExistence = async (email) => {
         try {
@@ -240,6 +240,7 @@ const SignUp = () => {
                 email: decoded.email,
                 firstName: decoded.given_name,
                 lastName: decoded.family_name,
+                profilePic: decoded.picture,
             });
             setOpen(true);
         } catch (error) {
@@ -269,6 +270,7 @@ const SignUp = () => {
                 email: userDetails.email,
                 firstName: userDetails.firstName,
                 lastName: userDetails.lastName,
+                profilePic: userDetails.profilePic,
                 password: password,
             };
             console.log('FormData', formData)

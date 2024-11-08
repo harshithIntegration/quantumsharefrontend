@@ -137,7 +137,7 @@ const Login = () => {
         )
     }
 
-    const [userDetails, setUserDetails] = useState({ email: '', firstName: '', lastName: '' });
+    const [userDetails, setUserDetails] = useState({ email: '', firstName: '', lastName: '', profilePic: '' });
 
     const checkEmailExistence = async (email) => {
         try {
@@ -188,6 +188,7 @@ const Login = () => {
                 email: decoded.email,
                 firstName: decoded.given_name,
                 lastName: decoded.family_name,
+                profilePic: decoded.picture,
             });
             setOpen(true);
         } catch (error) {
@@ -222,6 +223,7 @@ const Login = () => {
                 email: userDetails.email,
                 firstName: userDetails.firstName,
                 lastName: userDetails.lastName,
+                profilePic: userDetails.profilePic,
                 password: password,
             };
             console.log('FormData', formData)

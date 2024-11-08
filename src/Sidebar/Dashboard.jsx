@@ -145,7 +145,7 @@ const Dashboard = () => {
                                     <Card sx={{ width: 250, height: 100, margin: 1, cursor: 'pointer' }} onClick={handleSocialClick}>
                                         <CardContent sx={{ display: 'flex', justifyContent: 'space-around' }}>
                                             <Typography sx={{ fontSize: 18, paddingTop: '20px' }} gutterBottom>
-                                                Connect social
+                                                Connect Social
                                             </Typography>
                                             <IconButton >
                                                 <TryIcon sx={{ color: 'white', bgcolor: '#ba343b', width: '50px', height: '50px', padding: '7px', borderRadius: '50%' }} />

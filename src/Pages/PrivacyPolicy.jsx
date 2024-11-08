@@ -21,7 +21,7 @@ const PrivacyPolicy = () => {
                                         <Typography variant="h4" gutterBottom sx={{ color: '#b4232a', fontSize: '2.2rem', fontWeight: '600' }}><b>Privacy Policy</b></Typography>
                                         <Typography variant="h6" gutterBottom sx={{ fontSize: '2rem', fontWeight: '600' }}>Quantum Share</Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.3rem' }}>
-                                            Last Updated July 5, 2024
+                                            Last Updated November 7, 2024
                                         </Typography>
                                         <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>What Does Quantum Share Do ?</b></Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
@@ -137,13 +137,16 @@ const PrivacyPolicy = () => {
                                             Users are explicitly informed about the use of AI models and the potential data sharing involved.
                                             Explicit consent is obtained from users before any data is shared with third-party AI models. Users must actively consent through a clear action, such as clicking a button, before data sharing occurs.
                                         </Typography>
-
                                         <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>8. Limited Use Disclosure</b></Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
                                             Quantum Share’s use and transfer of information received from Google APIs will adhere to the Google API Services User Data Policy, including the Limited Use requirements.
                                         </Typography>
-
-                                        <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>9. Contact Us</b></Typography>
+                                        <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>9. Google Privacy Policy</b></Typography>
+                                        <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
+                                            We utilize the Google API for YouTube integration to enhance our service offerings. This integration allows users to access and share YouTube content seamlessly within the Quantum Share platform.<br />
+                                            <b>For more information, you can also review Google's Privacy Policy :</b> <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google Privacy Policy</a>
+                                        </Typography>
+                                        <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>10. Contact Us</b></Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
                                             If you have questions or comments about this Privacy Policy, please contact us at :
                                         </Typography>

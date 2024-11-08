@@ -439,6 +439,7 @@ const Post = ({ onClose }) => {
     const [scheduleDateTime, setScheduleDateTime] = useState(null);
     const [caption, setCaption] = useState('');
     const [title, setTitle] = useState('');
+    const [visibility, setVisibility] = useState("public");
     const [anchorEl, setAnchorEl] = useState(null);
     const [anchorEl1, setAnchorEl1] = useState(null);
     const [inputValue, setInputValue] = useState('');
@@ -465,6 +466,8 @@ const Post = ({ onClose }) => {
     const [AIopen, setAIopen] = useState(false)
     const dispatch = useDispatch()
     const AiText = useSelector((state) => state.Aitext.AiText)
+
+    console.log(image1);
 
     const handleSelectIconAndSendToParent = (selectedIcons, mediaPlatform) => {
         setSelectedIcons(selectedIcons);
@@ -634,7 +637,6 @@ const maxCaptionCharacters=500;
             setShareButtonDisabled(false);
             console.log('File selected:', processedFile);
         }
-
     };
 
     const handleClickOutside = (event) => {
@@ -701,6 +703,19 @@ const maxCaptionCharacters=500;
         };
     }, [showBox]);
 
+    useEffect(() => {
+        if (image1) {
+            setFileType('image');
+            fetch(image1)
+                .then(res => res.blob())
+                .then(blob => {
+                    const fileFromBlob = new File([blob], 'image1.png', { type: blob.type });
+                    setFile(fileFromBlob);
+                    setShareButtonDisabled(false);
+                });
+        }
+    }, [image1]);
+
     const handleChangesMade = () => {
         setChangesMade(true);
     };
@@ -739,16 +754,21 @@ const maxCaptionCharacters=500;
         }
     };
 
-    const createFormData = (file, caption, title, platform, sr) => {
+    const createFormData = (file, caption, title, visibility, platform, sr) => {
         const formData = new FormData();
         if (file) {
             formData.append('mediaFile', file);
         }
         formData.append('caption', caption);
         formData.append('title', title);
+        formData.append('visibility', visibility);
         formData.append('mediaPlatform', platform);
         formData.append('sr', sr);
         return formData;
+    };
+
+    const handleVisibilityChange = (event) => {
+        setVisibility(event.target.value);
     };
 
     const handleSubmit = async () => {
@@ -765,7 +785,7 @@ const maxCaptionCharacters=500;
             );
             const responses = await Promise.all(platforms.map(async platform => {
                 const endpoint = getEndpointForPlatform(platform);
-                const formData = createFormData(file, caption, title, platform, image1, sr);
+                const formData = createFormData(file, caption, title, visibility, platform, image1, sr);
                 try {
                     const response = await axiosInstance.post(endpoint, formData, {
                         headers: {
@@ -974,6 +994,7 @@ const maxCaptionCharacters=500;
         setScheduleDateTime(null);
         setTitle('');
         setCaption('');
+        setVisibility("public");
         setCommentValue('');
         setChangesMade(false);
         setSelectedIcons([]);
@@ -1007,13 +1028,15 @@ const maxCaptionCharacters=500;
 
     const handleTitleChange = (e) => {
         const newTitle = e.target.value;
-        if (newTitle.length <= maxTitleCharacters) {setTitle(newTitle);handleChangesMade(); }};
+        if (newTitle.length <= maxTitleCharacters) { setTitle(newTitle); handleChangesMade(); }
+    };
 
     const handleSubReddit = (e) => { setSr(e.target.value); handleChangesMade(); }
-    
+
     const handleCaptionChange = (e) => {
         const newCaption = e.target.value;
-        if(newCaption.length <= maxCaptionCharacters){setCaption(newCaption);dispatch(updateCaption(e.target.value));setChangesMade(true);}}
+        if (newCaption.length <= maxCaptionCharacters) { setCaption(newCaption); dispatch(updateCaption(e.target.value)); setChangesMade(true); }
+    }
 
     const addEmoji = (e) => {
         if (e.unified.startsWith('1F1E6')) {
@@ -1117,7 +1140,7 @@ const maxCaptionCharacters=500;
                 <DialogContent>
                     <Grid container spacing={1}>
                         <Grid item lg={7} md={7} xs={12} >
-                       
+
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <h4 id="newPost">New Post</h4>
                                 <Media onMediaPlatform={handleSelectIconAndSendToParent} initialMediaPlatform={mediaPlatform} postSubmitted={postSubmitted} />
@@ -1129,26 +1152,25 @@ const maxCaptionCharacters=500;
                                             <label style={{ fontSize: '12px', fontWeight: 'bold' }}>
                                                 Title <span style={{ color: 'red' }}>*</span>
                                             </label>
-                                            <input required className="area" placeholder="Title ... [Only for YouTube and Reddit]" value={title} name="title" onChange={handleTitleChange} style={{ height: '40px', width: '100%', border: '1px solid #ccc', borderRadius: '5px', resize: 'none', outline: 'none', fontSize: '12px', padding: '12px', paddingRight: '50px', boxSizing: 'border-box'}}/>
-                                            <span style={{ position: 'relative',top:'5px', fontSize: '10px',color: title.length === maxTitleCharacters ? 'red' : '#666'}}>{title.length}/{maxTitleCharacters}</span>
-                                           </div>)}            
+                                            <input required className="area" placeholder="Title ... [Only for YouTube and Reddit]" value={title} name="title" onChange={handleTitleChange} style={{ height: '40px', width: '100%', border: '1px solid #ccc', borderRadius: '5px', resize: 'none', outline: 'none', fontSize: '12px', padding: '12px', paddingRight: '50px', boxSizing: 'border-box' }} />
+                                            <span style={{ position: 'relative', top: '5px', fontSize: '10px', color: title.length === maxTitleCharacters ? 'red' : '#666' }}>{title.length}/{maxTitleCharacters}</span>
+                                        </div>)}
                                     {mediaPlatform.includes('Reddit') && (
                                         <div style={{ display: 'flex', flexDirection: 'column', width: '48.5%' }}>
                                             <label style={{ fontSize: '12px', fontWeight: 'bold' }}>SubReddit <span style={{ color: 'red' }}>*</span></label>
                                             <input required className="area" placeholder="SubReddit ... [Reddit]" value={sr} name="subreddit" onChange={handleSubReddit} style={{
                                                 height: '40px', border: '1px solid #ccc', borderRadius: '5px', resize: 'none', outline: 'none', fontSize: '12px', padding: '12px'
-                                            }} /></div>)}
+                                            }} />
+                                        </div>)}
                                 </div>
                                 <div>
                                     <textarea className="area" rows={12} placeholder="Add your Caption/Description here..." value={caption} name="caption" onChange={handleCaptionChange}
                                         style={{ width: '98%', border: '1px solid #ccc', borderRadius: '5px', resize: 'none', outline: 'none' }} id="textHere" />
-                                    <span style={{ position: 'relative', fontSize: '10px',color: caption.length === maxCaptionCharacters ? 'red' : '#666'}}>{caption.length}/{maxCaptionCharacters}</span>
-
+                                    <span style={{ position: 'relative', fontSize: '10px', color: caption.length === maxCaptionCharacters ? 'red' : '#666' }}>{caption.length}/{maxCaptionCharacters}</span>
                                 </div>
                                 <div>
                                     <Stack direction="row" alignItems="center" spacing={1} sx={{ flexWrap: 'wrap', position: 'relative' }}>
                                         <div style={{ position: 'relative', display: 'inline-block' }}>
-
                                             <Tooltip title="Take Photo" placement="top">
                                                 <IconButton onClick={handleCameraClick}>
                                                     <PhotoCameraIcon />
@@ -1159,8 +1181,6 @@ const maxCaptionCharacters=500;
                                                     <InsertPhotoIcon />
                                                 </IconButton>
                                             </Tooltip>
-
-
                                             <input
                                                 id="fileInput"
                                                 type="file"
@@ -1316,32 +1336,24 @@ const maxCaptionCharacters=500;
                                             </IconButton>
                                         </Tooltip>
                                         {AIopen && <QI onAiClose={handleAIClose} />}
+                                        {mediaPlatform.includes('youtube') && (
+                                            <FormControl sx={{ width: 242, maxWidth: '100%', marginTop: 2 }}>
+                                                <InputLabel sx={{ mt: -0.5 }}>Who can see this?</InputLabel>
+                                                <Select
+                                                    value={visibility}
+                                                    onChange={handleVisibilityChange}
+                                                    label="Who can see this?"
+                                                    sx={{ height: '45px' }}
+                                                >
+                                                    <MenuItem value="public">Public</MenuItem>
+                                                    <MenuItem value="private">Private</MenuItem>
+                                                    <MenuItem value="unlisted">Unlisted</MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                        )}
                                     </Stack>
-                                    {/* <FormControl className="option" sx={{ mt: 3, width: 300, maxWidth: '100%' }}>
-                                        <InputLabel id="demo-select-small-label">Select an Option</InputLabel>
-                                        <Select
-                                            labelId="demo-select-small-label"
-                                            id="demo-select-small"
-                                            value={selectedOption}
-                                            onChange={handle}
-                                            label="Select an Option"
-                                            sx={{ fontSize: '16px', mb: 1 }}
-                                        >
-                                            <MenuItem value={10}>Post Now</MenuItem>
-                                            <MenuItem disabled value={20}>Schedule Specific Date and Time</MenuItem>
-                                        </Select>
-                                    </FormControl> */}
                                 </div>
-                                {/* {selectedOption === 20 && (
-                                    <div className="datetime-picker" style={{ width: 300, maxWidth: '100%', marginBottom: '10px' }}>
-                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                            <DateTimePicker
-                                                value={scheduleDateTime}
-                                                onChange={(newValue) => setScheduleDateTime(newValue)}
-                                                sx={{ mt: 1 }}/></LocalizationProvider></div>)} */}
-
                             </div>
-                        
                         </Grid>
                         <Grid item lg={5} md={5} xs={12} sx={{ border: 1, borderStyle: 'ridge', display: 'flex', flexDirection: 'column', background: '#f5f5f5' }}>
                             <div className="preview" style={{ padding: '8px' }}>
