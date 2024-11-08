@@ -23,6 +23,8 @@ const LinkedInCallback = () => {
     const [isPageConnecting, setIsPageConnecting] = useState(false);
     const [isSubmitVisible, setIsSubmitVisible] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [selectedUrn, setSelectedUrn] = useState('');
+    const [selectedAccessToken, setSelectedAccessToken] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -52,6 +54,8 @@ const LinkedInCallback = () => {
                 if (linkedInProfile) {
                     setLinkedInUserName(linkedInProfile.name);
                     setLinkedInProfilePic(linkedInProfile.profile_image);
+                    setSelectedUrn(linkedInProfile.urn);
+                    setSelectedAccessToken(linkedInProfile.accessToken);
                 }
                 if (linkedInPages && Array.isArray(linkedInPages)) {
                     setPages(linkedInPages);
@@ -98,6 +102,8 @@ const LinkedInCallback = () => {
     const handleProfileClick = () => {
         setActiveSelection('profile');
         setIsSubmitVisible(true);
+        setSelectedUrn(selectedUrn); // Update with actual LinkedIn profile urn
+        setSelectedAccessToken(selectedAccessToken);
     };
 
     const handlePageSelect = (page) => {
@@ -109,10 +115,10 @@ const LinkedInCallback = () => {
         setIsSubmitting(true);
         if (activeSelection === 'profile') {
             handleSelection('profile', {
-                urn: "",
+                urn:selectedUrn,
                 name: linkedInUserName,
                 profile_image: linkedInProfilePic,
-                accessToken: "",
+                accessToken: selectedAccessToken,
             }).finally(() => setIsSubmitting(false));
         } else {
             const selectedPage = pages.find(page => page.urn === activeSelection);
