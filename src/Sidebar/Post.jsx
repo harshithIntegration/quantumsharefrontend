@@ -16,6 +16,8 @@
 // import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 // import { useDispatch } from "react-redux";
 // import { clearAiText, updateCaption } from "../Redux/action/AiTextSlice";
+// import heic2any from "heic2any";
+
 // const Post = ({ onClose }) => {
 //     const navigate = useNavigate()
 //     const location = useLocation();
@@ -75,13 +77,38 @@
 //         } else { setCaption(''); dispatch(clearAiText()); closeDialog();}};
 //     const handleGalleryClick = () => {
 //         document.getElementById('fileInput').click();};
+//     // const handleFileChange = async (e) => {
+//     //     const file = e.target.files[0];
+//     //     if (file) {
+//     //         const isImage = file.type.startsWith('image/');
+//     //         const isVideo = file.type.startsWith('video/');
+//     //         const imageSizeLimit = 4.5 * 1024 * 1024;
+//     //         const videoSizeLimit = 40 * 1024 * 1024;
+//     //         if (isImage && file.size > imageSizeLimit) {
+//     //             toast.error("Image size is too large! Maximum allowed is 4.5MB.");
+//     //             return;
+//     //         }
+//     //         if (isVideo && file.size > videoSizeLimit) {
+//     //             toast.error("Video size is too large! Maximum allowed is 40MB.");
+//     //             return;
+//     //         }
+            
+//     //         setFile(file);
+//     //         setFileType(isImage ? 'image' : 'video');
+//     //         setShareButtonDisabled(false);
+//     //         console.log('File selected:', file);}};
+
+//     const [filePreviewUrl, setFilePreviewUrl] = useState(null);
 //     const handleFileChange = async (e) => {
 //         const file = e.target.files[0];
 //         if (file) {
-//             const isImage = file.type.startsWith('image/');
-//             const isVideo = file.type.startsWith('video/');
+//             const isImage = file.type.startsWith("image/");
+//             const isVideo = file.type.startsWith("video/");
+//             const isHEIC = file.type === "image/heic" || file.type === "image/heif";
 //             const imageSizeLimit = 4.5 * 1024 * 1024;
 //             const videoSizeLimit = 40 * 1024 * 1024;
+    
+//             // Size check
 //             if (isImage && file.size > imageSizeLimit) {
 //                 toast.error("Image size is too large! Maximum allowed is 4.5MB.");
 //                 return;
@@ -90,17 +117,26 @@
 //                 toast.error("Video size is too large! Maximum allowed is 40MB.");
 //                 return;
 //             }
-//             let processedFile = file;
-//             if (isImage && file.type !== 'image/jpeg') {
-//                 // toast("Converting image to JPG...");
-//                 processedFile = await convertImageToJPG(file);}
-//             if (isVideo && file.type !== 'video/mp4') {
-//                 toast.error("Only MP4 videos are supported. Please upload an MP4 file.");
-//                 return;}
-//             setFile(processedFile);
-//             setFileType(isImage ? 'image' : 'video');
+    
+//             // Convert HEIC to a previewable format
+//             if (isHEIC) {
+//                 try {
+//                     const convertedBlob = await heic2any({ blob: file, toType: "image/jpeg" });
+//                     setFilePreviewUrl(URL.createObjectURL(convertedBlob));
+//                 } catch (error) {
+//                     toast.error("Could not preview HEIC image.");
+//                     return;
+//                 }
+//             } else {
+//                 // Use the file directly for preview if not HEIC
+//                 setFilePreviewUrl(URL.createObjectURL(file));
+//             }
+    
+//             setFileType(isImage ? "image" : "video");
 //             setShareButtonDisabled(false);
-//             console.log('File selected:', processedFile);}};
+//             console.log("File selected:", file);
+//         }
+//     };
 //     const handleClickOutside = (event) => {
 //         if (boxRef.current && !boxRef.current.contains(event.target)) {
 //             setShowBox(false);
@@ -355,14 +391,22 @@
 //                                 <h4 id="newPost">Media Preview</h4>
 //                             </div>
 //                             <div style={{ background: '#fff', width: '95%', maxWidth: '100%', height: '100%', borderRadius: '10px' }}>
-//                                 <div className="main-preview" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '10px', background: '#fff' }}>
-//                                     <div className="file-preview-container" style={{ height: 'auto', width: '350px', padding: '1px', maxWidth: '100%', textAlign: 'center' }}>
-//                                         {fileType === 'image' && file && (<img src={URL.createObjectURL(file)} alt="File Preview" className="file-preview" style={{ maxHeight: '100%', maxWidth: '100%' }} />)}
-//                                         {imageUrl && (<img src={imageUrl} alt="Captured Preview" className="file-preview" style={{ maxHeight: '100%', maxWidth: '100%' }} />)}
-//                                         {fileType === 'video' && file && (<video controls className="file-preview" style={{ maxHeight: '100%', maxWidth: '100%' }}><source src={URL.createObjectURL(file)} type="video/mp4" />Your browser does not support the video tag.</video>)}
-//                                         {!file && !imageUrl && (<p id="imgPreview" style={{ marginTop: '100px', color: '#808080' }}>Image / Video Preview</p>)}
-//                                     </div>
-//                                 </div>
+//                             <div className="main-preview" style={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: "10px", background: "#fff" }}>
+//             <div className="file-preview-container" style={{ height: "auto", width: "350px", padding: "1px", maxWidth: "100%", textAlign: "center" }}>
+//                 {fileType === "image" && filePreviewUrl && (
+//                     <img src={filePreviewUrl} alt="File Preview" className="file-preview" style={{ maxHeight: "100%", maxWidth: "100%" }} />
+//                 )}
+//                 {fileType === "video" && filePreviewUrl && (
+//                     <video controls className="file-preview" style={{ maxHeight: "100%", maxWidth: "100%" }}>
+//                         <source src={filePreviewUrl} type="video/mp4" />
+//                         Your browser does not support the video tag.
+//                     </video>
+//                 )}
+//                 {!filePreviewUrl && (
+//                     <p id="imgPreview" style={{ marginTop: "100px", color: "#808080" }}>Image / Video Preview</p>
+//                 )}
+//             </div>
+//         </div>
 //                                 <div className="text-preview" style={{ wordBreak: 'break-all', padding: '10px' }}>
 //                                     {(mediaPlatform.includes('youtube') || mediaPlatform.includes('Reddit')) && title.split('\n').map((line, index) => (<div key={index}>{line}</div>))}{mediaPlatform.includes('Reddit') && sr && <div>{`${sr}`}</div>}
 //                                 </div>
