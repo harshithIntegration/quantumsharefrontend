@@ -27,6 +27,7 @@ import { jwtDecode } from 'jwt-decode';
 import { GoogleLogin } from '@react-oauth/google';
 import { TailSpin } from 'react-loader-spinner';
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const defaultTheme = createTheme({
     typography: {
@@ -59,6 +60,7 @@ const Login = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
     const [error, setError] = useState('');
+    const {t} = useTranslation('');
 
     const handleCloseSignUp = () => {
         setIsOpen(false);
@@ -277,7 +279,7 @@ const Login = () => {
                                     <LockOutlinedIcon />
                                 </Avatar>
                                 <Typography component="h1" variant="h6" sx={{ mt: 1 }}>
-                                    Login
+                                    {t('login')}
                                 </Typography>
                                 <Box component="form" noValidate onSubmit={handleSubmit} >
                                     <Grid container spacing={0} justifyContent="center">
@@ -287,10 +289,10 @@ const Login = () => {
                                             </Typography>
                                         )}
                                         <Grid item xs={10}>
-                                            <TextField margin="normal" required fullWidth id="emph" label="E-mail / Phone Number" name="emph" value={emph} onChange={handleChange} error={!!errors.emph} helperText={errors.emph} autoFocus />
+                                            <TextField margin="normal" required fullWidth id="emph" label={t('email/Pnum')} name="emph" value={emph} onChange={handleChange} error={!!errors.emph} helperText={errors.emph} autoFocus />
                                         </Grid>
                                         <Grid item xs={10}>
-                                            <TextField margin="normal" required fullWidth name="password" label="Password" type={passwordVisible ? 'text' : 'password'} id="password" value={password} onChange={handleChange} error={!!errors.password} helperText={errors.password} autoComplete="current-password"
+                                            <TextField margin="normal" required fullWidth name="password" label={t('password')} type={passwordVisible ? 'text' : 'password'} id="password" value={password} onChange={handleChange} error={!!errors.password} helperText={errors.password} autoComplete="current-password"
                                                 InputProps={{
                                                     endAdornment: (
                                                         <InputAdornment position="end">
@@ -302,7 +304,7 @@ const Login = () => {
                                         </Grid>
                                         <Grid item xs={10} sx={{ textAlign: 'right' }}>
                                             <Link to="/forgot-password" style={{ textDecoration: 'none', color: '#1976db', fontSize: 15 }}>
-                                                Forgot Password ?
+                                                {t('forgotPassword')}
                                             </Link>
                                         </Grid>
                                         <Grid item xs={10}>
@@ -310,12 +312,12 @@ const Login = () => {
                                                 sx={{
                                                     mb: 1, height: '50px', marginTop: '20px', fontSize: '18px', bgcolor: '#ba343b',
                                                     '&:hover': { bgcolor: '#9e2b31' }
-                                                }}> Log In
+                                                }}> {t('login')}
                                             </Button>
                                         </Grid>
                                         <Grid item xs={10}>
                                             <Typography sx={{ fontSize: '12px', textAlign: 'center' }}>
-                                                By signing up, you agree to the <Link to='/privacy-policy' style={{ textDecoration: 'none', color: '#1976db' }}>Privacy Policy</Link> of Quantum Share.
+                                            By signing up, you agree to the <Link to='/privacy-policy' style={{ textDecoration: 'none', color: '#1976db' }}>Privacy Policy</Link> of Quantum Share.
                                             </Typography>
                                         </Grid>
                                         <Box sx={{ width: 'fit-content', margin: '25px auto', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -333,8 +335,8 @@ const Login = () => {
                                             <div style={{ marginTop: '10px' }}>
                                                 <Link to="/signUp">
                                                     <div variant="body2" style={{ color: 'black', textDecoration: 'none', cursor: 'pointer' }}>
-                                                        Don't have an account ?{' '}
-                                                        <span style={{ color: '#1976db' }}>Sign Up</span>
+                                                    {t('noAccount')}{' '}
+                                                        <span style={{ color: '#1976db' }}>{t('signUp')}</span>
                                                     </div>
                                                 </Link>
                                             </div>
@@ -358,7 +360,7 @@ const Login = () => {
                         <img src={QS} alt="" style={{ height: 35, marginTop: '5px' }} />
                     </Typography>
                     <DialogTitle sx={{ m: 0, p: 2, color: '#ba343b', fontSize: '20px', textAlign: 'center' }}>
-                        Set your Password
+                        {t('setPassword')}
                     </DialogTitle>
                     <Box component="form" noValidate sx={{ mt: 2 }}>
                         <Grid container spacing={2} justifyContent="center">

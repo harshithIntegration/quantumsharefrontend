@@ -11,16 +11,57 @@ import Sidenav from '../Navbar/Sidenav';
 import { Link } from 'react-router-dom';
 import bg from '../Assets/bg7.webp';
 import { FaCirclePlay } from "react-icons/fa6";
+import { useTranslation } from 'react-i18next';
 
 const Features = () => {
     const token = sessionStorage.getItem('token');
     const theme = useTheme();
+    const {t} = useTranslation('');
+
+    const featureCards = [
+        {
+            title: t('unifiedDashboard'),
+            description: t('unifiedDashboardDescription')
+        },
+        {
+            title: t('crossPlatformPosting'),
+            description: t('crossPlatformPostingDescription')
+        },
+        {
+            title: t('contentSuggestions'),
+            description: t('contentSuggestionsDescription')
+         },
+        {
+            title: t('privacySecurity'),
+            description: t('privacySecurityDescription')
+        },
+        {
+            title: t('createPost'),
+            description: t('createPostDescription')
+        },
+        {
+            title: t('analyticsInsights'),
+            description: t('analyticsInsightsDescription')
+        },
+        {
+            title: t('aiContentGeneration'),
+            description: t('aiContentGenerationDescription')
+        },
+        {
+            title: t('themeSelectionInterface'),
+            description: t('themeSelectionInterfaceDescription')
+        },
+        {
+            title: t('scheduleAndPost'),
+            description: t('scheduleAndPostDescription')
+        }
+    ];
 
     return (
         <>
             <HelmetProvider>
                 <Helmet>
-                    <title>Quantum Share Features - Streamline Your Social Media Management with AI-Powered Tools</title>
+                    <title>{t('QuantumShareFeatures')}</title>
                     <meta name="description" content="Explore the powerful features of Quantum Share, designed to simplify and elevate your social media experience. Manage multiple accounts with a unified dashboard, schedule posts across platforms with AI-driven insights, and receive personalized content recommendations. Our platform ensures privacy and security, offers advanced analytics, AI content generation, and customizable themes, all in one seamless interface. Stay ahead with tools that optimize your strategy, save time, and enhance audience engagement." />
                     <link rel="canonical" href='/Features' />
                 </Helmet>
@@ -50,21 +91,21 @@ const Features = () => {
                                                     fontSize: '2.5rem',
                                                     paddingBottom: '20px'
                                                 }}>
-                                                What We Provide?
+                                                {t('whatWeProvide')}
                                             </h1>
                                             <Typography className='animate__animated animate__fadeInLeftBig'
                                                 variant="body1"
                                                 sx={{
                                                     fontSize: { xs: '1rem', md: '1.2rem' }
                                                 }}>
-                                                Our plans are packed with the right features tailored to your unique business needs.
+                                                {t('ourPlansDescription')}
                                             </Typography>
                                             <Typography className='animate__animated animate__fadeInLeftBig'
                                                 variant="body1"
                                                 sx={{
                                                     fontSize: { xs: '1rem', md: '1.2rem' }
                                                 }}>
-                                                Switch plans at any time or choose from our expanding list of platform add-ons.
+                                                {t('switchPlans')}
                                             </Typography>
                                         </div>
                                     </Grid>
@@ -72,7 +113,7 @@ const Features = () => {
                                         <div style={{ textAlign: 'center', marginTop: '20px' }}>
                                             <h1 className='animate__animated animate__bounce'
                                                 style={{ color: '#d40d17', fontSize: '2rem' }}>
-                                                All Features
+                                                {t('allFeatures')}
                                             </h1>
                                             <Box sx={{
                                                 backgroundColor: '#f0f0f0',
@@ -134,44 +175,5 @@ const Footer = () => {
         </Box>
     );
 };
-
-const featureCards = [
-    {
-        title: 'Unified Dashboard',
-        description: 'Provide users with a single dashboard to manage and monitor multiple social media accounts from different platforms.'
-    },
-    {
-        title: 'Cross-Platform Posting',
-        description: 'The ability to create and schedule posts across multiple social media networks simultaneously, optimizing posting times based on AI insights.'
-    },
-    {
-        title: 'Content Suggestions',
-        description: 'AI-driven content recommendations based on user interests, trending topics, and historical engagement data across different platforms.'
-    },
-    {
-        title: 'Privacy and Security',
-        description: 'Implement robust privacy and security measures to protect user data and ensure compliance with each social media platform\'s policies.'
-    },
-    {
-        title: 'Create a Post',
-        description: 'Use the tool to create a new post. You can write your message, add any media (e.g., images, videos), and include hashtags or mentions as needed.'
-    },
-    {
-        title: 'Analytics and Insights',
-        description: 'Provide users with analytics and insights into their social media performance across different platforms, helping them understand their audience and improve their content strategy.'
-    },
-    {
-        title: 'AI Content Generation',
-        description: 'Implement advanced AI algorithms to provide personalized content recommendations based on user behavior, preferences, and interests.'
-    },
-    {
-        title: 'Theme Selection Interface',
-        description: 'Provide users with an interface where they can select and customize themes, including options for color schemes, typography, and layout styles.'
-    },
-    {
-        title: 'Schedule And Post',
-        description: 'Plan and automate your social media posts with our Schedule and Post feature. Stay organized, manage content, and engage your audience effortlessly.'
-    }
-];
 
 export default Features;

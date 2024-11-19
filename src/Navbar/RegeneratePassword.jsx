@@ -140,7 +140,7 @@ const RegeneratePassword = () => {
                         textAlign="center"
                         sx={{ margin: '5px 0', color: 'gray', fontSize: { xs: '14px', md: '16px' }} }
                     >
-                    Update your password to ensure a more secure authentication process.
+                    
                 </Typography>
                 <Box component="form" noValidate sx={{ mt: 2 }}>
                     <Grid container spacing={2} justifyContent="center">

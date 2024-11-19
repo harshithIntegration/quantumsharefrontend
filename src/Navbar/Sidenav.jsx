@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { MdDashboardCustomize } from "react-icons/md";
+import { MdDashboardCustomize, MdOutlineFilterFrames } from "react-icons/md";
 import { MdOutlineAccountCircle } from "react-icons/md";
 import { MdOutlineJoinRight } from "react-icons/md";
 import EqualizerOutlinedIcon from '@mui/icons-material/EqualizerOutlined';
@@ -67,6 +67,11 @@ const Sidenav = ({ children }) => {
             name: "Analytics",
             icon: <EqualizerOutlinedIcon />,
             path: '/analytics'
+        },
+        {
+            name: "Templates",
+            icon: <MdOutlineFilterFrames />,
+            path: "/gallery"
         },
         {
             name: "Account Overview",
