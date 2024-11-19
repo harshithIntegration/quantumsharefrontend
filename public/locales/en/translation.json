@@ -161,7 +161,7 @@
     "unlimitedCredits": "Unlimited Credits per day",
 
 
-
+    "quantumAI1": "Unleash Your Creativity with Intelligent Content Creation",
     "achieveMore": "Achieve More with Quantum",
     "meetQuantum": "Meet Quantum, the AI powerhouse capable of generating stunning images and compelling text effortlessly. Harness the potential of advanced artificial intelligence to bring your creative visions to life. Experience seamless and innovative content creation with Quantum.",
     "aiTextCreation": "AI Text Creation",
@@ -303,6 +303,15 @@
 
 
 
+
+    "allPosts": "All Posts",
+  "findQuantumShareAccount": "Find your Quantum Share account",
+  "enterEmailToChangePassword": "Enter your email-id associated with your account to change your password.",
+  "emailSent": "Email Sent!",
+  "resetPasswordLinkSent": "A reset password link has been sent to your email.",
+
+
+
     "selectSocialMedia": "Select Social Media",
     "submit": "Submit",
     "title": "Title",
@@ -312,6 +321,30 @@
     "unsupportedVideo": "Your browser does not support the video tag.",
     "imageVideoPreview": "Image / Video Preview",
     "share": "Share",
-    "confirmPost": "Are you sure you want to Post?"
+    "confirmPost": "Are you sure you want to Post?",
+
+
+    
+  "newPost": "New Post",
+  
+  "public": "Public",
+  "private": "Private",
+  "unlisted": "Unlisted",
+  "whocs" : "Who can see this?",
+  "areYouSurePost": "Are you sure you want to Post?",
+
+
+
+  "shareWithQuantumAI": "Share with Quantum AI",
+  "usingQuantumAI": "Now you are using Quantum share's Quantum AI",
+  "generate": "Generate",
+  "imageGenerationNotFreeTrial": "Image generation is not for Free Trial",
+  "ok": "Ok",
+  "poweredBy": "Powered by",
+  "quantumParadigm": "Quantum Paradigm",
+  "addToPost": "Add to Post",
+  "preview": "Preview",
+  "enterTextHere": "Enter text here",
+  "generateImage": "Generate image"
 
 }

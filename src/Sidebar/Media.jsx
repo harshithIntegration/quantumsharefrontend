@@ -9,6 +9,7 @@ import LinkedinIcon from '../Assets/linkedinsmall.svg';
 import InstagramIcon from '../Assets/instagramsmall.svg'
 import TelegramIcon from '../Assets/telegramsmall.svg'
 import YoutubeIcon from '../Assets/youtubesmall.svg'
+import { useTranslation } from 'react-i18next';
 
 const Media = ({ onMediaPlatform, postSubmitted }) => {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -33,6 +34,7 @@ const Media = ({ onMediaPlatform, postSubmitted }) => {
     const linkname = useSelector((state) => state.profilename.linkname)
     const youname = useSelector((state) => state.profilename.youname)
     const telname = useSelector((state) => state.profilename.telname)
+    const {t} = useTranslation('');
 
     const mediaPlatforms = [
         { id: 'facebook', icon: pageUrls, name: 'facebook', isLoggedIn, profileUrl: fbpagename },
@@ -104,7 +106,7 @@ const Media = ({ onMediaPlatform, postSubmitted }) => {
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     {submittedIcons.length === 0 && (
                         <div style={{ display: 'flex', alignItems: 'center', minWidth: '120px' }}>
-                            <span style={{ fontSize: '14px', color: 'black' }}>Select Social Media</span>
+                            <span style={{ fontSize: '14px', color: 'black' }}>{t('selectSocialMedia')}</span>
                         </div>
                     )}
                     <IconButton>
@@ -208,10 +210,10 @@ const Media = ({ onMediaPlatform, postSubmitted }) => {
                         </Tooltip>
                     </Typography>
                     <Button variant="outlined" color="error" sx={{ marginTop: 'auto', padding: '5px 5px', transform: 'translate(20px,-10px)' }} onClick={handleCancel} >
-                        Cancel
+                        {t('cancel')}
                     </Button>
                     <Button variant="contained" sx={{ marginTop: 'auto', padding: '5px 10px', transform: 'translate(100px,-10px)' }} onClick={handleSubmit}  >
-                        Submit
+                        {t('submit')}
                     </Button>
                 </Popover>
             </Tooltip>
