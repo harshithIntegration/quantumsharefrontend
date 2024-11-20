@@ -337,7 +337,66 @@
   "addToPost": "पोस्ट में जोड़ें",
   "preview": "पूर्वावलोकन",
   "enterTextHere": "यहाँ पाठ दर्ज करें",
-  "generateImage": "चित्र उत्पन्न करें"
+  "generateImage": "चित्र उत्पन्न करें",
+
+
+  "resetPassword": "अपना पासवर्ड रीसेट करें",
+  "resetPasswordDescription": "Quantum Share एप्लिकेशन के लिए अपना पासवर्ड रीसेट करने के लिए नया पासवर्ड दर्ज करें और उसकी पुष्टि करें।",
+
+    "successfullyUpdated": "आपका पासवर्ड सफलतापूर्वक अपडेट कर दिया गया है। अब आप प्लेटफ़ॉर्म का उपयोग करने के लिए लॉग इन कर सकते हैं।",
+    "regeneratePassword": "अपना पासवर्ड पुनः उत्पन्न करें",
+
+    "dashboard": "डैशबोर्ड",
+    "socialIntegration": "सोशल इंटीग्रेशन",
+    "publish": "प्रकाशित करें",
+    "quantumAI": "क्वांटम एआई",
+    "analytics": "एनालिटिक्स",
+    "templates": "टेम्पलेट्स",
+    "accountOverview": "खाता अवलोकन",
+
+    "emailAddress1": "ईमेल पता",
+  "companyNameOptional": "कंपनी का नाम (वैकल्पिक)",
+
+
+  "connectToSocialMedia": "कृपया सोशल मीडिया से जुड़ें",
+  "connectSocialNetwork": "एक सोशल नेटवर्क से कनेक्ट करें",
+  "upcomingMediaPlatforms": "आगामी मीडिया प्लेटफ़ॉर्म",
+
+  "connect": "कनेक्ट करें",
+  "disconnect": "डिस्कनेक्ट करें",
+  "confirmDisconnect": "क्या आप वाकई डिस्कनेक्ट करना चाहते हैं",
+  "facebookProfile": "फेसबुक प्रोफ़ाइल?",
+
+
+  "linkInstagramProfile": "इंस्टाग्राम प्रोफ़ाइल लिंक करें",
+  "ensureAccountConverted": "सुनिश्चित करें कि आपका खाता परिवर्तित हो",
+  "instagramBusiness": "इंस्टाग्राम बिजनेस",
+  "instagramCreator": "इंस्टाग्राम क्रिएटर",
+  "account": "खाता।",
+  "verifyInstagramConnected": "और सुनिश्चित करें कि इंस्टाग्राम खाता जुड़ा हुआ है",
+  "knowMoreHowTo": "और जानें कि कैसे",
+  "connectFacebookPageToInstagram": "फेसबुक पेज को इंस्टाग्राम से कनेक्ट करें",
+  "continue": "जारी रखें",
+  "instagramProfile": "इंस्टाग्राम प्रोफ़ाइल?",
+  "no": "नहीं",
+
+  "addLinkedInProfileOrPage": "लिंक्डइन प्रोफ़ाइल या लिंक्डइन कंपनी पेज जोड़ें",
+  "addLinkedInProfile": "लिंक्डइन प्रोफ़ाइल जोड़ें:",
+  "addPageAssociatedWithAccount": "इस खाते से संबंधित एक पेज जोड़ें:",
+  "linkedInCompanyPage": "लिंक्डइन कंपनी पेज",
+
+
+
+  "linkTelegram": "टेलीग्राम लिंक करें",
+  "telegramBotUsage": "टेलीग्राम बॉट का उपयोग करता है ताकि आप एक समूह या चैनल में पोस्ट कर सकें जहां आप स्वामी या व्यवस्थापक हैं। कृपया इसे देखें:",
+  "knowMoreAboutAddingBot": "समूह या चैनल में बॉट जोड़ने के बारे में अधिक जानें",
+  "detailedInstructions": "विस्तृत निर्देश",
+  "botEnabledInstructions": "बॉट सक्रिय है, आपको सक्रियण पूरा करने के लिए निम्नलिखित संदेश या कोड को अपने समूह या चैनल में पोस्ट करना होगा। संदेश या कोड को समूह या चैनल में पोस्ट करने के बाद,",
+  "clickOkHere": "कृपया यहां ओके पर क्लिक करें",
+  "waitForResponse": "टेलीग्राम में उत्तर के लिए कुछ मिनट प्रतीक्षा करें।",
+  "instructions": "निर्देश",
+  "connectTelegramGroup": "टेलीग्राम समूह से कनेक्ट करने के लिए।",
+  "oopsNoYouTubeChannel": "ओह! हमें आपके खाते में कोई YouTube चैनल नहीं मिला।"
     
 
 }

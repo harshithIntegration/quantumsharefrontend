@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setTelLoggedIn } from '../Redux/action/loginStatusSilce';
 import { setTelName } from '../Redux/action/NameSlice';
 import { setTelegramUrl } from '../Redux/action/pageUrlsSlice';
+import { useTranslation } from 'react-i18next';
 
 const TelegramLogin = () => {
     let token = sessionStorage.getItem("token");
@@ -29,6 +30,7 @@ const TelegramLogin = () => {
     const [telegramGroupMembersCount, setTelegramGroupMembersCount] = useState('');
     const [copied, setCopied] = useState(false);
     const [loadingCode, setLoadingCode] = useState(false);
+    const {t} = useTranslation('');
 
     const dispatch = useDispatch()
     const { telLoggedIn } = useSelector((state) => state.loginStatus)
@@ -230,35 +232,34 @@ const TelegramLogin = () => {
                     </Button>
                 ) : (
                     !telLoggedIn ? (
-                        <Button variant='contained' sx={{ marginTop: '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handleTelegramLogin}>Connect</Button>
+                        <Button variant='contained' sx={{ marginTop: '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handleTelegramLogin}>{t('connect')}</Button>
                     ) : (
-                        <Button variant='contained' sx={{ marginTop: '20px', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>Disconnect</Button>
+                        <Button variant='contained' sx={{ marginTop: '20px', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>{t('disconnect')}</Button>
                     )
                 )}
             </section>
             <Dialog open={open1} onClose={handleConnectPopup}>
                 <DialogTitle sx={{ color: '#b4232a', fontSize: '20px', textAlign: 'center' }}>
-                    Link Telegram
+                    {t('linkTelegram')}
                 </DialogTitle>
                 <DialogContent dividers>
                     <DialogContentText sx={{ fontSize: '18px' }}>
-                        Telegram uses Bot to allow posting to a Group or Channel that you are an owner or admin. Please see this :
+                       {t('telegramBotUsage')}
                     </DialogContentText>
                     <br />
                     <DialogContentText sx={{ fontSize: '18px', textAlign: 'center' }}>
-                        Know more about adding Bot to the Group or Channel
+                        {t('knowMoreAboutAddingBot')}
                     </DialogContentText>
                     <DialogContentText sx={{ textAlign: 'center', fontSize: '18px', cursor: 'pointer' }}>
-                        <Link to='/connect-socialmedia#telegram' id='info'>Detailed Instructions</Link>
+                        <Link to='/connect-socialmedia#telegram' id='info'>{t('detailedInstructions')}</Link>
                         <OpenInNewIcon sx={{ color: '#067acc', verticalAlign: 'middle', marginLeft: '2px', marginBottom: '5px', fontSize: 'medium' }} />
                     </DialogContentText>
                     <br />
                     <DialogContentText sx={{ fontSize: '18px' }}>
-                        Once the <b> QuantumShare </b> Bot is enabled, you'll need to post the following message or code to your Group or Channel to complete activation.
-                        Once posting the message or code in a Group or Channel, <b>Please click on OK here</b>. Please wait a few minutes for a response in Telegram.
+                        Once the <b> QuantumShare </b>{t('botEnabledInstructions')} <b>{t('clickOkHere')}</b>. {t('waitForResponse')}
                     </DialogContentText>
                     <DialogContentText sx={{ fontSize: '18px', textAlign: 'center' }}>
-                        <Link to='/connect-socialmedia#telegram' id='info'>Instructions</Link><OpenInNewIcon sx={{ color: '#067acc', verticalAlign: 'middle', marginLeft: '2px', marginBottom: '5px', fontSize: 'medium' }} /> to connect Telegram Group.
+                        <Link to='/connect-socialmedia#telegram' id='info'>{t('instructions')}</Link><OpenInNewIcon sx={{ color: '#067acc', verticalAlign: 'middle', marginLeft: '2px', marginBottom: '5px', fontSize: 'medium' }} /> {t('connectTelegramGroup')}
                     </DialogContentText>
                     <br />
                     <DialogContentText>
@@ -292,20 +293,20 @@ const TelegramLogin = () => {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleConnectPopup}>Cancel</Button>
-                    <Button autoFocus onClick={handleGetDetails}>OK</Button>
+                    <Button onClick={handleConnectPopup}>{t('cancel')}</Button>
+                    <Button autoFocus onClick={handleGetDetails}>{t('ok')}</Button>
                 </DialogActions>
             </Dialog>
 
             <Dialog open={open} onClose={handleDisconnectPopup} maxWidth='lg'>
                 <DialogContent>
                     <DialogContentText sx={{ color: 'black', fontSize: '17px' }}>
-                        Are you sure you want to disconnect from {telegramGroupName} Telegram Group?
+                       {t('confirmDisconnect')} {telegramGroupName} Telegram Group?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleDisconnectPopup}>Cancel</Button>
-                    <Button onClick={handleConfirmDisconnect} autoFocus>Yes</Button>
+                    <Button onClick={handleDisconnectPopup}>{t('cancel')}</Button>
+                    <Button onClick={handleConfirmDisconnect} autoFocus>{t('yes')}</Button>
                 </DialogActions>
             </Dialog>
         </>

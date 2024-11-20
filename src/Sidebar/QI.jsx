@@ -152,7 +152,7 @@ const QI = ({ onAiClose }) => {
                                 name="textPrompt"
                                 label={t('generateImage')}
                                 type="text"
-                                variant="outlined"
+                                variant="outlined" 
                                 fullWidth
                                 sx={{ marginBottom: '20px' }}
                                 value={input}

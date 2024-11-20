@@ -261,7 +261,7 @@
     "lastName": "Last Name",
     "phoneNumber": "Phone Number",
     "confirmPassword": "Confirm Password",
-    "alreadyHaveAccount": "Already have an account?",
+    "alreadyHaveAccount": "Already have an account ?",
     "signIn": "Sign In",
 
 
@@ -345,6 +345,66 @@
   "addToPost": "Add to Post",
   "preview": "Preview",
   "enterTextHere": "Enter text here",
-  "generateImage": "Generate image"
+  "generateImage": "Generate image",
+
+
+   "resetPassword": "Reset your Password",
+  "resetPasswordDescription": "Enter your new password and confirm it to reset your password for Quantum Share application.",
+
+  "successfullyUpdated": " has been successfully updated. You can now log in to access the platform.",
+  "regeneratePassword": "Regenerate your Password",
+
+
+  "dashboard": "Dashboard",
+  "socialIntegration": "Social Integration",
+  "publish": "Publish",
+  "quantumAI": "Quantum AI",
+  "analytics": "Analytics",
+  "templates": "Templates",
+  "accountOverview": "Account Overview",
+
+"emailAddress1": "Email Address",
+  "companyNameOptional": "Company Name (Optional)",
+
+  "connectToSocialMedia": "Please connect to social media",
+  "connectSocialNetwork": "Connect a Social Network",
+  "upcomingMediaPlatforms": "Upcoming Media Platforms",
+
+
+  "connect": "Connect",
+  "disconnect": "Disconnect",
+  "confirmDisconnect": "Are you sure you want to disconnect from",
+  "facebookProfile": "Facebook Profile?",
+
+  "linkInstagramProfile": "Link Instagram Profile",
+  "ensureAccountConverted": "Ensure that your account is converted as",
+  "instagramBusiness": "Instagram Business",
+  "instagramCreator": "Instagram Creator",
+  "account": "Account.",
+  "verifyInstagramConnected": "And verify that Instagram Account is connected to a",
+  "knowMoreHowTo": "Know more how to",
+  "connectFacebookPageToInstagram": "Connect a Facebook Page to an Instagram",
+  "continue": "Continue",
+  "instagramProfile": "Instagram Profile?",
+  "no": "No",
+
+
+  "addLinkedInProfileOrPage": "Add a LinkedIn Profile or a LinkedIn Company Page",
+  "addLinkedInProfile": "Add a LinkedIn Profile:",
+  "addPageAssociatedWithAccount": "Add a page associated with this account:",
+  "linkedInCompanyPage": "LinkedIn Company Page",
+
+
+  "linkTelegram": "Link Telegram",
+  "telegramBotUsage": "Telegram uses Bot to allow posting to a Group or Channel that you are an owner or admin. Please see this:",
+  "knowMoreAboutAddingBot": "Know more about adding Bot to the Group or Channel",
+  "detailedInstructions": "Detailed Instructions",
+  "botEnabledInstructions": "Bot is enabled, you'll need to post the following message or code to your Group or Channel to complete activation. Once posting the message or code in a Group or Channel,",
+  "clickOkHere": "Please click on OK here",
+  "waitForResponse": "Please wait a few minutes for a response in Telegram.",
+  "instructions": "Instructions",
+  "connectTelegramGroup": "to connect Telegram Group.",
+
+  "oopsNoYouTubeChannel": "Oops! We couldn't find any YouTube channel in your account."
 
 }

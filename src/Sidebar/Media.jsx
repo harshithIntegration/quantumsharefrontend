@@ -202,7 +202,7 @@ const Media = ({ onMediaPlatform, postSubmitted }) => {
                                     ))
                                 ) : (
                                     <div style={{ padding: '10px', textAlign: 'start', color: '#888' }}>
-                                        Please connect to social media
+                                        {t('connectToSocialMedia')}
                                     </div>
                                 )}
 

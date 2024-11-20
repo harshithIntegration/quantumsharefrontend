@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from "react-router-dom";
 import { FetchUser } from '../Redux/FetchUser';
+import { useTranslation } from 'react-i18next';
 
 const RegeneratePassword = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
@@ -23,6 +24,7 @@ const RegeneratePassword = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
+    const {t} = useTranslation('');
 
     const email = location.state?.email;
 
@@ -133,7 +135,7 @@ const RegeneratePassword = () => {
                         <img src={QS} alt="" style={{ height: 35, marginTop: '5px' }} />
                     </Typography>
                     <Typography sx={{ m: 0, p: 2, color: '#ba343b', fontSize: '20px', textAlign: 'center' }}>
-                        Regenerate your Password
+                        {t('regeneratePassword')}
                     </Typography>
                     <Typography
                         variant="body2"
@@ -149,7 +151,7 @@ const RegeneratePassword = () => {
                                 required
                                 fullWidth
                                 name="password"
-                                label="Password"
+                                label={t('password')}
                                 type={passwordVisible ? 'text' : 'password'}
                                 id="password"
                                 autoComplete="new-password"

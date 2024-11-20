@@ -120,14 +120,14 @@ const ResetPassword = () => {
                         </Typography>
                     </Box>
                     <Typography variant="h6" component="h2" textAlign="start">
-                        Reset your Password
+                        {t('resetPassword')}
                     </Typography>
                     <Typography
                         variant="body2"
                         textAlign="start"
                         sx={{ margin: '5px 0', color: 'gray' }}
                     >
-                        Enter your new password and confirm it to reset your password for Quantum Share application.
+                        {t('resetPasswordDescription')}
                     </Typography>
                     <TextField
                         margin="normal" required fullWidth
