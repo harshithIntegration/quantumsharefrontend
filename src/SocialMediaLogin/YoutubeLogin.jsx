@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setYoutubeProfile } from '../Redux/action/pageUrlsSlice';
 import { setYouLoggedIn } from '../Redux/action/loginStatusSilce';
 import { setYouName } from '../Redux/action/NameSlice';
+import { useTranslation } from 'react-i18next';
 
 const YoutubeLogin = () => {
     const token = sessionStorage.getItem('token');
@@ -21,6 +22,7 @@ const YoutubeLogin = () => {
     const [youtubeUrl, setYoutubeUrl] = useState('');
     const [youtubeChannelName, setYoutubeChannelName] = useState('');
     const [youtubeSubscriberCount, setYoutubeSubscriberCount] = useState('');
+    const {t} = useTranslation('');
 
     const dispatch = useDispatch()
     const { YouLoggedIn } = useSelector((state) => state.loginStatus)
@@ -164,9 +166,9 @@ const YoutubeLogin = () => {
                     </Button>
                 ) : (
                     !YouLoggedIn ? (
-                        <Button variant='contained' sx={{ marginTop: '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handleYoutubeLogin}>Connect</Button>
+                        <Button variant='contained' sx={{ marginTop: '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handleYoutubeLogin}>{t('connect')}</Button>
                     ) : (
-                        <Button variant='contained' sx={{ marginTop: '20px', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>Disconnect</Button>
+                        <Button variant='contained' sx={{ marginTop: '20px', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>{t('disconnect')}</Button>
                     )
                 )}
             </section>
@@ -174,12 +176,12 @@ const YoutubeLogin = () => {
             <Dialog open={open} onClose={handleClose} maxWidth='lg'>
                 <DialogContent>
                     <DialogContentText sx={{ color: 'black', fontSize: '17px' }}>
-                        Are you sure you want to disconnect from <b>{youtubeChannelName}</b> Youtube Channel ?
+                       {t('confirmDisconnect')} <b>{youtubeChannelName}</b> Youtube Channel ?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>No</Button>
-                    <Button onClick={handleConfirmDisconnect} autoFocus>Yes</Button>
+                    <Button onClick={handleClose}>{t('no')}</Button>
+                    <Button onClick={handleConfirmDisconnect} autoFocus>{t('yes')}</Button>
                 </DialogActions>
             </Dialog>
         </>

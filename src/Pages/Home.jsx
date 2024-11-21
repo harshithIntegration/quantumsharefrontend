@@ -27,6 +27,7 @@ import AOS from 'aos';
 import { motion } from "framer-motion"
 import { FaCirclePlay } from "react-icons/fa6";
 import { CgPlayButtonO } from "react-icons/cg";
+import { useTranslation } from 'react-i18next';
 
 const Home = () => {
 
@@ -36,6 +37,7 @@ const Home = () => {
 
     const token = localStorage.getItem('token')
     const [open, setOpen] = React.useState(false);
+    const {t} = useTranslation();
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -54,7 +56,7 @@ const Home = () => {
         <>
             <HelmetProvider>
                 <Helmet>
-                    <title>Quantum Share - Simplify Social Media & File Sharing | Secure & Easy</title>
+                    <title>Q{t('quantumShare1')}</title>
                     <meta name="description" content="Quantum Share offers a seamless and secure way to share files and posts across social media. Revolutionize your sharing experience with our easy-to-use, privacy-focused platform." />
                     <link rel="canonical" href='/home' />
                 </Helmet>
@@ -67,17 +69,15 @@ const Home = () => {
                 <Grid item xs={12} md={6} lg={6} className='homeSubGrid02'>
                     <div className='homeMainDiv01' style={{ marginLeft: '10px' }}>
                         <div className='homeSubDiv01'>
-                            <h2 className='homeh2Hdr01'> Revolutionize Your <br /> Social Sharing Experience! </h2>
+                            <h2 className='homeh2Hdr01'> {t('revolutionizeYour')} <br /> {t('socialSharingExperience')} </h2>
                             <p className='homeContent01'>
-                                With Quantum Share, we aim to streamline this process and <br />
-                                empower users like you to effortlessly distribute content, connect <br />
-                                with others, and amplify your online presence.
+                            {t('quantumShareIntro')}
                             </p>
                         </div>
                     </div>
                     <div className='homeMainDiv02'>
                         <Typography className='homeTypography01' gutterBottom>
-                            <span className='homeSpan01' style={{ fontSize: '19px' }}>Watch Now</span>
+                            <span className='homeSpan01' style={{ fontSize: '19px' }}>{t('watchNow')}</span>
                             <IconButton>
                                 <CgPlayButtonO className='homeCgPlayButtonO' onClick={handleClickOpen} />
                                 <Dialog
@@ -89,7 +89,7 @@ const Home = () => {
                                     <DialogContent>
                                         <video autoPlay loop muted={isMuted} style={{ width: '100%', height: 'auto' }}>
                                             <source src="https://quantumshare.quantumparadigm.in/vedio/QP%20ADD%20VDIEO%202024.mp4" type="video/mp4" />
-                                            Your browser does not support the video tag.
+                                            {t('browserNotSupportVideo')}
                                         </video>
                                         <IconButton onClick={toggleMute} style={{ position: 'absolute', left: '10px', color: '#BA343B' }}>
                                             {isMuted ? <VolumeOffIcon /> : <VolumeUpIcon />}
@@ -101,7 +101,7 @@ const Home = () => {
                         <div className='homeSubDiv02'>
                             <Link to="/signUp">
                                 <button className='homeButton01'>
-                                    Get Started With Free
+                                    {t('getStartedFree')}
                                 </button>
                             </Link>
                         </div>
@@ -128,7 +128,7 @@ const Home = () => {
                                         <div className='homeDivChild02'>
                                             <Typography className='home-text' sx={{ fontSize: '18', color: 'black', fontWeight: 600, paddingTop: "5px" }}>Connecting Your Accounts</Typography>
                                             <Typography sx={{ fontSize: 14, marginTop: '7px', fontWeight: '600' }} color="text.secondary" gutterBottom>
-                                                Link all your social media accounts to Quantum Share.</Typography>
+                                                {t('linkAccounts')}.</Typography>
                                         </div>
                                     </div>
                                 </CardContent>
@@ -144,9 +144,9 @@ const Home = () => {
                                             </Typography>
                                         </div>
                                         <div className='homeDivChild02'>
-                                            <Typography className='home-text' sx={{ fontSize: '18', color: 'black', fontWeight: 600, paddingTop: "5px" }}> Customize Your Text with AI</Typography>
+                                            <Typography className='home-text' sx={{ fontSize: '18', color: 'black', fontWeight: 600, paddingTop: "5px" }}> {t('customizeTextWithAI')}</Typography>
                                             <Typography sx={{ fontSize: 14, marginTop: '7px', fontWeight: '600' }} color="text.secondary" gutterBottom>
-                                                Transform your messages using AI-created content and hashtags.</Typography>
+                                               {t('transformMessages')} </Typography>
                                         </div>
                                     </div>
                                 </CardContent>
@@ -162,9 +162,9 @@ const Home = () => {
                                             </Typography>
                                         </div>
                                         <div className='homeDivChild02'>
-                                            <Typography className='home-text' sx={{ fontSize: '18', color: 'black', fontWeight: 600, paddingTop: "5px" }}> Create Your AI Images</Typography>
+                                            <Typography className='home-text' sx={{ fontSize: '18', color: 'black', fontWeight: 600, paddingTop: "5px" }}>{t('createAIImages')} </Typography>
                                             <Typography sx={{ fontSize: 14, marginTop: '7px', fontWeight: '600' }} color="text.secondary" gutterBottom>
-                                                Experience instant image creation tailored to your needs.  </Typography>
+                                                {t('aiImageExperience')}  </Typography>
                                         </div>
                                     </div>
                                 </CardContent>
@@ -179,20 +179,20 @@ const Home = () => {
                         className='homeMotionDiv02'>
                         <div className='homeDiv01'>
                             <Grid item xs={12} md={12} lg={12} sx={{ textAlign: 'start' }}>
-                                <p className='homeWhoWeAre'>WHO WE ARE ?</p>
+                                <p className='homeWhoWeAre'>{t('whoWeAre')}</p>
                             </Grid>
                             <Grid item xs={12} md={12} lg={12} sx={{ textAlign: 'start' }}>
-                                <h1 className='homeWhyChoose'>Why Companies Choose Quantum Share ?</h1>
+                                <h1 className='homeWhyChoose'>{t('whyCompaniesChoose')}</h1>
                             </Grid>
                             <div className='homeDiv02' style={{ display: 'flex', marginLeft: "20px" }}>
                                 <div>
-                                    <Typography style={{ paddingTop: "20px", color: '#3e5055', fontStyle: "italic", fontSize: "20px" }}> Leverage Quantum Share to eliminate the complexity of managing multiple social media platforms. With Quantum Share, businesses can seamlessly integrate and streamline their social media efforts from one centralized hub.</Typography>
-                                    <Alert style={{ paddingLeft: "0px", fontSize: "18px", paddingTop: "30px" }} variant="white" severity="success" border="1px solid white">Get to Market Quickly with Lower Build Costs</Alert>
-                                    <Alert style={{ paddingLeft: "0px", fontSize: "16px", fontSize: "18px" }} variant="white" severity="success" >Reliable and Trusted by Leading Companies</Alert>
-                                    <Alert style={{ paddingLeft: "0px", fontSize: "18px" }} variant="white" severity="success" >Minimal Ongoing Maintenance and Support Costs</Alert>
+                                    <Typography style={{ paddingTop: "20px", color: '#3e5055', fontStyle: "italic", fontSize: "20px" }}>{t('leverageQuantumShare')} </Typography>
+                                    <Alert style={{ paddingLeft: "0px", fontSize: "18px", paddingTop: "30px" }} variant="white" severity="success" border="1px solid white">{t('getToMarketQuickly')}</Alert>
+                                    <Alert style={{ paddingLeft: "0px", fontSize: "16px", fontSize: "18px" }} variant="white" severity="success" >{t('reliableAndTrusted')}</Alert>
+                                    <Alert style={{ paddingLeft: "0px", fontSize: "18px" }} variant="white" severity="success" >{t('minimalMaintenance')}</Alert>
                                     <div style={{ textAlign: 'center', margin: '1rem', marginLeft: "-200px", marginTop: "50px" }}>
                                         <Link to='/about'>
-                                            <Button variant="contained" sx={{ backgroundColor: '#ba343b', cursor: 'pointer', '&:hover': { bgcolor: '#9e2b31' }, fontWeight: '600' }}>Read More</Button>
+                                            <Button variant="contained" sx={{ backgroundColor: '#ba343b', cursor: 'pointer', '&:hover': { bgcolor: '#9e2b31' }, fontWeight: '600' }}>{t('readMore')}</Button>
                                         </Link>
                                     </div>
                                 </div>
@@ -219,13 +219,22 @@ const Home = () => {
                     </Grid>
                 </Grid>
                 <Grid item xs={12} md={11.9} lg={11.9} sx={{ backgroundColor: "#ffffff" }}>
-                    <h1 style={{ textAlign: "center", paddingTop: "30px", paddingBottom: '40px', color: '#d3040c', fontSize: "2.5rem", fontWeight: '600' }}>How does Quantum Share Work ?</h1>
+                    <h1 style={{ textAlign: "center", paddingTop: "30px", paddingBottom: '40px', color: '#d3040c', fontSize: "2.5rem", fontWeight: '600' }}>{t('howQuantumShareWorks')}</h1>
                 </Grid>
                 <Grid item xs={12} md={6} lg={6} sx={{ marginTop: "0px", backgroundColor: "white" }}>
                     <img style={{ marginLeft: "50px", borderRadius: "25px", width: "80%", }} src={feature1} alt="image"></img>
                 </Grid>
                 <Grid item xs={12} md={5.9} lg={5.9} sx={{ paddingTop: "15px", backgroundColor: '#fbf4f5', marginBottom: "40px", borderRadius: '16px', width: '80%' }}>
                     <Typography sx={{ fontSize: 17, marginTop: '7px', paddingBottom: "15px" }} style={{ paddingRight: '15px', marginRight: "20px", paddingLeft: '10px', paddingTop: '8px', fontWeight: '500' }} color="black" gutterBottom>
+                        {t('quantumShareInt')}   
+                    </Typography>
+                    <Typography sx={{ fontSize: 17, marginTop: '7px', paddingBottom: "15px", paddingTop: "10px" }} style={{ paddingRight: '15px', marginRight: "20px", paddingLeft: '10px', fontWeight: '500' }} color="black" gutterBottom>
+                        {t('effortlessContentPosting')}    
+                    </Typography>
+                    <Typography sx={{ fontSize: 17, marginTop: '7px', paddingTop: "15px" }} style={{ paddingRight: '15px', marginRight: "20px", paddingLeft: '10px', paddingBottom: '25px', fontWeight: '500' }} color="black" gutterBottom>
+                        {t('upcomingFeatures')}    
+                    </Typography>
+                    <Typography>
                         Quantum Share simplifies social media management through a streamlined and user-friendly process. To get started, users click the Quantum Share link
                         to open the web app, where they sign up by providing their email and creating a password. After completing email verification,
                         users log in and access the dashboard.From there,navigating to 'social integration' from the drop-down menu allows user to
@@ -254,12 +263,12 @@ const Home = () => {
                                     <TelegramIcon style={{ color: '#b24252', width: '30px', height: '30px', marginTop: "5px", marginLeft: "6px" }}></TelegramIcon>
                                 </div>
                                 <div>
-                                    <Typography className='home-text' sx={{ fontSize: '25px', fontWeight: 900, paddingTop: "10px", paddingLeft: "15px", color: "#45454d" }}>Send Posts</Typography>
+                                    <Typography className='home-text' sx={{ fontSize: '25px', fontWeight: 900, paddingTop: "10px", paddingLeft: "15px", color: "#45454d" }}>{t('sendPosts')}</Typography>
                                 </div>
                             </div>
                             <div style={{ marginLeft: '15px' }}>
                                 <Typography sx={{ fontSize: 17, marginTop: '7px', paddingBottom: "15px", paddingTop: "10px" }} style={{ paddingRight: '15px', marginRight: "20px", paddingLeft: '10px', fontWeight: '500' }} color="black" gutterBottom>
-                                    Create a post with text, images, or videos and send it immediately or schedule ti for a future date or time. Effortlessly manage your content distribution across multiple social media platforms from one place. </Typography>
+                                    {t('sendPostsDescription')} </Typography>
                             </div>
                         </CardContent>
                     </Card>
@@ -270,13 +279,13 @@ const Home = () => {
                                     <ImageIcon style={{ color: '#b24252', width: '30px', height: '30px', marginTop: "5px", marginLeft: "6px" }}></ImageIcon>
                                 </div>
                                 <div>
-                                    <Typography className='home-text' sx={{ paddingTop: "10px", paddingLeft: "15px", color: "#45454d", fontSize: '25px', fontWeight: 900, }}> Manage Images or Videos</Typography>
+                                    <Typography className='home-text' sx={{ paddingTop: "10px", paddingLeft: "15px", color: "#45454d", fontSize: '25px', fontWeight: 900, }}> {t('manageMedia')}</Typography>
                                 </div>
                             </div>
                             <div style={{ marginLeft: '15px' }}>
                                 <Typography sx={{ fontSize: 17, marginTop: '7px', paddingBottom: "15px", paddingTop: "10px" }} style={{ paddingRight: '15px', marginRight: "20px", paddingLeft: '10px', fontWeight: '500' }} color="black" gutterBottom>
-                                    Upload your images or videos directly to Quantum Share and get a URL to post with. No need for as separate image or video
-                                    hosting service, simplifying your media management </Typography>
+                                   {t('manageMediaDescription')}
+                                </Typography>
                             </div>
                         </CardContent>
                     </Card>
@@ -287,12 +296,13 @@ const Home = () => {
                                     <PowerIcon style={{ color: '#b24252', width: '30px', height: '30px', marginTop: "5px", marginLeft: "6px" }}></PowerIcon>
                                 </div>
                                 <div>
-                                    <Typography className='home-text' sx={{ paddingTop: "10px", paddingLeft: "15px", color: "#45454d", fontSize: '25px', fontWeight: 900, }}> Integrations</Typography>
+                                    <Typography className='home-text' sx={{ paddingTop: "10px", paddingLeft: "15px", color: "#45454d", fontSize: '25px', fontWeight: 900, }}>{t('integrations')} </Typography>
                                 </div>
                             </div>
                             <div style={{ marginLeft: '15px' }}>
                                 <Typography sx={{ fontSize: 17, marginTop: '7px', paddingBottom: "15px", paddingTop: "10px" }} style={{ paddingRight: '15px', marginRight: "20px", paddingLeft: '10px', fontWeight: '500' }} color="black" gutterBottom>
-                                    Save your team's time by connecting with various Quantum Share integrations, such as Notion, Airtable, Make, and Bubble. Seamlessly integrate with your existing tools and workflows. </Typography>
+                                   {t('integrationsDescription')}
+                                </Typography>
                             </div>
                         </CardContent>
                     </Card>
@@ -303,7 +313,7 @@ const Home = () => {
             </Grid >
             <div className="icon-container">
                 <Link to='/reference-video'><FaCirclePlay className="circle-icon" /></Link>
-                <div className="hover-content">reference video</div>
+                <div className="hover-content">{t('referencevideo')}</div>
             </div>
             <Footer />
         </>

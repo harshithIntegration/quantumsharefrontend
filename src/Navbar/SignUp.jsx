@@ -28,6 +28,7 @@ import { useDispatch } from 'react-redux';
 import QS from '../Assets/QS.webp';
 import { TailSpin } from 'react-loader-spinner';
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const defaultTheme = createTheme({
     typography: {
@@ -54,7 +55,7 @@ const SignUp = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
     const { firstName, lastName, email, phoneNo, password, confirm_password, company } = formData
-
+    const {t} = useTranslation('');
     const handleCloseSignUp = () => {
         setsignupOpen(false);
         navigate("/")
@@ -323,11 +324,11 @@ const SignUp = () => {
                                 <Avatar sx={{ m: 1, bgcolor: '#ba343b' }}>
                                     <LockOutlinedIcon />
                                 </Avatar>
-                                <Typography component="h1" variant="h6">Signup</Typography>
+                                <Typography component="h1" variant="h6">{t('signUp')}</Typography>
                                 <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
                                     <Grid container spacing={1} justifyContent="center">
                                         <Grid item xs={10} sm={5}>
-                                            <TextField autoComplete="given-name" name="firstName" required fullWidth id="firstName" label="First Name" autoFocus value={firstName}
+                                            <TextField autoComplete="given-name" name="firstName" required fullWidth id="firstName" label={t('firstName')} autoFocus value={firstName}
                                                 onChange={handleChange}
                                                 error={!!errors.firstName}
                                                 helperText={errors.firstName}
@@ -344,7 +345,7 @@ const SignUp = () => {
                                                 }} />
                                         </Grid>
                                         <Grid item xs={10} sm={5}>
-                                            <TextField required fullWidth id="lastName" label="Last Name" name="lastName" autoComplete="family-name" value={lastName}
+                                            <TextField required fullWidth id="lastName" label={t('lastName')} name="lastName" autoComplete="family-name" value={lastName}
                                                 onChange={handleChange}
                                                 error={!!errors.lastName}
                                                 helperText={errors.lastName}
@@ -361,7 +362,7 @@ const SignUp = () => {
                                                 }} />
                                         </Grid>
                                         <Grid item xs={10}>
-                                            <TextField required fullWidth id="email" label="Email Address" name="email" autoComplete="email" value={email}
+                                            <TextField required fullWidth id="email" label={t('emailAddress')} name="email" autoComplete="email" value={email}
                                                 onChange={handleChange}
                                                 error={!!errors.email}
                                                 helperText={errors.email}
@@ -378,7 +379,7 @@ const SignUp = () => {
                                                 }} />
                                         </Grid>
                                         <Grid item xs={10}>
-                                            <TextField required fullWidth name="phoneNo" label="Phone Number" id="phoneNo" value={phoneNo}
+                                            <TextField required fullWidth name="phoneNo" label={t('phoneNumber')} id="phoneNo" value={phoneNo}
                                                 onChange={handleChange}
                                                 error={!!errors.phoneNo}
                                                 helperText={errors.phoneNo}
@@ -395,7 +396,7 @@ const SignUp = () => {
                                                 }} />
                                         </Grid>
                                         <Grid item xs={10}>
-                                            <TextField required fullWidth name="password" label="Password" type={passwordVisible ? 'text' : 'password'} id="password" autoComplete="new-password" value={password}
+                                            <TextField required fullWidth name="password" label={t('password')} type={passwordVisible ? 'text' : 'password'} id="password" autoComplete="new-password" value={password}
                                                 onChange={handleChange}
                                                 error={!!errors.password}
                                                 helperText={errors.password}
@@ -417,7 +418,7 @@ const SignUp = () => {
                                                 }} />
                                         </Grid>
                                         <Grid item xs={10}>
-                                            <TextField required fullWidth name="confirm_password" label="Confirm Password" type={confirmPasswordVisible ? 'text' : 'password'} id="confirm_password" autoComplete="new-password" value={confirm_password}
+                                            <TextField required fullWidth name="confirm_password" label={t('confirmPassword')} type={confirmPasswordVisible ? 'text' : 'password'} id="confirm_password" autoComplete="new-password" value={confirm_password}
                                                 onChange={handleChange}
                                                 error={!!errors.confirm_password}
                                                 helperText={errors.confirm_password}
@@ -439,7 +440,7 @@ const SignUp = () => {
                                                 }} />
                                         </Grid>
                                         <Grid item xs={10}>
-                                            <TextField fullWidth name="company" label="Company Name (Optional)" id="company" value={company} onChange={handleChange}
+                                            <TextField fullWidth name="company" label={t('companyNameOptional')} id="company" value={company} onChange={handleChange}
                                                 InputProps={{
                                                     sx: {
                                                         height: '50px',
@@ -461,7 +462,7 @@ const SignUp = () => {
                                                     mt: 1, mb: 2, height: '50px', fontSize: '18px', bgcolor: '#ba343b',
                                                     '&:hover': { bgcolor: '#9e2b31' },
                                                 }}>
-                                                Sign Up
+                                                {t('signUp')}
                                             </Button>
                                         </Grid>
                                     </Grid>
@@ -478,7 +479,7 @@ const SignUp = () => {
                                         <Grid item>
                                             <div style={{ marginTop: '15px' }}>
                                                 <div variant="body2" style={{ color: 'black' }}>
-                                                    Already have an account ?{' '}
+                                                    {t('alreadyHaveAccount')}{' '}
                                                     <Link to="/login">
                                                         <span style={{ color: '#1976db' }}>Sign In</span>
                                                     </Link>
@@ -504,12 +505,12 @@ const SignUp = () => {
                         <img src={QS} alt="" style={{ height: 35, marginTop: '5px' }} />
                     </Typography>
                     <DialogTitle sx={{ m: 0, p: 2, color: '#ba343b', fontSize: '20px', textAlign: 'center' }}>
-                        Set your Password
+                        {t('setPassword')}
                     </DialogTitle>
                     <Box component="form" noValidate sx={{ mt: 2 }}>
                         <Grid container spacing={2} justifyContent="center">
                             <Grid item xs={11}>
-                                <TextField required fullWidth name="password" label="Password" type={passwordVisible ? 'text' : 'password'} id="password" autoComplete="new-password" value={password}
+                                <TextField required fullWidth name="password" label={t('password')} type={passwordVisible ? 'text' : 'password'} id="password" autoComplete="new-password" value={password}
                                     onChange={handleChange}
                                     error={!!errors.password}
                                     helperText={errors.password}
@@ -531,7 +532,7 @@ const SignUp = () => {
                                     }} />
                             </Grid>
                             <Grid item xs={11}>
-                                <TextField required fullWidth name="confirm_password" label="Confirm Password" type={confirmPasswordVisible ? 'text' : 'password'} id="confirm_password" autoComplete="new-password" value={confirm_password}
+                                <TextField required fullWidth name="confirm_password" label={t('confirmPassword')} type={confirmPasswordVisible ? 'text' : 'password'} id="confirm_password" autoComplete="new-password" value={confirm_password}
                                     onChange={handleChange}
                                     error={!!errors.confirm_password}
                                     helperText={errors.confirm_password}

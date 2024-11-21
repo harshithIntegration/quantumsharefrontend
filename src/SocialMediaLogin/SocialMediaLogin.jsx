@@ -15,6 +15,7 @@ import { FaCirclePlay } from "react-icons/fa6";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import RedditLogin from './RedditLogin';
 import PinterestLogin from './PinterestLogin';
+<<<<<<< HEAD
 import { useToast } from '../Context/ToastContext';
 
 const SocialMediaLogin = () => {
@@ -25,6 +26,12 @@ const SocialMediaLogin = () => {
     //         showToast(type, message); 
     //     }
     // }, [type, message, showToast]);
+=======
+import { useTranslation } from 'react-i18next';
+
+const SocialMediaLogin = () => {
+    const {t} = useTranslation('');
+>>>>>>> b2900b7ab25d7d3eae1cc09992abc594ab8b7244
 
     return (
         <>
@@ -34,7 +41,7 @@ const SocialMediaLogin = () => {
                 <Box sx={{ flexGrow: 1, marginLeft: '1rem' }}>
                     <div style={{ width: '100%', maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
                         <h1 style={{ textAlign: 'center', color: '#ba343b', fontSize: '1.7rem' }}>
-                            Connect a Social Network
+                            {t('connectSocialNetwork')}
                         </h1>
                         <div style={{ display: 'flex', justifyContent: 'center' }}>
                             <div className='container-soc'>
@@ -48,7 +55,7 @@ const SocialMediaLogin = () => {
                             </div>
                         </div>
                         <h1 style={{ textAlign: 'center', color: '#ba343b', fontSize: '24px', margin: '10px auto' }}>
-                            Upcoming Media Platforms
+                            {t('upcomingMediaPlatforms')}
                         </h1>
                         <div style={{ display: 'flex', justifyContent: 'center', padding: '20px', marginTop: '-2rem' }}>
                             <div className='container-soc' style={{ maxWidth: '1200px', width: '100%' }}>

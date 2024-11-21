@@ -16,6 +16,8 @@ import { List, ListItem, ListItemText } from '@mui/material';
 import { Person, PersonOutline, PrivacyTipOutlined } from "@mui/icons-material";
 import { IoLanguage } from "react-icons/io5";
 import QS from '../Assets/QS.webp';
+import LanguageSwitcher from '../LanguageSwitcher';
+import { useTranslation } from 'react-i18next';
 
 const Nav = () => {
     const [anchorElNav, setAnchorElNav] = useState(null);
@@ -30,6 +32,7 @@ const Nav = () => {
     const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
     const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 970);
     const isSmallerThan970 = useMediaQuery(theme.breakpoints.down(970));
+    const {t} = useTranslation('');
 
     // Event listener to update state on window resize
     window.addEventListener('resize', () => {
@@ -83,36 +86,36 @@ const Nav = () => {
         setOpen(false);
     };
 
-    const handleTranslateToggle = (event) => {
-        setTranslateAnchorEl(event.currentTarget);
-        setTranslateVisible((prev) => !prev);
-    };
+    // const handleTranslateToggle = (event) => {
+    //     setTranslateAnchorEl(event.currentTarget);
+    //     setTranslateVisible((prev) => !prev);
+    // };
 
-    const handleTranslateMenuClose = () => {
-        setTranslateAnchorEl(null);
-        setTranslateVisible(false);
-    };
+    // const handleTranslateMenuClose = () => {
+    //     setTranslateAnchorEl(null);
+    //     setTranslateVisible(false);
+    // };
 
-    const googleTranslateElementInit = () => {
-        new window.google.translate.TranslateElement(
-            {
-                pageLanguage: "en",
-                autoDisplay: false
-            },
-            "google_translate_element"
-        );
-    };
+    // const googleTranslateElementInit = () => {
+    //     new window.google.translate.TranslateElement(
+    //         {
+    //             pageLanguage: "en",
+    //             autoDisplay: false
+    //         },
+    //         "google_translate_element"
+    //     );
+    // };
 
-    useEffect(() => {
-        if (translateVisible) {
-            const addScript = document.createElement("script");
-            addScript.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-            addScript.async = true;
-            addScript.onerror = () => console.error("Google Translate script failed to load.");
-            document.body.appendChild(addScript);
-            window.googleTranslateElementInit = googleTranslateElementInit;
-        }
-    }, [translateVisible]);
+    // useEffect(() => {
+    //     if (translateVisible) {
+    //         const addScript = document.createElement("script");
+    //         addScript.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    //         addScript.async = true;
+    //         addScript.onerror = () => console.error("Google Translate script failed to load.");
+    //         document.body.appendChild(addScript);
+    //         window.googleTranslateElementInit = googleTranslateElementInit;
+    //     }
+    // }, [translateVisible]);
 
     return (
         <AppBar position="sticky" sx={{ bgcolor: 'white', height: '75px' }}>
@@ -207,7 +210,7 @@ const Nav = () => {
                                 onClick={handleCloseNavMenu}
                                 sx={{ color: 'black', textDecoration: 'none', fontSize: '16px' }}
                             >
-                                Home
+                                {t('home')}
                             </List>
                         )}
                         <List
@@ -216,7 +219,7 @@ const Nav = () => {
                             onClick={handleCloseNavMenu}
                             sx={{ color: 'black', textDecoration: 'none', fontSize: '16px' }}
                         >
-                            About
+                            {t('about')}
                         </List>
                         <List
                             component={Link}
@@ -224,7 +227,7 @@ const Nav = () => {
                             onClick={handleCloseNavMenu}
                             sx={{ color: 'black', textDecoration: 'none', fontSize: '16px' }}
                         >
-                            Features
+                            {t('features')}
                         </List>
                         <List
                             component={Link}
@@ -232,7 +235,7 @@ const Nav = () => {
                             onClick={handleCloseNavMenu}
                             sx={{ color: 'black', textDecoration: 'none', fontSize: '16px' }}
                         >
-                            Pricing
+                            {t('pricing')}
                         </List>
                         <List
                             component={Link}
@@ -240,12 +243,11 @@ const Nav = () => {
                             onClick={handleCloseNavMenu}
                             sx={{ color: 'black', textDecoration: 'none', fontSize: '16px' }}
                         >
-                            Quantum AI
+                             {t('quantumAI')}
                         </List>
                         <Menu
                             anchorEl={translateAnchorEl}
                             open={Boolean(translateAnchorEl)}
-                            onClose={handleTranslateMenuClose}
                             anchorOrigin={{
                                 vertical: 'bottom',
                                 horizontal: 'center',
@@ -261,7 +263,7 @@ const Nav = () => {
                         </Menu>
                     </Box>
                     <Box>
-                        <button onClick={handleTranslateToggle}
+                        <button 
                             style={{
                                 backgroundColor: '#fff',
                                 color: '#ba343b',
@@ -280,7 +282,7 @@ const Nav = () => {
                         >
                             <IoLanguage style={{ fontSize: '20px', fontWeight: '600' }} />
                             <List sx={{ display: isSmallerThan970 ? 'none' : 'flex', fontSize: '16px' }}>
-                                Translate
+                            <LanguageSwitcher />
                             </List>
                         </button>
                     </Box>
@@ -297,7 +299,7 @@ const Nav = () => {
                                     }}
                                     variant="outlined"
                                 >
-                                    Login
+                                    {t('login')}
                                 </Button>
                             </Link>
                         </Box>
@@ -317,7 +319,7 @@ const Nav = () => {
                                         marginTop: '10px'
                                     }}
                                 >
-                                    Try Free Trail
+                                    {t('tryFreeTrial')}
                                 </Button>
                             </Link>
                         </Box>
@@ -327,7 +329,7 @@ const Nav = () => {
                             <Box sx={{ display: { xs: 'none', md: 'flex' }, marginLeft: 'auto' }}>
                                 <Link to="/dashboard">
                                     <Button sx={{ color: '#ba343b', fontSize: '14.5px', fontWeight: '600', marginTop: '12px' }}>
-                                        Dashboard
+                                        {t('dashboard')}
                                     </Button>
                                 </Link>
                                 <Button
@@ -350,29 +352,29 @@ const Nav = () => {
                                         <ListItemIcon>
                                             <PersonOutline />
                                         </ListItemIcon>
-                                        Profile
+                                        {t('profile')}
                                     </MenuItem>
                                     <MenuItem component={Link} to='/privacy-policy'>
                                         <ListItemIcon>
                                             <PrivacyTipOutlined />
                                         </ListItemIcon>
-                                        Privacy Policy
+                                        {t('privacyPolicy')}
                                     </MenuItem>
                                     <MenuItem onClick={handleClickOpen}>
                                         <ListItemIcon>
                                             <LogoutIcon />
                                         </ListItemIcon>
-                                        Logout
+                                        {t('logout')}
                                     </MenuItem>
                                     <Dialog open={open} onClose={handleCloseDialog} fullWidth>
                                         <DialogContent>
                                             <DialogContentText sx={{ color: 'black', fontSize: '18px' }}>
-                                                Are you sure you want to logout?
+                                                {t('areYouSureYouWantToLogout')}
                                             </DialogContentText>
                                         </DialogContent>
                                         <DialogActions>
-                                            <Button onClick={handleCloseDialog} color="primary">Cancel</Button>
-                                            <Button onClick={handleLogout} color="primary">Yes</Button>
+                                            <Button onClick={handleCloseDialog} color="primary">{t('cancel')}</Button>
+                                            <Button onClick={handleLogout} color="primary">{t('yes')}</Button>
                                         </DialogActions>
                                     </Dialog>
                                 </Menu>
@@ -401,29 +403,29 @@ const Nav = () => {
                                     <ListItemIcon>
                                         <PersonOutline />
                                     </ListItemIcon>
-                                    Profile
+                                    {t('profile')}
                                 </MenuItem>
                                 <MenuItem component={Link} to='/privacy-policy'>
                                     <ListItemIcon>
                                         <PrivacyTipOutlined />
                                     </ListItemIcon>
-                                    Privacy Policy
+                                    {t('privacyPolicy')}
                                 </MenuItem>
                                 <MenuItem onClick={handleClickOpen}>
                                     <ListItemIcon>
                                         <LogoutIcon />
                                     </ListItemIcon>
-                                    Logout
+                                    {t('logout')}
                                 </MenuItem>
                                 <Dialog open={open} onClose={handleCloseDialog} fullWidth>
                                     <DialogContent>
                                         <DialogContentText sx={{ color: 'black', fontSize: '18px' }}>
-                                            Are you sure you want to logout?
+                                        {t('areYouSureYouWantToLogout')}
                                         </DialogContentText>
                                     </DialogContent>
                                     <DialogActions>
-                                        <Button onClick={handleCloseDialog} color="primary">Cancel</Button>
-                                        <Button onClick={handleLogout} color="primary">Yes</Button>
+                                        <Button onClick={handleCloseDialog} color="primary">{t('cancel')}</Button>
+                                        <Button onClick={handleLogout} color="primary">{t('yes')}</Button>
                                     </DialogActions>
                                 </Dialog>
                             </Menu>

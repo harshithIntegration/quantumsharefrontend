@@ -8,6 +8,7 @@ import pinteresticon from '../Assets/redditSmall.svg';
 import { ReactSVG } from 'react-svg';
 import { toast } from 'react-toastify';
 import { Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const PinterestLogin = () => {
     const token = sessionStorage.getItem('token');
@@ -18,6 +19,7 @@ const PinterestLogin = () => {
     const [channelImageUrl, setChannelImageUrl] = useState('');
     const [channelName, setChannelName] = useState('');
     const [subscriberCount, setSubscriberCount] = useState('');
+    const {t} = useTranslation('');
 
     const handlePinterestLogin = async () => {
         setLoading(true);
@@ -96,21 +98,21 @@ const PinterestLogin = () => {
                     </Button>
                 ) : (
                     !isLoggedIn ? (
-                        <Button variant='contained' sx={{ margin: '30px auto', marginBottom: '10px', fontWeight: '600' }} onClick={handlePinterestLogin} disabled>Connect</Button>
+                        <Button variant='contained' sx={{ margin: '30px auto', marginBottom: '10px', fontWeight: '600' }} onClick={handlePinterestLogin} disabled>{t('connect')}</Button>
                     ) : (
-                        <Button variant='contained' sx={{ margin: '30px auto', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>Disconnect</Button>
+                        <Button variant='contained' sx={{ margin: '30px auto', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>{t('disconnect')}</Button>
                     )
                 )}
             </section>
             <Dialog open={open} onClose={handleClose} maxWidth='lg'>
                 <DialogContent>
                     <DialogContentText sx={{ color: 'black', fontSize: '17px' }}>
-                        Are you sure you want to disconnect from {channelName} Youtube Channel ?
+                        {t('confirmDisconnect')} {channelName} Youtube Channel ?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>No</Button>
-                    <Button onClick={handleConfirmDisconnect} autoFocus>Yes</Button>
+                    <Button onClick={handleClose}>{t('no')}</Button>
+                    <Button onClick={handleConfirmDisconnect} autoFocus>{t('yes')}</Button>
                 </DialogActions>
             </Dialog>
         </>

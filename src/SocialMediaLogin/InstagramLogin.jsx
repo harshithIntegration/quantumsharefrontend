@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setInstaName } from '../Redux/action/NameSlice';
 import { setInstagramUrl } from '../Redux/action/pageUrlsSlice';
 import { setInstaLoggedIn } from '../Redux/action/loginStatusSilce';
+import { t } from 'i18next';
 
 const InstagramLogin = () => {
     let token = sessionStorage.getItem("token");
@@ -255,45 +256,45 @@ const InstagramLogin = () => {
                     </Button>
                 ) : (
                     !instaLoggedIn ? (
-                        <Button variant='contained' sx={{ marginTop: '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handleConnect}>Connect</Button>
+                        <Button variant='contained' sx={{ marginTop: '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handleConnect}>{t('connect')}</Button>
                     ) : (
-                        <Button variant='contained' sx={{ marginTop: '20px', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>Disconnect</Button>
+                        <Button variant='contained' sx={{ marginTop: '20px', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>{t('disconnect')}</Button>
                     )
                 )}
             </section>
 
             <Dialog open={open} onClose={handleConnectClose}>
                 <DialogTitle sx={{ m: 0, p: 2, color: '#ba343b', fontSize: '20px', textAlign: 'center' }}>
-                    Link Instagram Profile
+                  {t('linkInstagramProfile')}
                 </DialogTitle>
                 <DialogContent dividers>
                     <DialogContentText sx={{ fontSize: '18px' }}>
-                        Ensure that you account is converted as <b>Instagram Business</b> or <b>Instagram Creator</b> Account.
+                       {t('ensureAccountConverted')} <b>{t('instagramBusiness')}</b> or <b>{t('instagramCreator')}</b> {t('account')}
                     </DialogContentText>
                     <DialogContentText sx={{ fontSize: '18px' }}>
-                        And Verify that Instagram Account is connected to a <b>Facebook Page</b>.
+                       {t('verifyInstagramConnected')} <b>Facebook Page</b>.
                     </DialogContentText>
                     <br />
                     <DialogContentText sx={{ fontSize: '17px', textAlign: 'center' }}>
-                        Know more how to <Link to='/connect-socialmedia#instagram' id='info'>Connect a Facebook Page to an Instagram</Link><OpenInNewIcon sx={{ color: '#067acc', verticalAlign: 'middle', marginLeft: '2px', marginBottom: '5px', fontSize: 'medium' }} />
+                        {t('knowMoreHowTo')} <Link to='/connect-socialmedia#instagram' id='info'>{t('connectFacebookPageToInstagram')}</Link><OpenInNewIcon sx={{ color: '#067acc', verticalAlign: 'middle', marginLeft: '2px', marginBottom: '5px', fontSize: 'medium' }} />
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleConnectClose}>Cancel</Button>
                     <Button autoFocus value={code} name="code" onClick={handleInstagramLogin}>
-                        Continue
+                        {t('continue')}
                     </Button>
                 </DialogActions>
             </Dialog>
             <Dialog open={open1} onClose={handleClose} maxWidth='lg'>
                 <DialogContent>
                     <DialogContentText sx={{ color: 'black', fontSize: '17px' }}>
-                        Are you sure you want to disconnect from <b>{InstagramUsername}</b> Instagram Profile ?
+                        {t('confirmDisconnect')} <b>{InstagramUsername}</b> {t('instagramProfile')}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>No</Button>
-                    <Button onClick={handleConfirmDisconnect} autoFocus>Yes</Button>
+                    <Button onClick={handleClose}>{t('no')}</Button>
+                    <Button onClick={handleConfirmDisconnect} autoFocus>{t('yes')}</Button>
                 </DialogActions>
             </Dialog>
         </>
