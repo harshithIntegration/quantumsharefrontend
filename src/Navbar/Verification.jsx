@@ -8,12 +8,14 @@ import DoneIcon from '@mui/icons-material/Done';
 import QS from "../Assets/QS.webp";
 import emg1 from '../Assets/msg.webp';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 function Verification() {
     const location = useLocation();
     const [loading, setLoading] = useState(false);
     const [verificationResult, setVerificationResult] = useState(null);
     const [signupMessage, setSignupMessage] = useState("A verification link has been sent to your email. Please verify to access login.");
+    const {t} =useTranslation('');
 
     useEffect(() => {
         const token = new URLSearchParams(location.search).get('token');
@@ -54,8 +56,8 @@ function Verification() {
                                 <h2>{verificationResult ? "Email Verified!" : "Signup Successful! Verify Your Email"}</h2>
                                 {verificationResult ? (
                                     <div>
-                                        <p style={{ marginTop: '12px', color: 'gray', fontSize: '18px' }}>Your email <b style={{ color: '#ba343b' }}>{verificationResult.data.user.email}</b> has been successfully verified. You can now log in to access the platform.</p>
-                                        <Link to='/login'><button style={{ backgroundColor: '#ba343b', color: '#fff', padding: '10px 20px', borderRadius: '15px', border: 'none', cursor: 'pointer', fontSize: '18px', fontWeight: '600', margin: '30px' }}>Login</button></Link>
+                                        <p style={{ marginTop: '12px', color: 'gray', fontSize: '18px' }}>Your email <b style={{ color: '#ba343b' }}>{verificationResult.data.user.email}</b> {t('successfullyUpdated')}</p>
+                                        <Link to='/login'><button style={{ backgroundColor: '#ba343b', color: '#fff', padding: '10px 20px', borderRadius: '15px', border: 'none', cursor: 'pointer', fontSize: '18px', fontWeight: '600', margin: '30px' }}>{t('login')}</button></Link>
                                     </div>
                                 ) : (
                                     <p style={{ marginTop: '12px', color: 'gray', fontSize: '18px' }}>{signupMessage}</p>

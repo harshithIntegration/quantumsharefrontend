@@ -18,6 +18,7 @@ import { FetchUser } from '../Redux/FetchUser';
 import QI from '../Sidebar/QI';
 import Post from './Post';
 import AutoGraphIcon from '@mui/icons-material/AutoGraph';
+import { useTranslation } from 'react-i18next';
 
 const Dashboard = () => {
     const { remainingDays, remainingCredits } = useSelector((state) => state.data);
@@ -25,6 +26,7 @@ const Dashboard = () => {
     const [AIopen, setAIopen] = useState(false)
     const [Postopen, setpostopen] = useState(false)
     const navigate = useNavigate()
+    const {t} = useTranslation('');
 
     useEffect(() => {
         FetchUser(dispatch);
@@ -98,7 +100,7 @@ const Dashboard = () => {
                         <Grid container spacing={2}>
                             <Grid item xs={12} md={12} lg={12}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', backgroundColor: 'white' }}>
-                                    <h2 style={{ padding: '10px', color: 'grey', marginLeft: '1rem' }}>Welcome!</h2>
+                                    <h2 style={{ padding: '10px', color: 'grey', marginLeft: '1rem' }}>{t('welcome')}</h2>
                                     <div style={{ display: 'flex', justifyContent: 'flex-end', backgroundColor: 'white', padding: '10px' }}>
                                         {remainingDays !== null && (
                                             <Button
@@ -110,7 +112,7 @@ const Dashboard = () => {
                                                 }}
                                                 variant="outlined"
                                             >
-                                                Trial Expires in {remainingDays} Days
+                                                {t('trailExpires')} {remainingDays} {t('days')}
                                             </Button>
                                         )}
                                         {remainingCredits !== null && (
@@ -123,7 +125,7 @@ const Dashboard = () => {
                                                 }}
                                                 variant="contained"
                                             >
-                                                {remainingCredits} Credits Left
+                                                {remainingCredits} {t('creditsLeft')}
                                             </Button>
                                         )}
                                     </div>
@@ -134,7 +136,7 @@ const Dashboard = () => {
                                     <Card sx={{ width: 250, height: 100, margin: 1, cursor: 'pointer' }} onClick={handleAIComponent}>
                                         <CardContent sx={{ display: 'flex', justifyContent: 'space-around' }}>
                                             <Typography sx={{ fontSize: 18, paddingTop: '20px' }} gutterBottom>
-                                                Quantum AI
+                                                {t('quantum_ai')}
                                             </Typography>
                                             <IconButton >
                                                 <AutoFixHighIcon sx={{ color: 'white', bgcolor: '#ba343b', width: '50px', height: '50px', padding: '7px', borderRadius: '50%' }} />
@@ -145,7 +147,7 @@ const Dashboard = () => {
                                     <Card sx={{ width: 250, height: 100, margin: 1, cursor: 'pointer' }} onClick={handleSocialClick}>
                                         <CardContent sx={{ display: 'flex', justifyContent: 'space-around' }}>
                                             <Typography sx={{ fontSize: 18, paddingTop: '20px' }} gutterBottom>
-                                                Connect Social
+                                                {t('connect_social')}
                                             </Typography>
                                             <IconButton >
                                                 <TryIcon sx={{ color: 'white', bgcolor: '#ba343b', width: '50px', height: '50px', padding: '7px', borderRadius: '50%' }} />
@@ -155,7 +157,7 @@ const Dashboard = () => {
                                     <Card sx={{ width: 250, height: 100, margin: 1, cursor: 'pointer' }} onClick={handlePost}>
                                         <CardContent sx={{ display: 'flex', justifyContent: 'space-around' }}>
                                             <Typography sx={{ fontSize: 18, paddingTop: '20px' }} gutterBottom>
-                                                Social Media Post
+                                                {t('social_media_post')}
                                             </Typography>
                                             <IconButton >
                                                 <PhotoFilterIcon sx={{ color: 'white', bgcolor: '#ba343b', width: '50px', height: '50px', padding: '7px', borderRadius: '50%' }} />
@@ -166,7 +168,7 @@ const Dashboard = () => {
                                     <Card sx={{ width: 250, height: 100, margin: 1, cursor: 'pointer' }} onClick={handleAnalyticsClick}>
                                         <CardContent sx={{ display: 'flex', justifyContent: 'space-around' }}>
                                             <Typography sx={{ fontSize: 18, paddingTop: '20px' }} gutterBottom>
-                                                Analytics
+                                                {t('analytics')}
                                             </Typography>
                                             <IconButton >
                                                 <AutoGraphIcon sx={{ color: 'white', bgcolor: '#ba343b', width: '50px', height: '50px', padding: '7px', borderRadius: '50%' }} />
@@ -174,8 +176,8 @@ const Dashboard = () => {
                                         </CardContent>
                                     </Card>
                                 </div>
-                                <h3 style={{ padding: '30px', backgroundColor: 'white', margin: '10px', textAlign: 'center', fontSize: 24, color: '#ba343b' }}>Stay tuned for upcoming features</h3>
-                                <h4 style={{ padding: '10px', backgroundColor: 'white', margin: '10px', marginLeft: '1rem', borderRadius: '5px', marginTop: '15px', fontSize: 20, color: '#ba343b' }}>Analytics Overview</h4>
+                                <h3 style={{ padding: '30px', backgroundColor: 'white', margin: '10px', textAlign: 'center', fontSize: 24, color: '#ba343b' }}>{t('stayTuned')}</h3>
+                                <h4 style={{ padding: '10px', backgroundColor: 'white', margin: '10px', marginLeft: '1rem', borderRadius: '5px', marginTop: '15px', fontSize: 20, color: '#ba343b' }}>{t('analyticsOverview')}</h4>
                             </Grid>
                             <Grid item xs={12} md={6} lg={6}>
                                 <div className='charts' style={{ background: 'white', padding: '20px', margin: '10px', marginTop: '0px' }}>
@@ -236,40 +238,41 @@ const Dashboard = () => {
                                     <Card className='mystyle' sx={{ width: 270, height: 300, margin: 1 }}>
                                         <CardContent>
                                             <Typography sx={{ fontSize: 18, textAlign: 'center', color: '#fff', bgcolor: '#ba343b', padding: '5px', borderRadius: '5px' }} gutterBottom>
-                                                Scheduled Post
+                                                {t('scheduledpost')}
                                             </Typography>
                                             <Typography sx={{ fontSize: 14, textAlign: 'center' }} color="text.secondary" gutterBottom>
-                                                Plan your content in advance, set the timing and target your competitors, and watch your posts go live automatically. Stay consistent, save time, and reach your audience when they're most engaged. Keep an eye out for this exciting feature!  Effortlessly manage your social media and connect with your audience seamlessly.
+                                                {t('scheduledpostdesc')}    
                                             </Typography>
                                         </CardContent>
                                     </Card>
                                     <Card sx={{ width: 270, height: 300, margin: 1 }}>
                                         <CardContent>
                                             <Typography sx={{ fontSize: 18, textAlign: 'center', color: '#fff', bgcolor: '#ba343b', padding: '5px', borderRadius: '5px' }} gutterBottom>
-                                                Recent Post
+                                               {t('recentpost')}
                                             </Typography>
                                             <Typography sx={{ fontSize: 14, textAlign: 'center' }} color="text.secondary" gutterBottom>
-                                                Effortlessly view your latest social media posts and monitor engagement metrics, including likes, comments, and shares, all in one place. Our detailed analytics provide valuable insights into your posts' performance, helping you understand what resonates with your audience. Track trends and refine your strategy to boost your social media presence.
+                                               {t('recentpostdesc')}
+                                                </Typography>
+                                        </CardContent>
+                                    </Card>
+                                    <Card sx={{ width: 270, height: 300, margin: 1 }}>
+                                        <CardContent>
+                                            <Typography sx={{ fontSize: 18, textAlign: 'center', color: '#fff', bgcolor: '#ba343b', padding: '5px', borderRadius: '5px' }} gutterBottom>
+                                                {t('publishedpost')}
+                                            </Typography>
+                                            <Typography sx={{ fontSize: 14, textAlign: 'center' }} color="text.secondary" gutterBottom>
+                                               {t('publishedpostdesc')}
                                             </Typography>
                                         </CardContent>
                                     </Card>
                                     <Card sx={{ width: 270, height: 300, margin: 1 }}>
                                         <CardContent>
                                             <Typography sx={{ fontSize: 18, textAlign: 'center', color: '#fff', bgcolor: '#ba343b', padding: '5px', borderRadius: '5px' }} gutterBottom>
-                                                Published Post
+                                                {t('draft')}
                                             </Typography>
                                             <Typography sx={{ fontSize: 14, textAlign: 'center' }} color="text.secondary" gutterBottom>
-                                                Access all your shared content across social media platforms easily. Stay organized with a centralized hub for posts, likes, and comments. Monitor your social presence effortlessly and engage with your audience effectively. Keep track of your content and its performance. Experience seamless social media management.
+                                               {t('draftdesc')}   
                                             </Typography>
-                                        </CardContent>
-                                    </Card>
-                                    <Card sx={{ width: 270, height: 300, margin: 1 }}>
-                                        <CardContent>
-                                            <Typography sx={{ fontSize: 18, textAlign: 'center', color: '#fff', bgcolor: '#ba343b', padding: '5px', borderRadius: '5px' }} gutterBottom>
-                                                Draft
-                                            </Typography>
-                                            <Typography sx={{ fontSize: 14, textAlign: 'center' }} color="text.secondary" gutterBottom>
-                                                Manage your drafts with ease! Access and edit your unpublished posts. Keep your ideas in one place and refine your content before publishing. Seamlessly transition from draft to published post whenever you're ready. Stay organized and ensure your content is polished before sharing. Experience efficient social media planning with our draft management feature.                                            </Typography>
                                         </CardContent>
                                     </Card>
                                 </div>
@@ -280,7 +283,7 @@ const Dashboard = () => {
             </div>
             <div className="icon-container">
                 <Link to='/reference-video'><FaCirclePlay className="circle-icon" /></Link>
-                <div className="hover-content">reference video</div>
+                <div className="hover-content">{t('referencevideo')}</div>
             </div>
         </>
     )

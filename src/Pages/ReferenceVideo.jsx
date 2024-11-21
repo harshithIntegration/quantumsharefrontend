@@ -2,26 +2,28 @@ import React, { useState } from 'react';
 import Nav from '../Navbar/Nav';
 import Sidenav from '../Navbar/Sidenav';
 import { Container, Typography, Grid, Card, CardMedia, CardContent, Dialog, DialogContent, Box } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const ReferenceVideo = () => {
     const token = sessionStorage.getItem('token')
     const [open, setOpen] = useState(false);
     const [selectedVideo, setSelectedVideo] = useState(null);
+    const {t} = useTranslation('');
 
     const videos = [
         {
             title: 'Facebook',
-            description: 'Welcome to QuantumShare! In this video,we will guide you through the seamless process of integrating your Facebook business page with QuantumShare and posting your content. Follow these easy steps to get started and enhance your social media management !',
+            description: t('facebookdesc'),
             url: 'https://youtu.be/-2XXxqIMd38?si=R44V3PmhNYOtwCNP',
         },
         {
             title: 'Instagram',
-            description: 'In this video, we will walk you through the seamless integration of your Instagram business account with QuantumShare. Learn how to effortlessly connect your Instagram and start posting your content with ease. Our step-by-step guide will help you optimize your social media management.',
+            description: t('instagramdesc'),
             url: 'https://youtu.be/lFTgfTKa69w?si=y0XXm3f97b-y2u-Y',
         },
         {
             title: 'Telegram',
-            description: 'Welcome to QuantumShare! In this instructional video, we will walk you through the process of integrating your Telegram group with QuantumShare and seamlessly posting content. Follow these detailed steps to enhance your social media management capabilities.',
+            description: t('telegramdesc'),
             url: 'https://youtu.be/prr9XTkN-p4?si=VbrtWIqkkjNTRA2x',
         },
     ];
@@ -59,7 +61,7 @@ const ReferenceVideo = () => {
                 <Container>
                     <Typography variant="h5" gutterBottom color="#d3040c" fontWeight="bold">
                         <h1 style={{ textAlign: 'center', color: '#ba343b', fontSize: '26px', marginTop: '3rem' }}>
-                            Step-by-Step Guide: Connecting Social Media Profiles with QuantumShare
+                            {t('stepbystep')}
                         </h1>
                     </Typography>
                     <Grid container spacing={4} marginTop={3}>
@@ -106,7 +108,7 @@ const ReferenceVideo = () => {
                                             autoPlay
                                         >
                                             <source src={selectedVideo.url} type="video/mp4" />
-                                            Your browser does not support the video tag.
+                                            {t('browserNotSupportVideo')}
                                         </video>
                                     ) : (
                                         <iframe

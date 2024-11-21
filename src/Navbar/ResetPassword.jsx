@@ -9,6 +9,7 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import { ToastContainer, toast } from 'react-toastify';
 import { TailSpin } from 'react-loader-spinner';
+import { useTranslation } from 'react-i18next';
 
 const ResetPassword = () => {
     const navigate = useNavigate();
@@ -22,6 +23,7 @@ const ResetPassword = () => {
     const [passwordError, setPasswordError] = useState('');
     const [confirmPasswordError, setConfirmPasswordError] = useState('');
     const [loading, setLoading] = useState(false);
+    const {t} = useTranslation('');
 
     useEffect(() => {
         const query = new URLSearchParams(location.search);
@@ -130,14 +132,14 @@ const ResetPassword = () => {
                         <img src={QS} alt="" style={{ height: 35, marginTop: '5px' }} />
                     </Typography>
                     <Typography sx={{ m: 0, p: 2, color: '#ba343b', fontSize: { xs: '18px', md: '20px' }, textAlign: 'center' }}>
-                        Reset your Password
+                        {t('resetPassword')}
                     </Typography>
                     <Typography
                         variant="body2"
                         textAlign="start"
                         sx={{ margin: '5px 0', color: 'gray', fontSize: { xs: '14px', md: '16px' }} }
                     >
-                        Enter your new password and confirm it to reset your password for Quantum Share application.
+                        {t('resetPasswordDescription')}
                     </Typography>
                     <Box component="form" noValidate sx={{ mt: 2 }}>
                         <Grid container spacing={2} justifyContent="center">

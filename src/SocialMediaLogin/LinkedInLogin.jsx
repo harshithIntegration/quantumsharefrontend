@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setLinkLoggedIn } from '../Redux/action/loginStatusSilce';
 import { setLinkedInProfile } from '../Redux/action/pageUrlsSlice';
 import { setLinkName } from '../Redux/action/NameSlice';
+import { useTranslation } from 'react-i18next';
 
 const LinkedInLogin = () => {
     const token = sessionStorage.getItem('token');
@@ -20,6 +21,7 @@ const LinkedInLogin = () => {
     const [linkedInUserName, setLinkedInUserName] = useState('');
     const [selectedPage, setSelectedPage] = useState('');
     const [linkedInFollowersCount, setLinkedInFollowersCount] = useState('');
+    const {t} = useTranslation('');
 
     const dispatch = useDispatch()
     const { linkLoggedIn } = useSelector((state) => state.loginStatus)
@@ -175,21 +177,21 @@ const LinkedInLogin = () => {
                     </Button>
                 ) : (
                     !linkLoggedIn ? (
-                        <Button variant='contained' sx={{ marginTop: '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handleLinkedInLogin}>Connect</Button>
+                        <Button variant='contained' sx={{ marginTop: '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handleLinkedInLogin}>{t('connect')}</Button>
                     ) : (
-                        <Button variant='contained' sx={{ marginTop: '20px', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>Disconnect</Button>
+                        <Button variant='contained' sx={{ marginTop: '20px', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>{t('disconnect')}</Button>
                     )
                 )}
             </section>
             <Dialog open={open} onClose={handleClose} maxWidth='lg'>
                 <DialogContent>
                     <DialogContentText sx={{ color: 'black', fontSize: '18px' }}>
-                        Are you sure you want to disconnect from <b>{linkedInUserName}</b> LinkedIn ?
+                       {t('confirmDisconnect')} <b>{linkedInUserName}</b> LinkedIn ?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleConfirmDisconnect} autoFocus>Yes</Button>
+                    <Button onClick={handleClose}>{t('cancel')}</Button>
+                    <Button onClick={handleConfirmDisconnect} autoFocus>{t('yes')}</Button>
                 </DialogActions>
             </Dialog>
         </>

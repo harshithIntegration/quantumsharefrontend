@@ -7,6 +7,7 @@ import { TailSpin } from 'react-loader-spinner';
 import { useDispatch } from 'react-redux';
 import QS from '../Assets/QS.webp';
 import { setLinkLoggedIn } from '../Redux/action/loginStatusSilce';
+import { useTranslation } from 'react-i18next';
 
 const LinkedInCallback = () => {
     const location = useLocation();
@@ -26,6 +27,8 @@ const LinkedInCallback = () => {
     const [selectedUrn, setSelectedUrn] = useState('');
     const [selectedAccessToken, setSelectedAccessToken] = useState('');
     const navigate = useNavigate();
+    const {t} = useTranslation('');
+
 
     useEffect(() => {
         const urlParams = new URLSearchParams(location.search);
@@ -143,10 +146,10 @@ const LinkedInCallback = () => {
                 <div id='callbacks'>
                     <img src={QS} alt="Logo" style={{ height: 30, width: 'auto', marginLeft: '12rem' }} />
                     <div style={{ textAlign: 'center', marginTop: '1rem', fontSize: '20px', fontWeight: 'bold' }}>
-                        Add a LinkedIn Profile or a LinkedIn Company Page
+                        {t('addLinkedInProfileOrPage')}
                     </div>
                     <div style={{ color: '#d3040c', marginTop: '1rem', fontWeight: 'bold' }}>
-                        Add a LinkedIn Profile:
+                        {t('addLinkedInProfile')}
                     </div>
                     <div onClick={handleProfileClick} style={{
                         marginTop: '1rem', display: 'flex', alignItems: 'center', padding: '10px', borderRadius: '8px', border: '1px solid #ddd', cursor: 'pointer'
@@ -164,7 +167,7 @@ const LinkedInCallback = () => {
                     {Array.isArray(pages) && pages.length > 0 && (
                         <>
                             <div style={{ color: '#d3040c', marginTop: '2rem', fontWeight: 'bold' }}>
-                                Add a page associated with this account:
+                                {this('addPageAssociatedWithAccount')}
                             </div>
                             <ul style={{ paddingLeft: '0', listStyleType: 'none', marginTop: '1rem' }}>
                                 {pages.map((page) => (
@@ -175,7 +178,7 @@ const LinkedInCallback = () => {
                                         <img src={page.profile_image || 'https://via.placeholder.com/50'} alt={page.name} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
                                         <div style={{ marginLeft: '10px' }}>
                                             <h4 style={{ margin: '0' }}>{page.name}</h4>
-                                            <span style={{ fontSize: '14px' }}>LinkedIn Company Page</span>
+                                            <span style={{ fontSize: '14px' }}>{t('linkedInCompanyPage')}</span>
                                         </div>
                                     </li>
                                 ))}

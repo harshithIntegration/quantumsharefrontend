@@ -21,6 +21,7 @@ import Quantum from '../Assets/Quantum_Logo.webp'
 import { ImageContext } from '../Context/ImageContext';
 import { useDispatch } from 'react-redux';
 import { setAiText } from '../Redux/action/AiTextSlice';
+import { useTranslation } from 'react-i18next';
 
 const QI = ({ onAiClose }) => {
     var url = "";
@@ -33,6 +34,7 @@ const QI = ({ onAiClose }) => {
     const [textResponse, setTextResponse] = useState('');
     const { setImage1 } = useContext(ImageContext);
     const dispatch = useDispatch()
+    const {t} = useTranslation('');
 
     const handleTextSubmit = async () => {
         const endpoint = '/quantum-share/aitext';
@@ -101,12 +103,57 @@ const QI = ({ onAiClose }) => {
         <>
             <Dialog fullWidth maxWidth="md"  open={true} onClose={onAiClose} PaperProps={{ component: 'form', onSubmit: (event) => {event.preventDefault();handleSubmit();},sx: { padding: '10px',  borderRadius: '12px',  display: 'flex', flexDirection: 'column',  height: '100%', }}}>
                 <DialogTitle sx={{ display: 'flex' }}>
-                    <div>Share with Quantum AI <AutoAwesomeIcon /></div>
+                    <div>{t('shareWithQuantumAI')} <AutoAwesomeIcon /></div>
                 </DialogTitle>
                 <Grid container spacing={3} sx={{ flexGrow: 1, overflowY: 'auto' }}>
                     <Grid item xs={12} md={6} sx={{ borderRight: '0.5px solid #ccc', paddingRight: '15px' }}>
-                        <DialogTitle>Now you are using Quantum share's Quantum AI</DialogTitle>
+                        <DialogTitle>{t('usingQuantumAI')}</DialogTitle>
                         <DialogContent sx={{ marginTop: '10px' }}>
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                name="userMessage"
+                                label= {t('enterTextHere')}
+                                type="text"
+                                variant="outlined" 
+                                value={inputText}
+                                fullWidth
+                                sx={{ marginBottom: '20px' }}
+                                onChange={(e) => setInputText(e.target.value)}
+                            />
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={handleTextSubmit}
+                                disabled={!inputText || loading}
+                                fullWidth
+                                sx={{ mt: 2 }}
+                            >
+                                {t('generate')} &nbsp;<AutoFixHighIcon />
+                            </Button>
+                        </DialogContent>
+                        <DialogContent sx={{ marginTop: '30px' }}>
+                            <TextField
+                                margin="none"
+                                name="textPrompt"
+                                label={t('generateImage')}
+                                type="text"
+                                variant="outlined" 
+                                fullWidth
+                                sx={{ marginBottom: '20px' }}
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                            />
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={handleSubmit}
+                                disabled={!input || loading}
+                                fullWidth
+                                sx={{ mt: 1 }}
+                            >
+                                {t('generate')} &nbsp;<AutoAwesomeIcon />
+                            </Button>
                             <TextField autoFocus margin="dense" name="userMessage" label="Enter text here" type="text" variant="outlined"  value={inputText} fullWidth sx={{ marginBottom: '20px' }} onChange={(e) => setInputText(e.target.value)}/>
                             <Button variant="contained" color="primary" onClick={handleTextSubmit} disabled={!inputText || loading} fullWidth sx={{ mt: 2 }}>
                                 Generate &nbsp;<AutoFixHighIcon />
@@ -117,17 +164,17 @@ const QI = ({ onAiClose }) => {
                             <Button variant="contained" color="primary" onClick={handleSubmit} disabled={!input || loading} fullWidth sx={{ mt: 1 }}>Generate &nbsp;<AutoAwesomeIcon /> </Button>
                             <Dialog open={aiopen} onClose={handleClose} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description" fullWidth>
                                 <DialogContent>
-                                    <DialogContentText sx={{ color: 'black', fontSize: '18px' }}>Image generation is not for Free Trial</DialogContentText>
+                                    <DialogContentText sx={{ color: 'black', fontSize: '18px' }}>{t('imageGenerationNotFreeTrial')}</DialogContentText>
                                 </DialogContent>
                                 <DialogActions>
-                                    <Button onClick={handleClose} style={{ color: '#ba343b' }}>Cancel</Button>
-                                    <Button onClick={handleClose} style={{ color: '#ba343b' }} autoFocus>Ok</Button>
+                                    <Button onClick={handleClose} style={{ color: '#ba343b' }}>{t('cancel')}</Button>
+                                    <Button onClick={handleClose} style={{ color: '#ba343b' }} autoFocus>{t('ok')}</Button>
                                 </DialogActions>
                             </Dialog>
                         </DialogContent>
                     </Grid>
                     <Grid item xs={12} md={6} sx={{ paddingLeft: '15px' }}>
-                        <DialogTitle>Preview</DialogTitle>
+                        <DialogTitle>{t('preview')}</DialogTitle>
                         <div style={{ marginTop: '20px', textAlign: 'center' }}>
                             {loading ? (
                                 <RingLoader color="#d3040c" loading={loading} size={50} aria-label="Loading Spinner" data-testid="loader"/>) : ( 
@@ -153,9 +200,15 @@ const QI = ({ onAiClose }) => {
                 </Grid>
                 <DialogActions sx={{ marginTop: 'auto', borderTop: '1px solid #ccc', display: 'flex', justifyContent: 'space-between', padding: '10px 24px',}}>
                     <h6 style={{ color: 'grey' }}>
-                        Powered by <img src={Quantum} alt="Quantum Logo" height={30} style={{ marginLeft: '5px' }} /> Quantum Paradigm
+                       {t('poweredBy')} <img src={Quantum} alt="Quantum Logo" height={30} style={{ marginLeft: '5px' }} /> {t('quantumParadigm')}
                     </h6>
                     <DialogActions>
+                        <Button onClick={onAiClose} variant="outlined" sx={{ mr: 2 }}>
+                            {t('cancel')}
+                        </Button>
+                        <Button onClick={handleSend} variant="contained" color="primary">
+                            {t('addToPost')}
+                        </Button>
                         <Button onClick={onAiClose} variant="outlined" sx={{ mr: 2 }}>Cancel </Button>
                         <Button onClick={handleSend} variant="contained" color="primary">Add to Post</Button>    
                     </DialogActions>

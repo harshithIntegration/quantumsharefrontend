@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setPageUrls } from '../Redux/action/pageUrlsSlice';
 import { setFbName } from '../Redux/action/NameSlice';
 import { setIsLoggedIn } from '../Redux/action/loginStatusSilce';
+import { useTranslation } from 'react-i18next';
 
 const FacebookLogin = () => {
     let token = sessionStorage.getItem("token");
@@ -28,6 +29,7 @@ const FacebookLogin = () => {
     const [facebookNumberofpages, setNumberOfPages] = useState('');
     const [pageData, setPageData] = useState([]);
     const [selectedPage, setSelectedPage] = useState('');
+    const {t} = useTranslation('');
     // const [processing, setProcessing] = useState(false);
 
     const dispatch = useDispatch()
@@ -298,9 +300,9 @@ const FacebookLogin = () => {
                     </Button>
                 ) : (
                     !isLoggedIn ? (
-                        <Button variant='contained' sx={{ marginTop: '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handleFacebookLogin}>Connect</Button>
+                        <Button variant='contained' sx={{ marginTop: '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handleFacebookLogin}>{t('connect')}</Button>
                     ) : (
-                        <Button variant='contained' sx={{ marginTop: '20px', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>Disconnect</Button>
+                        <Button variant='contained' sx={{ marginTop: '20px', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>{t('disconnect')}</Button>
                     )
                 )}
             </section>
@@ -314,12 +316,12 @@ const FacebookLogin = () => {
             <Dialog open={open} onClose={handleClose} maxWidth='lg'>
                 <DialogContent>
                     <DialogContentText sx={{ color: 'black', fontSize: '17px' }}>
-                        Are you sure you want to disconnect from <b>{facebookUsername}</b> Facebook Profile ?
+                        {t('confirmDisconnect')} <b>{facebookUsername}</b> {t('facebookProfile')}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleConfirmDisconnect} autoFocus>Yes</Button>
+                    <Button onClick={handleClose}>{t('cancel')}</Button>
+                    <Button onClick={handleConfirmDisconnect} autoFocus>{t('yes')}</Button>
                 </DialogActions>
             </Dialog>
         </>

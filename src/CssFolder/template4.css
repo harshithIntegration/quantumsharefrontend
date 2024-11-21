@@ -1,0 +1,259 @@
+/* App.css */
+.app-container {
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+  align-items: center;
+  justify-content: flex-start; /* Align items at the top */
+  height: 95vh;
+  padding: 10px; /* Added padding for better spacing */
+  background-color: #dfe2e2; /* Light blue background for a modern look */
+}
+
+.header-box {
+  width: 100%; /* Full width for the header */
+  max-width: 1200px; /* Maximum width for better alignment */
+  background-color: #ffffff; /* White background for the header */
+  padding: 20px; /* Padding for better spacing */
+  border-radius: 12px; /* Rounded corners for the header */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+  margin-bottom: 20px; /* Space below the header */
+  text-align: center; /* Center align text */
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  align-items: center; /* Center align items horizontally */
+}
+
+.company-name {
+  font-size: 36px; /* Larger font size for the company name */
+  font-weight: 700; /* Bold font weight */
+  color: #333; /* Darker text color for better contrast */
+  margin-bottom: 10px; /* Space below the company name */
+}
+
+.tagline {
+  font-size: 20px; /* Font size for tagline */
+  font-weight: 400; /* Normal font weight */
+  color: #666; /* Slightly lighter color for the tagline */
+  margin-bottom: 10px; /* Space below the tagline */
+}
+
+.footer {
+  font-size: 16px; /* Font size for footer */
+  color: #6c757d; /* Subtle gray color */
+  margin-top: 10px; /* Space above the footer */
+}
+
+.controls {
+  width: 100%; /* Ensure full width for controls */
+  display: flex; /* Align control elements horizontally */
+  justify-content: center; /* Center controls horizontally */
+  margin-bottom: 20px;
+}
+
+.control-group {
+  display: flex; /* Align control elements horizontally */
+  flex-direction: row; /* Align elements in a row */
+  gap: 20px; /* Space between control groups */
+  margin-bottom: 10px;
+  padding: 10px; /* Added padding for better spacing */
+  background-color: #ffffff; /* Background for the control panel */
+  border-radius: 8px; /* Rounded corners for control panel */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow for the control panel */
+}
+
+.control-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600; /* Bold font for labels */
+}
+
+.template {
+  background-color: #ffffff; /* White background for the template */
+  padding: 20px;
+  border-radius: 12px; /* More rounded corners */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Deeper shadow for a card-like effect */
+  width: 600px;
+  max-width: 90%; /* Responsive width */
+}
+
+.card-header, .card-body, .card-footer {
+  padding: 20px;
+  margin-bottom: 10px;
+  text-align: center;
+  position: relative; /* For positioning icons */
+}
+
+.company-logo, .team-photo {
+  max-width: 100%; /* Slightly larger logo and photo */
+  margin-bottom: 20px;
+}
+
+.editable-input {
+  width: fit-content; /* Full width for inputs */
+  font-size: 18px; /* Adjusted font size */
+  padding: 10px; /* Increased padding for better usability */
+  border: 1px solid #ced4da; /* Light border color */
+  border-radius: 4px; /* Rounded corners for inputs */
+  margin-bottom: 10px;
+}
+
+.team-photo {
+  max-width: 100%; /* Full width photo */
+  height: 50px;
+  cursor: pointer;
+}
+
+.icons {
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* Increased gap for better spacing */
+}
+
+.icons svg {
+  width: 30px; /* Larger icons */
+  height: 30px;
+  fill: #007bff; /* Blue color for icons */
+  cursor: pointer;
+}
+
+.card-footer {
+  font-size: 16px; /* Slightly larger font size */
+  color: #6c757d; /* Subtle gray color */
+}
+
+.editable-container {
+  position: relative;
+  display: inline-block;
+}
+
+.edit-icon {
+  position: absolute;
+  top: -10px; /* Adjusted position */
+  right: -10px;
+  background-color: #ffffff; /* White background */
+  border: 1px solid #dee2e6; /* Light border for the icon */
+  border-radius: 50%;
+  padding: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Light shadow for the icon */
+}
+
+.card-header, .card-body, .card-footer {
+  border: none; /* Removed border from default state */
+}
+
+.card-header.dragging, .card-body.dragging, .card-footer.dragging {
+  border: 2px dashed #007bff; /* Blue dashed border while dragging */
+}
+
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(246, 244, 244, 0.1);
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(227, 222, 222, 0.5);
+}
+
+
+button {
+  margin-left: 10px;
+  margin-bottom: 3px;
+  padding: 10px 20px;
+  background-color: #9500ff;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+  border-radius: 100px;
+}
+.app-container {
+  position: relative;
+}
+
+.popup-overlay {
+  position:absolute;
+  top: 0;
+  left: 0;
+  width:fit-content;
+  height: 100px;
+ 
+  display:block;
+  justify-content: center;
+  align-items:baseline;
+  margin-left: 1800px;
+  margin-top: 30px;
+
+  
+}
+
+.popup {
+  background: #cfc1c1;
+  padding: 20px;
+  border-radius: 20px;
+  margin-left: 1200px;
+  position: absolute;
+  
+  
+ 
+  
+  
+  
+}
+
+.control-group {
+  margin-bottom: 15px;
+
+  
+  
+}
+
+.control-group label {
+  display: block;
+  margin-bottom: 5px;
+  
+}
+
+.close-icon {
+  position:absolute;
+  top: 10px;
+  right: 40px;
+  cursor: pointer;
+}
+.draggable-element {
+  padding: 10px;
+  border: 2px blanchedalmond; /* Default border */
+  border-radius: 8px;
+  transition: border-color 0.3s ease; /* Smooth transition for border color */
+  width:fit-content;
+}
+
+.draggable-element.dragging {
+  border-color: #ff004c; /* Change border color when dragging */
+  box-shadow: 0 0 10px rgba(0, 255, 102, 0.5); /* Optional shadow effect */
+}
+
+
+.drag-arrows {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 24px;
+  color: #333;
+}
