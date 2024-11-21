@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Draggable from 'react-draggable';
-import '../CssFolder/template.css';
+import '../CssFolder/Template.css';
 import marketingImage from '../Assets/T5p.jpg';
 import logoImage from '../Assets/T5l.jpg';
 

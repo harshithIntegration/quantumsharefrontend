@@ -37,14 +37,3 @@ const Root = () => {
 };
 
 createRoot(document.getElementById("root")).render(<Root />);
-
-
-createRoot(document.getElementById("root")).render(
-    <ImageProvider>
-        <Provider store={store}>
-            <GoogleOAuthProvider clientId="409442492110-3uqmgqqdd3ur012hsg1vq3thek6g9882.apps.googleusercontent.com">
-                <App />
-            </GoogleOAuthProvider>
-        </Provider>
-    </ImageProvider>
-);

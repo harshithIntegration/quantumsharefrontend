@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Draggable from 'react-draggable'; // Import Draggable
-import '../CssFolder/template.css';
+import '../CssFolder/Template.css';
 import t6img from '../Assets/T7b.jpg'; 
 import t6lgo from '../Assets/T6l.jpg';
 
