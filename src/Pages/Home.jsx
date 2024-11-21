@@ -226,7 +226,6 @@ const Home = () => {
                 </Grid>
                 <Grid item xs={12} md={5.9} lg={5.9} sx={{ paddingTop: "15px", backgroundColor: '#fbf4f5', marginBottom: "40px", borderRadius: '16px', width: '80%' }}>
                     <Typography sx={{ fontSize: 17, marginTop: '7px', paddingBottom: "15px" }} style={{ paddingRight: '15px', marginRight: "20px", paddingLeft: '10px', paddingTop: '8px', fontWeight: '500' }} color="black" gutterBottom>
-<<<<<<< HEAD
                         {t('quantumShareInt')}   
                     </Typography>
                     <Typography sx={{ fontSize: 17, marginTop: '7px', paddingBottom: "15px", paddingTop: "10px" }} style={{ paddingRight: '15px', marginRight: "20px", paddingLeft: '10px', fontWeight: '500' }} color="black" gutterBottom>
@@ -235,7 +234,7 @@ const Home = () => {
                     <Typography sx={{ fontSize: 17, marginTop: '7px', paddingTop: "15px" }} style={{ paddingRight: '15px', marginRight: "20px", paddingLeft: '10px', paddingBottom: '25px', fontWeight: '500' }} color="black" gutterBottom>
                         {t('upcomingFeatures')}    
                     </Typography>
-=======
+                    <Typography>
                         Quantum Share simplifies social media management through a streamlined and user-friendly process. To get started, users click the Quantum Share link
                         to open the web app, where they sign up by providing their email and creating a password. After completing email verification,
                         users log in and access the dashboard.From there,navigating to 'social integration' from the drop-down menu allows user to
@@ -255,7 +254,6 @@ const Home = () => {
                         hashtags to posts based on real-time keyword popularity, boosting visibility and engagement.Lastly, Comment Management will enables users to
                         retrieve, post, and manage comments, fostering community engagement.
                     </Typography> */}
->>>>>>> b81235f3ec6da6dea7d31c5a3c9e249847812ffa
                 </Grid>
                 <Grid item xs={12} md={6} lg={6} sx={{ backgroundColor: "white", marginTop: "10px" }}>
                     <Card className='mystyle' id="hover-div" sx={{ width: "85%", height: "auto", marginLeft: "30px", boxShadow: "none", backgroundColor: '#fbf5f7', borderRadius: "25px" }} elevation={12}>
