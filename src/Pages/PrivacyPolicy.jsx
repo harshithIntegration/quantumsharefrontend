@@ -98,7 +98,6 @@ const PrivacyPolicy = () => {
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
                                             Upon your request to terminate your account, we will deactivate or delete your account and information from our active databases. However, some information may be retained in our files to prevent fraud, troubleshoot problems, assist with any investigations, enforce our Terms of Use and/or comply with legal requirements.
                                         </Typography>
-
                                         <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>7. Explicit User Consent for AI Models</b></Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
                                             Quantum Share utilizes third-party AI models for enhancing user experience and providing personalized content recommendations. The following outlines our use of AI models:

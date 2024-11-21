@@ -828,7 +828,6 @@ const Post = ({ onClose }) => {
                                                         vertical: 'bottom',
                                                         horizontal: 'center',
                                                     }}
-
                                                     transformOrigin={{
                                                         vertical: 'top',
                                                         horizontal: 'center',

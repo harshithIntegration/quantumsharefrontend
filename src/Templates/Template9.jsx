@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Draggable from "react-draggable";
-import '../CssFolder/template.css';
+import '../CssFolder/Template.css';
 import t8bimg from '../Assets/T5p.jpg'; 
 
 // Font and Style Modal component

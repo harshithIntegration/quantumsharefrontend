@@ -129,7 +129,7 @@ function EditContainer({
           style={{ width: '100%', marginBottom: '16px' }}
         />
       </label>
-      
+
       <label>
         Upload Logo:
         <input
@@ -233,7 +233,7 @@ function EditContainer({
           style={{ width: '100%', marginBottom: '16px' }}
         />
       </label>
-{/* 
+      {/* 
       <Button type="submit" onClick={handleSaveChanges} variant="outlined" color="error">
         Update
       </Button> */}
