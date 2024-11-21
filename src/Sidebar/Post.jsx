@@ -1,456 +1,13 @@
-// /* eslint-disable no-undef */
-// /* eslint-disable no-mixed-operators */
-// /* eslint-disable no-unused-vars */
-// import React, { useEffect, useState, useContext, useRef, useCallback } from "react";
-// import { Dialog, DialogContent, DialogActions, Grid, Button, Tooltip, DialogContentText } from "@mui/material";
-// import IconButton from '@mui/material/IconButton';
-// import SendIcon from '@mui/icons-material/Send';
-// import Stack from '@mui/material/Stack';
-// import Media from '../Sidebar/Media.jsx'
-// import { ToastContainer, toast } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css'
-// import axiosInstance from "../Helper/AxiosInstance";
-// import 'react-toastify/dist/ReactToastify.css';
-// import { useNavigate, useLocation  } from "react-router-dom";
-// import { ImageContext } from "../Context/ImageContext";
-// import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
-// import { useDispatch } from "react-redux";
-// import { clearAiText, updateCaption } from "../Redux/action/AiTextSlice";
-// import heic2any from "heic2any";
-
-// const Post = ({ onClose }) => {
-//     const navigate = useNavigate()
-//     const location = useLocation();
-//     let token = sessionStorage.getItem("token");
-//     const [open, setOpen] = useState(true);
-//     const [open1, setOpen1] = useState(false);
-//     const [file, setFile] = useState(null);
-//     const [fileType, setFileType] = useState('');
-//     const [caption, setCaption] = useState('');
-//     const [title, setTitle] = useState('');
-//     const [confirmCloseOpen, setConfirmCloseOpen] = useState(false);
-//     const [shareButtonDisabled, setShareButtonDisabled] = useState(true);
-//     const [commentValue, setCommentValue] = useState('');
-//     const [changesMade, setChangesMade] = useState(false);
-//     const [selectedIcons, setSelectedIcons] = useState([]);
-//     const [mediaPlatform, setMediaPlatform] = useState([]);
-//     const { image1 } = useContext(ImageContext);
-//     const [showBox, setShowBox] = useState(false);
-//     const [disableMainTooltip, setDisableMainTooltip] = useState(false);
-//     const boxRef = useRef(null);
-//     const tooltipTimerRef = useRef(null);
-//     const [imageUrl, setImageUrl] = useState('');
-//     const [sr, setSr] = useState('');
-//     const [postSubmitted, setPostSubmitted] = useState(false)
-//     const dispatch = useDispatch()
-
-//     const handleSelectIconAndSendToParent = (selectedIcons, mediaPlatform) => {
-//         setSelectedIcons(selectedIcons);
-//         console.log(selectedIcons);
-//         setMediaPlatform(mediaPlatform);
-//         if (!mediaPlatform.includes('youtube') && !mediaPlatform.includes('Reddit')) {
-//             setTitle('');}
-//         if (!mediaPlatform.includes('Reddit')) {
-//             setSr('');}
-//         console.log(mediaPlatform);
-//     };
-//     const maxTitleCharacters = 100;
-// const maxCaptionCharacters=500;
-//     const closeDialog = () => { setOpen(false); setFile(null); setFileType(''); setTitle(''); setCaption(''); setCommentValue(''); setMediaPlatform([]); onClose();};
-//     useEffect(() => {
-//         if (open) {
-//             const handleBackNavigation = () => {
-//                 closeDialog();
-//                 return false;
-//             };
-
-//             window.history.pushState(null, '', location.pathname); // Push current state
-//             window.addEventListener('popstate', handleBackNavigation);
-
-//             return () => {
-//                 window.removeEventListener('popstate', handleBackNavigation);
-//             };
-//         }
-//     }, [open, location.pathname]);
-//     const handleConfirmCloseOpen = () => {
-//         if (changesMade) { setCaption(''); dispatch(clearAiText()); setChangesMade(false); closeDialog();
-//         } else { setCaption(''); dispatch(clearAiText()); closeDialog();}};
-//     const handleGalleryClick = () => {
-//         document.getElementById('fileInput').click();};
-//     // const handleFileChange = async (e) => {
-//     //     const file = e.target.files[0];
-//     //     if (file) {
-//     //         const isImage = file.type.startsWith('image/');
-//     //         const isVideo = file.type.startsWith('video/');
-//     //         const imageSizeLimit = 4.5 * 1024 * 1024;
-//     //         const videoSizeLimit = 40 * 1024 * 1024;
-//     //         if (isImage && file.size > imageSizeLimit) {
-//     //             toast.error("Image size is too large! Maximum allowed is 4.5MB.");
-//     //             return;
-//     //         }
-//     //         if (isVideo && file.size > videoSizeLimit) {
-//     //             toast.error("Video size is too large! Maximum allowed is 40MB.");
-//     //             return;
-//     //         }
-            
-//     //         setFile(file);
-//     //         setFileType(isImage ? 'image' : 'video');
-//     //         setShareButtonDisabled(false);
-//     //         console.log('File selected:', file);}};
-
-//     const [filePreviewUrl, setFilePreviewUrl] = useState(null);
-//     const handleFileChange = async (e) => {
-//         const file = e.target.files[0];
-//         if (file) {
-//             const isImage = file.type.startsWith("image/");
-//             const isVideo = file.type.startsWith("video/");
-//             const isHEIC = file.type === "image/heic" || file.type === "image/heif";
-//             const imageSizeLimit = 4.5 * 1024 * 1024;
-//             const videoSizeLimit = 40 * 1024 * 1024;
-    
-//             // Size check
-//             if (isImage && file.size > imageSizeLimit) {
-//                 toast.error("Image size is too large! Maximum allowed is 4.5MB.");
-//                 return;
-//             }
-//             if (isVideo && file.size > videoSizeLimit) {
-//                 toast.error("Video size is too large! Maximum allowed is 40MB.");
-//                 return;
-//             }
-    
-//             // Convert HEIC to a previewable format
-//             if (isHEIC) {
-//                 try {
-//                     const convertedBlob = await heic2any({ blob: file, toType: "image/jpeg" });
-//                     setFilePreviewUrl(URL.createObjectURL(convertedBlob));
-//                 } catch (error) {
-//                     toast.error("Could not preview HEIC image.");
-//                     return;
-//                 }
-//             } else {
-//                 // Use the file directly for preview if not HEIC
-//                 setFilePreviewUrl(URL.createObjectURL(file));
-//             }
-    
-//             setFileType(isImage ? "image" : "video");
-//             setShareButtonDisabled(false);
-//             console.log("File selected:", file);
-//         }
-//     };
-//     const handleClickOutside = (event) => {
-//         if (boxRef.current && !boxRef.current.contains(event.target)) {
-//             setShowBox(false);
-//             setDisableMainTooltip(false);
-//             clearTimeout(tooltipTimerRef.current);}};
-//        useEffect(() => {
-//         if (showBox) {
-//             document.addEventListener('mousedown', handleClickOutside);
-//         } else {
-//             document.removeEventListener('mousedown', handleClickOutside);
-//         }
-//         return () => {
-//             document.removeEventListener('mousedown', handleClickOutside);
-//             clearTimeout(tooltipTimerRef.current);
-//         };
-//     }, [showBox]);
-//     const handleChangesMade = () => {setChangesMade(true)};
-//     const platformMappings = {
-//         'facebook': 'Facebook',
-//         'instagram': 'Instagram'};
-//     const getDisplayPlatformName = (platform) => {
-//         const lowercasePlatform = platform.toLowerCase();
-//         if (platformMappings[lowercasePlatform]) {
-//             return platformMappings[lowercasePlatform];
-//         } else {
-//         return platform.charAt(0).toUpperCase() + platform.slice(1);}};
-//     const getEndpointForPlatform = (platform) => {
-//         switch (platform) {
-//             case 'facebook':
-//                 return '/quantum-share/post/file/facebook';
-//             case 'instagram':
-//                 return '/quantum-share/post/file/instagram';
-//             default:
-//                 throw new Error(`Unsupported platform: ${platform}`);}};
-//     const createFormData = (file, caption, title, platform, sr) => {
-//         const formData = new FormData();
-//         if (file) { formData.append('mediaFile', file);} formData.append('caption', caption); formData.append('title', title); formData.append('mediaPlatform', platform); formData.append('sr', sr);
-//         return formData;
-//     };
-//     const handleSubmit = async () => {
-//         setConfirmCloseOpen(false);
-//         setOpen1(false);
-//         const platforms = mediaPlatform.split(',');
-//         if (!platforms || platforms.length === 0) {
-//             toast.error('Please Select a Social Media Platform!');
-//             return;}
-//         try {
-//             const loadingToasts = platforms.map(platform =>
-//                 toast.loading(`Posting to ${getDisplayPlatformName(platform)}...`)
-//             );
-//             const responses = await Promise.all(platforms.map(async platform => {
-//                 const endpoint = getEndpointForPlatform(platform);
-//                 const formData = createFormData(file, caption, title, platform, image1, sr);
-//                 try {
-//                     const response = await axiosInstance.post(endpoint, formData, {
-//                         headers: {
-//                             'Accept': 'application/json',
-//                             Authorization: `Bearer ${token}`
-//                         },
-//                         params: { mediaPlatform: platform }
-//                     });
-//                     toast.dismiss(loadingToasts[platforms.indexOf(platform)]);
-//                     if (platform === 'facebook') {
-//                         if (Array.isArray(response.data)) {
-//                             response.data.forEach(async res => {
-//                                 if (res.status === "success" && res.platform === "facebook") {
-//                                     toast.success(res.message);
-//                                     const postId = res.data.response.id;
-//                                     var delay = 0;
-//                                     console.log("before");
-
-//                                     const contentType = res.data.mediaType;
-//                                     console.log("content type : " + contentType);
-
-//                                     if (contentType.startsWith('video')) {
-//                                         console.log("video section");
-//                                         const contentlength = res.data.mediaSize;
-//                                         var sizeInMB = contentlength / (1024 * 1024);
-//                                         sizeInMB = Math.round(sizeInMB * 10) / 10;
-//                                         console.log("type " + contentlength);
-//                                         console.log("mb " + sizeInMB);
-//                                         delay = 40000;
-//                                         if (sizeInMB <= 10) {
-//                                             delay = 12000;
-//                                         } else if (sizeInMB <= 20) {
-//                                             delay = 15000;
-//                                         } else if (sizeInMB <= 30) {
-//                                             delay = 30000;
-//                                         } else if (sizeInMB <= 40) {
-//                                             delay = 40000;
-//                                         }
-//                                     } else if (contentType.startsWith('image')) {
-//                                         console.log("image section");
-//                                         delay = 5000;
-//                                     }
-//                                     setTimeout(async () => {
-//                                         await axiosInstance.get(`/quatumshare/socialmedia/get/recent/post`, {
-//                                             headers: {
-//                                                 'Accept': 'application/json',
-//                                                 Authorization: `Bearer ${token}`
-//                                             },
-//                                             params: { postId }
-//                                         });
-//                                     }, delay);
-//                                 } else if (res.status === "error" && res.code === 114) {
-//                                     console.error('Credit Depleted Error Message:', res.message);
-//                                     toast.info(res.message);
-//                                 }
-//                             });
-//                         }
-//                     } else if (platform === 'instagram') {
-//                         if (response.data.success?.status === "success") {
-//                             const res = response.data.success;
-//                             toast.success(res.message);
-//                             const postId = res.data.id;
-//                             setTimeout(async () => {
-//                                 await axiosInstance.get(`/quatumshare/socialmedia/get/recent/post`, {
-//                                     headers: {
-//                                         'Accept': 'application/json',
-//                                         Authorization: `Bearer ${token}`
-//                                     },
-//                                     params: { postId }
-//                                 });
-//                             }, 5000);
-//                         } else if (response.data.code === 116) {
-//                             const res = response.data;
-//                             console.error('Unsupported Aspect Ratio:', res.message);
-//                             toast.info(res.message);
-//                         } else if (response.data.structure?.status === "error" && response.data.structure.code === 114) {
-//                             const res = response.data.structure;
-//                             console.error('Credit Depleted Error Message:', res.message);
-//                             toast.info(res.message);
-//                         } else if (response.data.structure?.code === 404) {
-//                             toast.error(response.data.structure.message);
-//                         }
-//                     } 
-//                     return { platform, success: true };
-//                 } catch (error) {
-//                     toast.dismiss(loadingToasts[platforms.indexOf(platform)]);
-//                     const responseData = error.response?.data || {};
-//                     if (error.response?.status === 403) {
-//                         toast.error('Forbidden: You do not have permission to access this resource.');
-//                     } else if (platform === 'facebook') {
-//                         if (Array.isArray(responseData)) {
-//                             responseData.forEach(err => {
-//                                 if (err.status === "error" && err.code === 114) {
-//                                     console.error('Credit Depleted Error Message:', err.message);
-//                                     toast.info(err.message);
-//                                 }
-//                             });
-//                         } else if (responseData.structure?.code === 404) {
-//                             toast.error(responseData.structure.message);
-//                         }
-//                     } else if (platform === 'instagram') {
-//                         if (responseData.code === 116) {
-//                             toast.info('Unsupported aspect ratio. Please use one of Instagram\'s formats: 4:5, 1:1, or 1.91:1.');
-//                         } else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
-//                             const err = responseData.structure;
-//                             console.error('Credit Depleted Error Message:', err.message);
-//                             toast.info(err.message);
-//                         } else if (responseData.structure?.code === 404) {
-//                             toast.error(responseData.structure.message);
-//                         }
-//                     }  else if (responseData.code === 115) {
-//                         toast.error("Token Expired, Please Login Again");
-//                         setTimeout(() => {
-//                             navigate("/login");
-//                         }, 4000);
-//                     } else {
-//                         console.log('An error occurred while processing your request.');
-//                         toast.error('An error occurred while processing your request.');}
-//                     return { platform, success: false };
-//                 }})); 
-//             resetState();
-//             setPostSubmitted(true);
-//         } catch (error) {
-//             console.error('Request failed:', error);
-//             toast.error('Request failed:', error.response?.data?.message || 'An unexpected error occurred.');}};
-//     const resetState = () => {
-//         setFile(null);setFileType('');setTitle('');setCaption('');setCommentValue('');setChangesMade(false);setSelectedIcons([]);setMediaPlatform([]);setImageUrl('')};
-//     const handleTitleChange = (e) => {
-//         const newTitle = e.target.value;
-//         if (newTitle.length <= maxTitleCharacters) {setTitle(newTitle);handleChangesMade(); }};
-
-//     const handleSubReddit = (e) => { setSr(e.target.value); handleChangesMade(); }
-//     const handleCaptionChange = (e) => {
-//         const newCaption = e.target.value;
-//         if(newCaption.length <= maxCaptionCharacters){setCaption(newCaption);setChangesMade(true);}}
-//     const handleClickOpen = () => {setOpen1(true);};
-//     const handleClose = () => { setOpen1(false);};
-//     useEffect(() => {
-//         if (image1) {
-//             setFileType('image');
-//             fetch(image1)
-//                 .then(res => res.blob())
-//                 .then(blob => {
-//                     const fileFromBlob = new File([blob], 'image1.png', { type: blob.type });
-//                     setFile(fileFromBlob);
-//                     setShareButtonDisabled(false);
-//                 });
-//         }
-//     }, [image1]);
-//     return (
-//         <>
-//             <Dialog className="postContent" open={open} onClose={closeDialog} fullWidth maxWidth="lg">
-//                 <DialogContent>
-//                     <Grid container spacing={1}>
-//                         <Grid item lg={7} md={7} xs={12} >
-//                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-//                                 <h4 id="newPost">New Post</h4>
-//                                 <Media onMediaPlatform={handleSelectIconAndSendToParent} initialMediaPlatform={mediaPlatform} postSubmitted={postSubmitted} />
-//                             </div>
-//                             <div className="choose">
-//                                 <div style={{ display: 'flex', gap: '10px' }}>
-//                                     {(mediaPlatform.includes('youtube') || mediaPlatform.includes('Reddit')) && (
-//                                         <div style={{ display: 'flex', flexDirection: 'column', width: mediaPlatform.includes('Reddit') ? '48%' : '98%' }}>
-//                                             <label style={{ fontSize: '12px', fontWeight: 'bold' }}>
-//                                                 Title <span style={{ color: 'red' }}>*</span>
-//                                             </label>
-//                                             <input required className="area" placeholder="Title ... [Only for YouTube and Reddit]" value={title} name="title" onChange={handleTitleChange} style={{ height: '40px', width: '100%', border: '1px solid #ccc', borderRadius: '5px', resize: 'none', outline: 'none', fontSize: '12px', padding: '12px', paddingRight: '50px', boxSizing: 'border-box'}}/>
-//                                             <span style={{ position: 'relative',top:'5px', fontSize: '10px',color: title.length === maxTitleCharacters ? 'red' : '#666'}}>{title.length}/{maxTitleCharacters}</span>
-//                                            </div>)}            
-//                                     {mediaPlatform.includes('Reddit') && (
-//                                         <div style={{ display: 'flex', flexDirection: 'column', width: '48.5%' }}>
-//                                             <label style={{ fontSize: '12px', fontWeight: 'bold' }}>SubReddit <span style={{ color: 'red' }}>*</span></label>
-//                                             <input required className="area" placeholder="SubReddit ... [Reddit]" value={sr} name="subreddit" onChange={handleSubReddit} style={{
-//                                                 height: '40px', border: '1px solid #ccc', borderRadius: '5px', resize: 'none', outline: 'none', fontSize: '12px', padding: '12px'
-//                                             }} /></div>)}
-//                                 </div>
-//                                 <div>
-//                                     <textarea className="area" rows={12} placeholder="Add your Caption/Description here..." value={caption} name="caption" onChange={handleCaptionChange}
-//                                         style={{ width: '98%', border: '1px solid #ccc', borderRadius: '5px', resize: 'none', outline: 'none' }} id="textHere" />
-//                                     <span style={{ position: 'relative', fontSize: '10px',color: caption.length === maxCaptionCharacters ? 'red' : '#666'}}>{caption.length}/{maxCaptionCharacters}</span>
-
-//                                 </div>
-//                                 <div>
-//                                     <Stack direction="row" alignItems="center" spacing={1} sx={{ flexWrap: 'wrap', position: 'relative' }}>
-//                                         <div style={{ position: 'relative', display: 'inline-block' }}>
-//                                             <Tooltip title="Select Photo or Video" placement="top">
-//                                                 <IconButton onClick={handleGalleryClick}>
-//                                                     <InsertPhotoIcon />
-//                                                 </IconButton>
-//                                             </Tooltip>
-//                                             <input id="fileInput" type="file" accept="image/, video/" style={{ display: 'none' }} onChange={handleFileChange} name="mediaFile"/>
-//                                         </div>
-//                                     </Stack>
-//                                 </div>
-//                             </div>
-//                         </Grid>
-//                         <Grid item lg={5} md={5} xs={12} sx={{ border: 1, borderStyle: 'ridge', display: 'flex', flexDirection: 'column', background: '#f5f5f5' }}>
-//                             <div className="preview" style={{ padding: '8px' }}>
-//                                 <h4 id="newPost">Media Preview</h4>
-//                             </div>
-//                             <div style={{ background: '#fff', width: '95%', maxWidth: '100%', height: '100%', borderRadius: '10px' }}>
-//                             <div className="main-preview" style={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: "10px", background: "#fff" }}>
-//             <div className="file-preview-container" style={{ height: "auto", width: "350px", padding: "1px", maxWidth: "100%", textAlign: "center" }}>
-//                 {fileType === "image" && filePreviewUrl && (
-//                     <img src={filePreviewUrl} alt="File Preview" className="file-preview" style={{ maxHeight: "100%", maxWidth: "100%" }} />
-//                 )}
-//                 {fileType === "video" && filePreviewUrl && (
-//                     <video controls className="file-preview" style={{ maxHeight: "100%", maxWidth: "100%" }}>
-//                         <source src={filePreviewUrl} type="video/mp4" />
-//                         Your browser does not support the video tag.
-//                     </video>
-//                 )}
-//                 {!filePreviewUrl && (
-//                     <p id="imgPreview" style={{ marginTop: "100px", color: "#808080" }}>Image / Video Preview</p>
-//                 )}
-//             </div>
-//         </div>
-//                                 <div className="text-preview" style={{ wordBreak: 'break-all', padding: '10px' }}>
-//                                     {(mediaPlatform.includes('youtube') || mediaPlatform.includes('Reddit')) && title.split('\n').map((line, index) => (<div key={index}>{line}</div>))}{mediaPlatform.includes('Reddit') && sr && <div>{`${sr}`}</div>}
-//                                 </div>
-//                                 <div className="text-preview" style={{ wordBreak: 'break-all', padding: '10px' }}>{caption.split('\n').map((line, index) => (<div key={index}>{line}</div>))}</div></div>
-//                         </Grid>
-//                     </Grid>
-//                 </DialogContent>
-//                 <DialogActions className="action">
-//                     <div style={{ display: 'flex' }}>
-//                         <Button onClick={handleConfirmCloseOpen} color="error">Cancel</Button>
-//                         <Button variant="contained" disabled={shareButtonDisabled} endIcon={<SendIcon />} onClick={handleClickOpen} sx={{ borderRadius: '20px' }}>Share</Button>
-//                         <Dialog open={open1} onClose={handleClose} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description" fullWidth>
-//                             <DialogContent>
-//                                 <DialogContentText sx={{ color: 'black', fontSize: '18px' }}>Are you sure you want to Post?</DialogContentText>
-//                             </DialogContent>
-//                             <DialogActions>
-//                                 <Button onClick={handleClose} style={{ color: '#ba343b' }}>Cancel</Button>
-//                                 <Button onClick={handleSubmit} style={{ color: '#ba343b' }} autoFocus>Yes</Button>
-//                             </DialogActions>
-//                         </Dialog>
-//                     </div>
-//                 </DialogActions>
-//             </Dialog>
-//             <ToastContainer />
-//         </>);};
-// export default Post;  
-
-
 /* eslint-disable no-undef */
 /* eslint-disable no-mixed-operators */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState, useContext, useRef } from "react";
-import { Dialog, DialogContent, DialogActions, Grid, Button, Tooltip, Popover, Zoom, DialogContentText } from "@mui/material";
+import { Dialog, DialogContent, DialogActions, Grid, Button, Tooltip, Popover, Zoom, DialogContentText, Modal, Box } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
-import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 import MoodOutlinedIcon from '@mui/icons-material/MoodOutlined';
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
-import TagOutlinedIcon from '@mui/icons-material/TagOutlined';
-import SellOutlinedIcon from '@mui/icons-material/SellOutlined';
 import SendIcon from '@mui/icons-material/Send';
 import Stack from '@mui/material/Stack';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import EmojiPicker from "emoji-picker-react";
 import Media from './Media'
@@ -470,6 +27,7 @@ import WarningIcon from '@mui/icons-material/Warning';
 import { clearAiText, updateCaption } from "../Redux/action/AiTextSlice";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import QI from './QI'
+import TagIcon from '@mui/icons-material/Tag';
 
 const Post = ({ onClose }) => {
     const navigate = useNavigate();
@@ -485,10 +43,6 @@ const Post = ({ onClose }) => {
     const [title, setTitle] = useState('');
     const [visibility, setVisibility] = useState("public");
     const [anchorEl, setAnchorEl] = useState(null);
-    const [anchorEl1, setAnchorEl1] = useState(null);
-    const [inputValue, setInputValue] = useState('');
-    const [suggestions, setSuggestions] = useState([]);
-    const [filteredSuggestions, setFilteredSuggestions] = useState([]);
     const [confirmCloseOpen, setConfirmCloseOpen] = useState(false);
     const [shareButtonDisabled, setShareButtonDisabled] = useState(true);
     const [commentValue, setCommentValue] = useState('');
@@ -510,7 +64,10 @@ const Post = ({ onClose }) => {
     const [AIopen, setAIopen] = useState(false)
     const dispatch = useDispatch()
     const AiText = useSelector((state) => state.Aitext.AiText)
-
+    const [query, setQuery] = useState("");
+    const [suggestions, setSuggestions] = useState([]);
+    const [noHashtagMessage, setNoHashtagMessage] = useState("");
+    const [showInput, setShowInput] = useState(false);
     console.log(image1);
 
     const handleSelectIconAndSendToParent = (selectedIcons, mediaPlatform) => {
@@ -525,12 +82,11 @@ const Post = ({ onClose }) => {
         }
         console.log(mediaPlatform);
     };
-
     const [warningMessages, setWarningMessages] = useState([]);
     const maxTitleCharacters = 100;
-const maxCaptionCharacters=500;
-    // const closeDialog = () => { setOpen(false); setFile(null); setFileType(''); setTitle(''); setCaption(''); setCommentValue(''); setMediaPlatform([]); onClose();};
+    const maxCaptionCharacters = 500;
     const closeDialog = () => {
+        console.log("closeDialog triggered");
         setOpen(false);
         setFile(null);
         setFileType('');
@@ -538,10 +94,16 @@ const maxCaptionCharacters=500;
         setScheduleDateTime(null);
         setTitle('');
         setCaption('');
+        dispatch(updateCaption(''));
         setCommentValue('');
         setMediaPlatform([]);
+        setQuery('');
+        setSuggestions([]);
+        setNoHashtagMessage('');
+        setShowInput(false);
         onClose();
     };
+
     useEffect(() => {
         if (open) {
             const handleBackNavigation = () => {
@@ -627,17 +189,25 @@ const maxCaptionCharacters=500;
         }
     }, [mediaPlatform, title, sr, file, fileType, caption]);
 
-   
+
     const handleConfirmCloseOpen = () => {
         if (changesMade) {
             setCaption('');
             dispatch(clearAiText());
             setChangesMade(false);
             closeDialog();
+            setQuery('');
+            setSuggestions([]);
+            setNoHashtagMessage('');
+
         } else {
             setCaption('');
             dispatch(clearAiText());
             closeDialog();
+            setQuery('');
+            setSuggestions([]);
+            setNoHashtagMessage('');
+
         }
     };
 
@@ -659,6 +229,7 @@ const maxCaptionCharacters=500;
             const isVideo = file.type.startsWith('video/');
             const imageSizeLimit = 4.5 * 1024 * 1024;
             const videoSizeLimit = 40 * 1024 * 1024;
+
             if (isImage && file.size > imageSizeLimit) {
                 toast.error("Image size is too large! Maximum allowed is 4.5MB.");
                 return;
@@ -667,16 +238,26 @@ const maxCaptionCharacters=500;
                 toast.error("Video size is too large! Maximum allowed is 40MB.");
                 return;
             }
+
             let processedFile = file;
-            if (isImage && file.type !== 'image/jpeg') {
-                // toast("Converting image to JPG...");
-                processedFile = await convertImageToJPG(file);
-            }
             if (isVideo && file.type !== 'video/mp4') {
                 toast.error("Only MP4 videos are supported. Please upload an MP4 file.");
                 return;
             }
-            setFile(processedFile);
+            const unsupportedImageFormats = ['image/heic', 'image/tiff'];
+            if (isImage && unsupportedImageFormats.includes(file.type)) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const filePreviewUrl = e.target.result;
+                    setFile(file);
+                    setImageUrl(filePreviewUrl);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                setFile(file);
+                setImageUrl(URL.createObjectURL(file));
+            }
+
             setFileType(isImage ? 'image' : 'video');
             setShareButtonDisabled(false);
             console.log('File selected:', processedFile);
@@ -1043,33 +624,11 @@ const maxCaptionCharacters=500;
         setChangesMade(false);
         setSelectedIcons([]);
         setMediaPlatform([]);
-        setImageUrl('')
+        setImageUrl('');
+        setQuery('');
+        setSuggestions([]);
+        setNoHashtagMessage('');
     };
-
-    const convertImageToJPG = (file) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = (e) => {
-                const img = new Image();
-                img.src = e.target.result;
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0);
-                    canvas.toBlob((blob) => {
-                        resolve(blob);
-                    }, 'image/jpeg');
-                };
-            };
-            reader.onerror = (err) => reject(err);
-        });
-    };
-
-    const handle = (event) => { setSelectedOption(event.target.value); handleChangesMade(); }
-
     const handleTitleChange = (e) => {
         const newTitle = e.target.value;
         if (newTitle.length <= maxTitleCharacters) { setTitle(newTitle); handleChangesMade(); }
@@ -1104,45 +663,62 @@ const maxCaptionCharacters=500;
         setAnchorEl(null);
     };
 
-    const handleHashtagIconClick = (event) => {
-        setAnchorEl1(event.currentTarget);
-    };
-
-    const handleClosePopover1 = () => {
-        setAnchorEl1(null);
-    };
-
-    const handleInputChange = (event) => {
-        const value = event.target.value;
-        setInputValue(value);
-
-        const filtered = suggestions.filter((item) =>
-            item.name.toLowerCase().includes(value.toLowerCase())
-        );
-        setFilteredSuggestions(filtered);
-        handleChangesMade();
-    };
-
-    const handleSuggestionClick = (suggestion) => {
-        setInputValue(suggestion.name);
-        setFilteredSuggestions([]);
-    }
-
-    const handleTextAreaKeyPress = (event) => {
-        if (event.key === 'Enter') {
-            event.preventDefault()
-            setInputValue(inputValue + ' #')
+    const fetchSuggestions = async (query) => {
+        try {
+            const response = await axiosInstance.get(`/quantum-share/Hashtag-suggestions`, {
+                params: { query },
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            console.log(response.data.data);
+            console.log("Full Response:", response);
+            console.log("Response Status:", response.data.status);
+            console.log("Response Data:", response.data.data);
+            if (response.data.status === "sucess" && response.data.data) {
+                const hashtags = response.data.data;
+                if (hashtags.length > 0) {
+                    setSuggestions(hashtags);
+                    setNoHashtagMessage("");
+                } else {
+                    setSuggestions([]);
+                    setNoHashtagMessage("No hashtag found");
+                }
+            } else {
+                setSuggestions([]);
+                setNoHashtagMessage(response.data.message || "No hashtag found");
+            }
+        } catch (error) {
+            console.error("Error fetching hashtag suggestions:", error);
         }
-    }
+    };
+    const handleInputChange = (e) => {
+        const value = e.target.value;
+        setQuery(value);
+    };
 
-    const handleSendClick = () => {
-        if (inputValue.trim() !== '') {
-            setCaption((prevValue) => prevValue + ' #' + inputValue.trim());
-            setInputValue('');
+    const handleFetchClick = () => {
+        if (query) {
+            fetchSuggestions(query);
         }
-        setAnchorEl1(null);
-    }
-
+    };
+    const handleHashtagSelect = (hashtag) => {
+        const updatedCaption = `${caption} ${hashtag}`.trim();
+        if (updatedCaption.length <= maxCaptionCharacters) {
+            setCaption(updatedCaption);
+            dispatch(updateCaption(updatedCaption));
+            setChangesMade(true);
+        }
+        setSuggestions(suggestions.filter((s) => s !== hashtag));
+    };
+    const handleIconClick = () => {
+        setShowInput(!showInput);
+        if (showInput) {
+            setQuery('');
+            setSuggestions([]);
+            setNoHashtagMessage('');
+        }
+    };
     const handleClickOpen = () => {
         setOpen1(true);
     };
@@ -1233,6 +809,7 @@ const maxCaptionCharacters=500;
                                                 onChange={handleFileChange}
                                                 name="mediaFile"
                                             />
+
                                             {showCamera && (
                                                 <div style={{
                                                     position: 'fixed',
@@ -1288,54 +865,101 @@ const maxCaptionCharacters=500;
                                                 <FmdGoodOutlinedIcon />
                                             </IconButton>
                                         </Tooltip>
-                                        <Tooltip TransitionComponent={Zoom} title="Hashtag" enterDelay={100} leaveDelay={100} placement="top-end">
-                                            <IconButton>
-                                                <TagOutlinedIcon onClick={handleHashtagIconClick} />
-                                                <Popover
-                                                    open={Boolean(anchorEl1)}
-                                                    anchorEl={anchorEl1}
-                                                    onClose={handleClosePopover1}
-                                                    anchorOrigin={{
-                                                        vertical: 'bottom',
-                                                        horizontal: 'center',
-                                                    }}
-                                                    transformOrigin={{
-                                                        vertical: 'top',
-                                                        horizontal: 'center',
-                                                    }}
-                                                    PaperProps={{
-                                                        style: {
-                                                            width: '300px',
-                                                            height: '185px',
-                                                            background: '#f5f5f5'
-                                                        },
-                                                    }}>
-                                                    <div style={{ padding: '10px', width: '100px', display: 'flex', flexDirection: 'column' }}>
-                                                        <textarea
-                                                            type="text"
-                                                            value={inputValue}
-                                                            onChange={handleInputChange}
-                                                            onKeyDown={handleTextAreaKeyPress}
-                                                            placeholder="Enter text only"
-                                                            style={{ width: '280px', resize: 'none', border: '0.5px solid grey', outline: 'none', borderRadius: '10px', paddingTop: '5px' }}
-                                                        />
-                                                        {filteredSuggestions.length > 0 && (
-                                                            <div>
-                                                                {filteredSuggestions.map((suggestion, index) => (
-                                                                    <div key={index} onClick={() => handleSuggestionClick(suggestion)} style={{ cursor: 'pointer', padding: '5px 0', display: 'flex', justifyContent: 'space-between' }}>
-                                                                        <div>{suggestion.name}</div>
-                                                                        <div>{suggestion.view}</div>
-                                                                    </div>
-                                                                ))}
-                                                            </div>
-                                                        )}
-                                                        <Button onClick={handleSendClick} variant="contained" style={{ marginTop: 'auto', padding: '5px 10px', transform: 'translate(200px,80px)' }} >
-                                                            Add
-                                                        </Button>
-                                                    </div>
-                                                </Popover>
+                                        <Tooltip
+                                            TransitionComponent={Zoom}
+                                            title="Hashtag"
+                                            enterDelay={100}
+                                            leaveDelay={100}
+                                            placement="top-end"
+                                        >
+                                            <IconButton onClick={handleIconClick}>
+                                                <TagIcon />
                                             </IconButton>
                                         </Tooltip>
+
+                                        {showInput && (
+                                            <div
+                                                style={{
+                                                    position: "absolute",
+                                                    bottom: "70%",
+                                                    left: '25%',
+                                                    transform: "translateY(-16px)",
+                                                    // padding: "8px",
+                                                    border: "1px solid #ccc",
+                                                    borderRadius: "8px",
+                                                    background: "#fff",
+                                                    boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
+                                                    width: "300px",
+
+                                                }}
+                                            >
+                                                <input
+                                                    type="text"
+                                                    value={query}
+                                                    onChange={handleInputChange}
+                                                    placeholder="Type to search hashtags"
+                                                    style={{
+                                                        padding: "10px",
+                                                        width: "100%",
+                                                        border: "1px solid #ccc",
+                                                        borderRadius: "4px",
+                                                        outline: "none",
+                                                        fontSize: "14px",
+                                                        width: '250px'
+                                                    }}
+                                                />
+                                                <IconButton onClick={handleFetchClick} sx={{ position: 'relative', left: '6px' }}>
+                                                    <SendIcon sx={{ color: 'blue' }} />
+                                                </IconButton>
+                                                <div
+                                                    style={{
+                                                        width: "300px",
+                                                        height: "200px",
+                                                        borderRadius: "4px",
+                                                        overflowY: "auto",
+                                                        boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
+                                                        border: "1px solid #ccc",
+                                                        background: "#fff",
+                                                        marginTop: "8px",
+                                                    }}
+                                                >
+                                                    {Array.isArray(suggestions) && suggestions.length > 0 ? (
+                                                        suggestions.map((hashtag, index) => (
+                                                            <div
+                                                                key={index}
+                                                                style={{
+                                                                    padding: "8px",
+                                                                    cursor: "pointer",
+                                                                    fontSize: "14px",
+                                                                    borderBottom: "1px solid #f0f0f0",
+                                                                }}
+                                                                onClick={() => handleHashtagSelect(hashtag)}
+                                                            >
+                                                                {hashtag}
+                                                            </div>
+                                                        ))
+                                                    ) : (
+                                                        noHashtagMessage && (
+                                                            <div
+                                                                style={{
+                                                                    padding: "8px",
+                                                                    textAlign: "center",
+                                                                    fontSize: "14px",
+                                                                    color: "#999",
+                                                                    border: "1px solid #ccc",
+                                                                    borderRadius: "4px",
+                                                                    background: "#fff",
+                                                                    marginTop: "8px",
+                                                                }}
+                                                            >
+                                                                {noHashtagMessage}
+                                                            </div>
+                                                        )
+                                                    )}
+
+                                                </div>
+                                            </div>
+                                        )}
                                         <Tooltip>
                                             <IconButton
                                                 onClick={handleAIComponent}
@@ -1439,7 +1063,6 @@ const maxCaptionCharacters=500;
                 </DialogContent>
                 <DialogActions className="action">
                     <div style={{ display: 'flex' }}>
-                        {/* Warning Message and Tooltip */}
                         {warningMessages.length > 0 && (
                             <div style={{ display: 'flex' }}>
                                 <Tooltip
