@@ -98,7 +98,6 @@ const Home = () => {
                                 </Dialog>
                             </IconButton>
                         </Typography>
-
                         <div className='homeSubDiv02'>
                             <Link to="/signUp">
                                 <button className='homeButton01'>
@@ -222,11 +221,12 @@ const Home = () => {
                 <Grid item xs={12} md={11.9} lg={11.9} sx={{ backgroundColor: "#ffffff" }}>
                     <h1 style={{ textAlign: "center", paddingTop: "30px", paddingBottom: '40px', color: '#d3040c', fontSize: "2.5rem", fontWeight: '600' }}>{t('howQuantumShareWorks')}</h1>
                 </Grid>
-                <Grid item xs={12} md={6} lg={6} sx={{ marginTop: "70px", backgroundColor: "white" }}>
+                <Grid item xs={12} md={6} lg={6} sx={{ marginTop: "0px", backgroundColor: "white" }}>
                     <img style={{ marginLeft: "50px", borderRadius: "25px", width: "80%", }} src={feature1} alt="image"></img>
                 </Grid>
                 <Grid item xs={12} md={5.9} lg={5.9} sx={{ paddingTop: "15px", backgroundColor: '#fbf4f5', marginBottom: "40px", borderRadius: '16px', width: '80%' }}>
                     <Typography sx={{ fontSize: 17, marginTop: '7px', paddingBottom: "15px" }} style={{ paddingRight: '15px', marginRight: "20px", paddingLeft: '10px', paddingTop: '8px', fontWeight: '500' }} color="black" gutterBottom>
+<<<<<<< HEAD
                         {t('quantumShareInt')}   
                     </Typography>
                     <Typography sx={{ fontSize: 17, marginTop: '7px', paddingBottom: "15px", paddingTop: "10px" }} style={{ paddingRight: '15px', marginRight: "20px", paddingLeft: '10px', fontWeight: '500' }} color="black" gutterBottom>
@@ -235,6 +235,27 @@ const Home = () => {
                     <Typography sx={{ fontSize: 17, marginTop: '7px', paddingTop: "15px" }} style={{ paddingRight: '15px', marginRight: "20px", paddingLeft: '10px', paddingBottom: '25px', fontWeight: '500' }} color="black" gutterBottom>
                         {t('upcomingFeatures')}    
                     </Typography>
+=======
+                        Quantum Share simplifies social media management through a streamlined and user-friendly process. To get started, users click the Quantum Share link
+                        to open the web app, where they sign up by providing their email and creating a password. After completing email verification,
+                        users log in and access the dashboard.From there,navigating to 'social integration' from the drop-down menu allows user to
+                        select and connect their desired social media profiles.
+                    </Typography>
+                    <Typography sx={{ fontSize: 17, marginTop: '7px', paddingBottom: "15px", paddingTop: "10px" }} style={{ paddingRight: '15px', marginRight: "20px", paddingLeft: '10px', fontWeight: '500' }} color="black" gutterBottom>
+                        Once integrated, users can create and post content effortlessly. By going to
+                        media platforms the we want to post to,and click 'Post'to publish their content the 'Post' section,
+                        they can add a title and description, select the social across multiple platforms simultaneously.
+                        This seamless process ensures efficient content management and broad reach.
+                    </Typography>
+                    {/* <Typography sx={{ fontSize: 17, marginTop: '7px', paddingTop: "15px" }} style={{ paddingRight: '15px', marginRight: "20px", paddingLeft: '10px', paddingBottom: '25px', fontWeight: '500' }} color="black" gutterBottom>
+                        Exciting upcoming features will further enhance Quantum Share's functionality. The Schedule Post feature will
+                        allow users to plan their content strategy by scheduling posts for future dates and times,ensuring consistent
+                        audience engagement. Advanced Analytics will provide insights into user interactions,including likes,retweets,
+                        and clicks,helping to optimize content strategies. The Auto Hashtags feature will automatically add relevant
+                        hashtags to posts based on real-time keyword popularity, boosting visibility and engagement.Lastly, Comment Management will enables users to
+                        retrieve, post, and manage comments, fostering community engagement.
+                    </Typography> */}
+>>>>>>> b81235f3ec6da6dea7d31c5a3c9e249847812ffa
                 </Grid>
                 <Grid item xs={12} md={6} lg={6} sx={{ backgroundColor: "white", marginTop: "10px" }}>
                     <Card className='mystyle' id="hover-div" sx={{ width: "85%", height: "auto", marginLeft: "30px", boxShadow: "none", backgroundColor: '#fbf5f7', borderRadius: "25px" }} elevation={12}>

@@ -22,7 +22,11 @@ const PrivacyPolicy = () => {
                                         <Typography variant="h4" gutterBottom sx={{ color: '#b4232a', fontSize: '2.2rem', fontWeight: '600' }}><b>{t('privacyPolicy')}</b></Typography>
                                         <Typography variant="h6" gutterBottom sx={{ fontSize: '2rem', fontWeight: '600' }}>{t('quantumShare')} </Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.3rem' }}>
+<<<<<<< HEAD
                                             {t('lastUpdated')}
+=======
+                                            Last Updated November 7, 2024
+>>>>>>> b81235f3ec6da6dea7d31c5a3c9e249847812ffa
                                         </Typography>
                                         <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>{t('whatDoesQuantumShareDo')}</b></Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
@@ -136,6 +140,7 @@ const PrivacyPolicy = () => {
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
                                             {t('userConsentDescription')}
                                         </Typography>
+<<<<<<< HEAD
 
                                         <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>{t('limitedUseDisclosure')}</b></Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
@@ -143,6 +148,18 @@ const PrivacyPolicy = () => {
                                          </Typography>
 
                                         <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>{t('contactUs')}</b></Typography>
+=======
+                                        <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>8. Limited Use Disclosure</b></Typography>
+                                        <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
+                                            Quantum Share’s use and transfer of information received from Google APIs will adhere to the Google API Services User Data Policy, including the Limited Use requirements.
+                                        </Typography>
+                                        <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>9. Google Privacy Policy</b></Typography>
+                                        <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
+                                            We utilize the Google API for YouTube integration to enhance our service offerings. This integration allows users to access and share YouTube content seamlessly within the Quantum Share platform.<br />
+                                            <b>For more information, you can also review Google's Privacy Policy :</b> <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google Privacy Policy</a>
+                                        </Typography>
+                                        <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>10. Contact Us</b></Typography>
+>>>>>>> b81235f3ec6da6dea7d31c5a3c9e249847812ffa
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
                                             {t('contactUsDescription')}
                                         </Typography>

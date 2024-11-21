@@ -194,7 +194,7 @@ const About = () => {
                                         <DialogContent>
                                             <video autoPlay loop muted={isMuted} style={{ width: '100%', height: 'auto' }}>
                                                 <source
-                                                    src="https://quantumshare.quantumparadigm.in/vedio/InShot_20241028_163827308.mp4"
+                                                    src="https://quantumshare.quantumparadigm.in/vedio/InShot_20241030_104339432.mp4"
                                                     type="video/mp4"
                                                 />
                                                 {t('browserNotSupportVideo')}

@@ -59,66 +59,52 @@ const QI = ({ onAiClose }) => {
         }
     }
 
-    const handleSubmit = () => {
-        setAiOpen(true)
-    }
+    // const handleSubmit = () => {
+    //     setAiOpen(true)
+    // }
 
+    const handleSubmit = async () => {
+        try {
+            setLoading(true)
+            const formData = new FormData();
+            formData.append('textPromt', input);
+
+            const endpoint = "/quantum-share/generate-image";
+            const response = await axiosInstance.post(endpoint, formData, {
+                responseType: 'arraybuffer',
+                headers: {
+                    'Accept': 'application/json',
+                },
+            });
+            console.log(response);
+            const blob = new Blob([response.data], { type: 'image/png' });
+            console.log(blob);
+            const imageUrl = URL.createObjectURL(blob);
+            url = imageUrl;
+            console.log(url);
+            console.log(imageUrl);
+            setImageSrc(imageUrl);
+            setError('');
+        } catch (error) {
+            console.error(error);
+            if (error.response && error.response.data && error.response.data.message) {
+                setError(error.response.data.message);
+            } else {setError('Error generating image');}} finally {setLoading(false);}}
     const [copied, setCopied] = useState(false);
     const copyTextToClipboard = () => {
         navigator.clipboard.writeText(textResponse)
-            .then(() => {
-                console.log('Text copied to clipboard');
-                setCopied(true)
-                setTimeout(() => setCopied(false), 2000)
-            })
-            .catch((error) => {
-                console.error('Failed to copy text: ', error);
-            })
-    }
-
-    const handleDownload = () => {
-        if (!imageSrc) return
-        const link = document.createElement('a')
-        link.href = imageSrc
-        link.download = 'generated_image.png'
-        link.click()
-    }
-
-    const handleSend = () => {
-        dispatch(setAiText(textResponse))
-        onAiClose(false)
-    }
-
-    const handleClose = () => {
-        setAiOpen(false)
-    }
+            .then(() => { console.log('Text copied to clipboard'); setCopied(true); setTimeout(() => setCopied(false), 2000)
+            }).catch((error) => {console.error('Failed to copy text: ', error);})}
+    const handleDownload = () => { if (!imageSrc) return; const link = document.createElement('a'); link.href = imageSrc; link.download = 'generated_image.png'; link.click()}
+    const handleSend = () => { dispatch(setAiText(textResponse)); setImage1(imageSrc); onAiClose(false)}
+    const handleClose = () => { setAiOpen(false)}
 
     return (
         <>
-            <Dialog
-                fullWidth
-                maxWidth="md" 
-                open={true}
-                onClose={onAiClose}
-                PaperProps={{
-                    component: 'form',
-                    onSubmit: (event) => {
-                        event.preventDefault();
-                        handleSubmit();
-                    },
-                    sx: {
-                        padding: '10px', 
-                        borderRadius: '12px', 
-                        display: 'flex',
-                        flexDirection: 'column', 
-                        height: '100%', 
-                    },
-                }}
-            >
+            <Dialog fullWidth maxWidth="md"  open={true} onClose={onAiClose} PaperProps={{ component: 'form', onSubmit: (event) => {event.preventDefault();handleSubmit();},sx: { padding: '10px',  borderRadius: '12px',  display: 'flex', flexDirection: 'column',  height: '100%', }}}>
                 <DialogTitle sx={{ display: 'flex' }}>
                     <div>{t('shareWithQuantumAI')} <AutoAwesomeIcon /></div>
                 </DialogTitle>
-
                 <Grid container spacing={3} sx={{ flexGrow: 1, overflowY: 'auto' }}>
                     <Grid item xs={12} md={6} sx={{ borderRight: '0.5px solid #ccc', paddingRight: '15px' }}>
                         <DialogTitle>{t('usingQuantumAI')}</DialogTitle>
@@ -168,6 +154,14 @@ const QI = ({ onAiClose }) => {
                             >
                                 {t('generate')} &nbsp;<AutoAwesomeIcon />
                             </Button>
+                            <TextField autoFocus margin="dense" name="userMessage" label="Enter text here" type="text" variant="outlined"  value={inputText} fullWidth sx={{ marginBottom: '20px' }} onChange={(e) => setInputText(e.target.value)}/>
+                            <Button variant="contained" color="primary" onClick={handleTextSubmit} disabled={!inputText || loading} fullWidth sx={{ mt: 2 }}>
+                                Generate &nbsp;<AutoFixHighIcon />
+                            </Button>
+                        </DialogContent>
+                        <DialogContent sx={{ marginTop: '30px' }}>
+                            <TextField margin="none" name="textPrompt" label="Generate image" type="text" variant="outlined" fullWidth sx={{ marginBottom: '20px' }} value={input} onChange={(e) => setInput(e.target.value)}/>
+                            <Button variant="contained" color="primary" onClick={handleSubmit} disabled={!input || loading} fullWidth sx={{ mt: 1 }}>Generate &nbsp;<AutoAwesomeIcon /> </Button>
                             <Dialog open={aiopen} onClose={handleClose} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description" fullWidth>
                                 <DialogContent>
                                     <DialogContentText sx={{ color: 'black', fontSize: '18px' }}>{t('imageGenerationNotFreeTrial')}</DialogContentText>
@@ -183,74 +177,28 @@ const QI = ({ onAiClose }) => {
                         <DialogTitle>{t('preview')}</DialogTitle>
                         <div style={{ marginTop: '20px', textAlign: 'center' }}>
                             {loading ? (
-                                <RingLoader
-                                    color="#d3040c"
-                                    loading={loading}
-                                    size={50}
-                                    aria-label="Loading Spinner"
-                                    data-testid="loader"
-                                />
-                            ) : (
-                                <>
-                                    {imageSrc && (
+                                <RingLoader color="#d3040c" loading={loading} size={50} aria-label="Loading Spinner" data-testid="loader"/>) : ( 
+                            <>{imageSrc && (
                                         <div style={{ position: 'relative', display: 'inline-block' }}>
-                                            <img
-                                                src={imageSrc}
-                                                alt="Generated Image"
-                                                style={{ maxWidth: '100%', borderRadius: '8px' }}
-                                            />
-                                            <IconButton
-                                                onClick={handleDownload}
-                                                sx={{ position: 'absolute', top: '10px', right: '10px' }}
-                                            >
+                                            <img src={imageSrc} alt="Generated Image" style={{ maxWidth: '100%', borderRadius: '8px' }}/>
+                                            <IconButton onClick={handleDownload} sx={{ position: 'absolute', top: '10px', right: '10px' }}>
                                                 <Tooltip title="Download image" placement="top" TransitionComponent={Zoom}>
-                                                    <DownloadIcon
-                                                        style={{
-                                                            backgroundColor: '#596259',
-                                                            borderRadius: '50%',
-                                                            padding: '5px',
-                                                            color: 'white',
-                                                            fontSize: '30px',
-                                                        }}
-                                                    />
+                                                    <DownloadIcon style={{ backgroundColor: '#596259', borderRadius: '50%', padding: '5px', color: 'white', fontSize: '30px',}}/>
                                                 </Tooltip>
                                             </IconButton>
-                                        </div>
-                                    )}
-                                </>
-                            )}
+                                        </div>)} </> )}  
                         </div>
                         <div style={{ marginTop: '20px', padding: '10px', fontFamily: 'sans-serif', wordWrap: 'break-word', position: 'relative', whiteSpace: 'pre-line' }}>
                             {textResponse && (
-                                <>
-                                    <div>{textResponse}</div>
-                                    <IconButton
-                                        variant="standard"
-                                        onClick={copyTextToClipboard}
-                                        sx={{
-                                            position: 'absolute',
-                                            right: 0,
-                                            top: -30,
-                                            display: { xs: 'flex', }
-                                        }}
-                                    >
-                                        <Tooltip title="Copy" placement="top" TransitionComponent={Zoom}>
-                                            {copied ? <DoneIcon /> : <ContentCopyIcon sx={{ color: 'grey' }} />}
-                                        </Tooltip>
-                                    </IconButton>
-                                </>
-                            )}
+                                <><div>{textResponse}</div>
+                                    <IconButton variant="standard" onClick={copyTextToClipboard} sx={{ position: 'absolute', right: 0, top: -30, display: { xs: 'flex', } }}>
+                                     <Tooltip title="Copy" placement="top" TransitionComponent={Zoom}>{copied ? <DoneIcon /> : <ContentCopyIcon sx={{ color: 'grey' }} />}</Tooltip>  
+                                    </IconButton> </>)}
                         </div>
                         {error && <div style={{ color: 'red' }}>{error}</div>}
                     </Grid>
                 </Grid>
-                <DialogActions sx={{
-                    marginTop: 'auto',
-                    borderTop: '1px solid #ccc',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    padding: '10px 24px',
-                }}>
+                <DialogActions sx={{ marginTop: 'auto', borderTop: '1px solid #ccc', display: 'flex', justifyContent: 'space-between', padding: '10px 24px',}}>
                     <h6 style={{ color: 'grey' }}>
                        {t('poweredBy')} <img src={Quantum} alt="Quantum Logo" height={30} style={{ marginLeft: '5px' }} /> {t('quantumParadigm')}
                     </h6>
@@ -261,11 +209,12 @@ const QI = ({ onAiClose }) => {
                         <Button onClick={handleSend} variant="contained" color="primary">
                             {t('addToPost')}
                         </Button>
+                        <Button onClick={onAiClose} variant="outlined" sx={{ mr: 2 }}>Cancel </Button>
+                        <Button onClick={handleSend} variant="contained" color="primary">Add to Post</Button>    
                     </DialogActions>
                 </DialogActions>
             </Dialog>
         </>
     );
 }
-
 export default QI;
