@@ -1,11 +1,9 @@
 import React, { useState, useRef, useContext } from 'react';
-
 import template1 from '../Assets/Screenshot 2024-09-17 165040.png';
 import template2 from '../Assets/AddBotImage-4.webp';
 import template3 from '../Assets/AddBotImage-4.webp';
 import template4 from '../Assets/AddBotImage-4.webp';
-
-import '../CssFolder/gallery.css';
+import '../CssFolder/Gallery.css';
 import Nav from '../Navbar/Nav';
 import Sidenav from '../Navbar/Sidenav';
 import Dialog from '@mui/material/Dialog';

@@ -4,16 +4,11 @@
 import React, { useEffect, useState, useContext, useRef } from "react";
 import { Dialog, DialogContent, DialogActions, Grid, Button, Tooltip, Popover, Zoom, DialogContentText } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
-import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 import MoodOutlinedIcon from '@mui/icons-material/MoodOutlined';
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
 import TagOutlinedIcon from '@mui/icons-material/TagOutlined';
-import SellOutlinedIcon from '@mui/icons-material/SellOutlined';
 import SendIcon from '@mui/icons-material/Send';
 import Stack from '@mui/material/Stack';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import EmojiPicker from "emoji-picker-react";
 import Media from './Media'
@@ -32,8 +27,7 @@ import { useDispatch, useSelector } from "react-redux";
 import WarningIcon from '@mui/icons-material/Warning';
 import { clearAiText, updateCaption } from "../Redux/action/AiTextSlice";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
-import QI from './QI'
-import { useTranslation } from "react-i18next";
+import QI from './QI';
 
 
 const Post = ({ onClose }) => {
@@ -91,8 +85,8 @@ const {t} = useTranslation('');
 
     const [warningMessages, setWarningMessages] = useState([]);
     const maxTitleCharacters = 100;
-const maxCaptionCharacters=500;
-    // const closeDialog = () => { setOpen(false); setFile(null); setFileType(''); setTitle(''); setCaption(''); setCommentValue(''); setMediaPlatform([]); onClose();};
+    const maxCaptionCharacters = 500;
+
     const closeDialog = () => {
         setOpen(false);
         setFile(null);
@@ -105,6 +99,7 @@ const maxCaptionCharacters=500;
         setMediaPlatform([]);
         onClose();
     };
+
     useEffect(() => {
         if (open) {
             const handleBackNavigation = () => {
@@ -112,7 +107,7 @@ const maxCaptionCharacters=500;
                 return false;
             };
 
-            window.history.pushState(null, '', location.pathname); // Push current state
+            window.history.pushState(null, '', location.pathname);
             window.addEventListener('popstate', handleBackNavigation);
 
             return () => {
@@ -120,6 +115,7 @@ const maxCaptionCharacters=500;
             };
         }
     }, [open, location.pathname]);
+
     const validatePlatforms = () => {
         let newWarningMessages = [];
         let shouldDisableShare = false;
@@ -190,7 +186,6 @@ const maxCaptionCharacters=500;
         }
     }, [mediaPlatform, title, sr, file, fileType, caption]);
 
-   
     const handleConfirmCloseOpen = () => {
         if (changesMade) {
             setCaption('');
@@ -594,6 +589,7 @@ const maxCaptionCharacters=500;
         }
     };
 
+
     const resetState = () => {
         setFile(null);
         setFileType('');
@@ -630,8 +626,6 @@ const maxCaptionCharacters=500;
             reader.onerror = (err) => reject(err);
         });
     };
-
-    const handle = (event) => { setSelectedOption(event.target.value); handleChangesMade(); }
 
     const handleTitleChange = (e) => {
         const newTitle = e.target.value;
@@ -747,9 +741,8 @@ const maxCaptionCharacters=500;
                 <DialogContent>
                     <Grid container spacing={1}>
                         <Grid item lg={7} md={7} xs={12} >
-
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <h4 id="newPost">{t('newPost')}</h4>
+                                <h4 id="newPost">New Post</h4>
                                 <Media onMediaPlatform={handleSelectIconAndSendToParent} initialMediaPlatform={mediaPlatform} postSubmitted={postSubmitted} />
                             </div>
                             <div className="choose">
@@ -836,7 +829,6 @@ const maxCaptionCharacters=500;
                                                         vertical: 'bottom',
                                                         horizontal: 'center',
                                                     }}
-
                                                     transformOrigin={{
                                                         vertical: 'top',
                                                         horizontal: 'center',
@@ -893,7 +885,7 @@ const maxCaptionCharacters=500;
                                                             </div>
                                                         )}
                                                         <Button onClick={handleSendClick} variant="contained" style={{ marginTop: 'auto', padding: '5px 10px', transform: 'translate(200px,80px)' }} >
-                                                            {t('add')}
+                                                            Add
                                                         </Button>
                                                     </div>
                                                 </Popover>
@@ -964,7 +956,7 @@ const maxCaptionCharacters=500;
                         </Grid>
                         <Grid item lg={5} md={5} xs={12} sx={{ border: 1, borderStyle: 'ridge', display: 'flex', flexDirection: 'column', background: '#f5f5f5' }}>
                             <div className="preview" style={{ padding: '8px' }}>
-                                <h4 id="newPost">{t('mediaPreview')}</h4>
+                                <h4 id="newPost">Media Preview</h4>
                             </div>
                             <div style={{ background: '#fff', width: '95%', maxWidth: '100%', height: '100%', borderRadius: '10px' }}>
                                 <div className="main-preview" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '10px', background: '#fff' }}>
@@ -979,11 +971,11 @@ const maxCaptionCharacters=500;
                                         {fileType === 'video' && file && (
                                             <video controls className="file-preview" style={{ maxHeight: '100%', maxWidth: '100%' }}>
                                                 <source src={URL.createObjectURL(file)} type="video/mp4" />
-                                                {t('unsupportedVideo')}
+                                                Your browser does not support the video tag.
                                             </video>
                                         )}
                                         {!file && !imageUrl && (
-                                            <p id="imgPreview" style={{ marginTop: '100px', color: '#808080' }}>{t('imageVideoPreview')}</p>
+                                            <p id="imgPreview" style={{ marginTop: '100px', color: '#808080' }}>Image / Video Preview</p>
                                         )}
                                     </div>
                                 </div>
@@ -1025,15 +1017,15 @@ const maxCaptionCharacters=500;
                                 <span style={{ color: 'red', fontSize: '12px', marginLeft: '5px' }}></span>
                             </div>
                         )}
-                        <Button onClick={handleConfirmCloseOpen} color="error">{t('cancel')}</Button>
-                        <Button variant="contained" disabled={shareButtonDisabled} endIcon={<SendIcon />} onClick={handleClickOpen} sx={{ borderRadius: '20px' }}>{t('share')}</Button>
+                        <Button onClick={handleConfirmCloseOpen} color="error">Cancel</Button>
+                        <Button variant="contained" disabled={shareButtonDisabled} endIcon={<SendIcon />} onClick={handleClickOpen} sx={{ borderRadius: '20px' }}>Share</Button>
                         <Dialog open={open1} onClose={handleClose} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description" fullWidth>
                             <DialogContent>
-                                <DialogContentText sx={{ color: 'black', fontSize: '18px' }}>{t('areYouSurePost')}</DialogContentText>
+                                <DialogContentText sx={{ color: 'black', fontSize: '18px' }}>Are you sure you want to Post?</DialogContentText>
                             </DialogContent>
                             <DialogActions>
-                                <Button onClick={handleClose} style={{ color: '#ba343b' }}>{t('cancel')}</Button>
-                                <Button onClick={handleSubmit} style={{ color: '#ba343b' }} autoFocus>{t('yes')}</Button>
+                                <Button onClick={handleClose} style={{ color: '#ba343b' }}>Cancel</Button>
+                                <Button onClick={handleSubmit} style={{ color: '#ba343b' }} autoFocus>Yes</Button>
                             </DialogActions>
                         </Dialog>
                     </div>
@@ -1044,4 +1036,4 @@ const maxCaptionCharacters=500;
     );
 };
 
-export default Post;
+export default Post;  
