@@ -958,12 +958,12 @@ const Analytics = () => {
                                                 <span style={{ fontWeight: '600' }}>Comments : {selectedPost.data.commentCount}</span>
                                             </p>
                                         )}
-                                        {selectedPost.data.media_type === 'video/mp4' && selectedPost.data.viewCount !== undefined && (
+                                        {/* {selectedPost.data.media_type === 'video/mp4' && selectedPost.data.viewCount !== undefined && (
                                             <p style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                                 <VisibilityOutlinedIcon sx={{ color: 'grey', fontSize: '20px', marginRight: '8px' }} />
                                                 <span style={{ fontWeight: '600' }}>Views : {selectedPost.data.viewCount}</span>
                                             </p>
-                                        )}
+                                        )} */}
                                         {/* {selectedPost.data.media_type === 'video/mp4' && selectedPost.data.likeCount !== undefined && (
                                             <p style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                                 <FavoriteBorderOutlinedIcon sx={{ color: 'grey', fontSize: '20px', marginRight: '8px' }} />

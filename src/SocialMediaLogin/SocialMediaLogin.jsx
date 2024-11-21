@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { Box, Typography } from '@mui/material';
 import Nav from '../Navbar/Nav';
@@ -15,10 +15,23 @@ import { FaCirclePlay } from "react-icons/fa6";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import RedditLogin from './RedditLogin';
 import PinterestLogin from './PinterestLogin';
+<<<<<<< HEAD
+import { useToast } from '../Context/ToastContext';
+
+const SocialMediaLogin = () => {
+    // const { showToast, message, type } = useToast();
+
+    // useEffect(() => {
+    //     if (message) {
+    //         showToast(type, message); 
+    //     }
+    // }, [type, message, showToast]);
+=======
 import { useTranslation } from 'react-i18next';
 
 const SocialMediaLogin = () => {
     const {t} = useTranslation('');
+>>>>>>> b2900b7ab25d7d3eae1cc09992abc594ab8b7244
 
     return (
         <>
