@@ -5,7 +5,6 @@ import marketingImage from '../Assets/T5p.jpg';
 import logoImage from '../Assets/T5l.jpg';
 
 const Template10 = () => {
-  // States to store font size, color, and style for each text section
   const [selectedText, setSelectedText] = useState(null);
   const [styleSettings, setStyleSettings] = useState({
     companyName: { fontSize: '20px', color: '#000', fontStyle: 'normal' },
@@ -15,8 +14,6 @@ const Template10 = () => {
     contactEmail: { fontSize: '16px', color: '#000', fontStyle: 'normal' },
     website: { fontSize: '16px', color: '#000', fontStyle: 'normal' },
   });
-
-  // Function to handle style changes
   const handleStyleChange = (property, value) => {
     if (selectedText) {
       setStyleSettings(prevSettings => ({
