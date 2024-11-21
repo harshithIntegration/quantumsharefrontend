@@ -28,7 +28,7 @@ import WarningIcon from '@mui/icons-material/Warning';
 import { clearAiText, updateCaption } from "../Redux/action/AiTextSlice";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import QI from './QI';
-
+import { useTranslation } from "react-i18next";
 
 const Post = ({ onClose }) => {
     const navigate = useNavigate();
@@ -69,7 +69,8 @@ const Post = ({ onClose }) => {
     const [AIopen, setAIopen] = useState(false)
     const dispatch = useDispatch()
     const AiText = useSelector((state) => state.Aitext.AiText)
-const {t} = useTranslation('');
+    const { t } = useTranslation('');
+
     const handleSelectIconAndSendToParent = (selectedIcons, mediaPlatform) => {
         setSelectedIcons(selectedIcons);
         console.log(selectedIcons);
