@@ -70,7 +70,7 @@ const Post = ({ onClose }) => {
     const [suggestions, setSuggestions] = useState([]);
     const [noHashtagMessage, setNoHashtagMessage] = useState("");
     const [showInput, setShowInput] = useState(false);
-    console.log(image1);
+    const {t} = useTranslation();
 
     const handleSelectIconAndSendToParent = (selectedIcons, mediaPlatform) => {
         setSelectedIcons(selectedIcons);
