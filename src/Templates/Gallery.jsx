@@ -125,18 +125,18 @@ export default function Gallery() {
           <Sidenav />
             
             <div className="all-template">
-              <img src={template1} alt="Gallery Image 1" onClick={() => handleClickOpen('template1')} style={{ cursor: 'pointer' }} />
-              <img src={template2} alt="Gallery Image 2" onClick={() => handleClickOpen('template2')} style={{ cursor: 'pointer' }} />
-              <img src={template3} alt="Gallery Image 3" onClick={() => handleClickOpen('template3')} style={{ cursor: 'pointer' }} />
-              <img src={template4} alt="Gallery Image 4" onClick={() => handleClickOpen('template4')} style={{ cursor: 'pointer' }} />
-              <img src={template1} alt="Gallery Image 5" onClick={() => handleClickOpen('template5')} style={{ cursor: 'pointer' }} />
-              <img src={template2} alt="Gallery Image 6" onClick={() => handleClickOpen('template6')} style={{ cursor: 'pointer' }} />
-              <img src={template3} alt="Gallery Image 7" onClick={() => handleClickOpen('template7')} style={{ cursor: 'pointer' }} />
-              <img src={template4} alt="Gallery Image 8" onClick={() => handleClickOpen('template8')} style={{ cursor: 'pointer' }} />
-              <img src={template1} alt="Gallery Image 9" onClick={() => handleClickOpen('template1')} style={{ cursor: 'pointer' }} />
-              <img src={template1} alt="Gallery Image 10" onClick={() => handleClickOpen('template1')} style={{ cursor: 'pointer' }} />
-              <img src={template1} alt="Gallery Image 11" onClick={() => handleClickOpen('template1')} style={{ cursor: 'pointer' }} />
-              <img src={template1} alt="Gallery Image 12" onClick={() => handleClickOpen('template1')} style={{ cursor: 'pointer' }} />
+              <img className="tempImg" src={template1} alt="Gallery Image 1" onClick={() => handleClickOpen('template1')} style={{ cursor: 'pointer' }} />
+              <img className="tempImg" src={template2} alt="Gallery Image 2" onClick={() => handleClickOpen('template2')} style={{ cursor: 'pointer' }} />
+              <img className="tempImg" src={template3} alt="Gallery Image 3" onClick={() => handleClickOpen('template3')} style={{ cursor: 'pointer' }} />
+              <img className="tempImg" src={template4} alt="Gallery Image 4" onClick={() => handleClickOpen('template4')} style={{ cursor: 'pointer' }} />
+              <img className="tempImg" src={template1} alt="Gallery Image 5" onClick={() => handleClickOpen('template5')} style={{ cursor: 'pointer' }} />
+              <img className="tempImg" src={template2} alt="Gallery Image 6" onClick={() => handleClickOpen('template6')} style={{ cursor: 'pointer' }} />
+              <img className="tempImg" src={template3} alt="Gallery Image 7" onClick={() => handleClickOpen('template7')} style={{ cursor: 'pointer' }} />
+              <img className="tempImg" src={template4} alt="Gallery Image 8" onClick={() => handleClickOpen('template8')} style={{ cursor: 'pointer' }} />
+              <img className="tempImg" src={template1} alt="Gallery Image 9" onClick={() => handleClickOpen('template1')} style={{ cursor: 'pointer' }} />
+              <img className="tempImg" src={template1} alt="Gallery Image 10" onClick={() => handleClickOpen('template1')} style={{ cursor: 'pointer' }} />
+              <img className="tempImg" src={template1} alt="Gallery Image 11" onClick={() => handleClickOpen('template1')} style={{ cursor: 'pointer' }} />
+              <img className="tempImg" src={template1} alt="Gallery Image 12" onClick={() => handleClickOpen('template1')} style={{ cursor: 'pointer' }} />
             </div>
           
           <Dialog

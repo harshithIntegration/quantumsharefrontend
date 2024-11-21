@@ -754,10 +754,10 @@ t4button {
   cursor: pointer;
 }
 
-button:hover {
+/* button:hover {
   background-color: #0056b3;
   border-radius: 100px;
-}
+} */
 .t4app-container {
   position: relative;
 }
@@ -1103,10 +1103,10 @@ button:hover {
   cursor: pointer;
 }
 
-button:hover {
+/* button:hover {
   background-color: #0056b3;
   border-radius: 100px;
-}
+} */
 .t5app-container {
   position: relative;
 }
