@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Draggable from 'react-draggable';
-import '../CssFolder/Template.css';
+import '../CssFolder/template.css';
 import t8bimg from '../Assets/t8pp.jpg'; 
 import t8lgo from '../Assets/T6l.jpg';
 import t8p from '../Assets/t8ppp.jpg'; // Default background image

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import '../CssFolder/Template.css';
+import '../CssFolder/template.css';
 import Draggable from 'react-draggable';
 import { FaPlusCircle, FaDownload, FaTimes, FaPhoneAlt, FaEnvelope, FaUserPlus } from 'react-icons/fa';
 import html2canvas from 'html2canvas';

@@ -2,7 +2,7 @@
 /* eslint-disable no-mixed-operators */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState, useContext, useRef } from "react";
-import { Dialog, DialogContent, DialogActions, Grid, Button, Tooltip, Popover, Zoom, DialogContentText } from "@mui/material";
+import { Dialog, DialogContent, DialogActions, Grid, Button, Tooltip, Popover, Zoom, DialogContentText, Modal, Box } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import MoodOutlinedIcon from '@mui/icons-material/MoodOutlined';
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
@@ -28,6 +28,7 @@ import WarningIcon from '@mui/icons-material/Warning';
 import { clearAiText, updateCaption } from "../Redux/action/AiTextSlice";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import QI from './QI';
+import TagIcon from '@mui/icons-material/Tag';
 import { useTranslation } from "react-i18next";
 
 const Post = ({ onClose }) => {
@@ -44,10 +45,6 @@ const Post = ({ onClose }) => {
     const [title, setTitle] = useState('');
     const [visibility, setVisibility] = useState("public");
     const [anchorEl, setAnchorEl] = useState(null);
-    const [anchorEl1, setAnchorEl1] = useState(null);
-    const [inputValue, setInputValue] = useState('');
-    const [suggestions, setSuggestions] = useState([]);
-    const [filteredSuggestions, setFilteredSuggestions] = useState([]);
     const [confirmCloseOpen, setConfirmCloseOpen] = useState(false);
     const [shareButtonDisabled, setShareButtonDisabled] = useState(true);
     const [commentValue, setCommentValue] = useState('');
@@ -69,7 +66,11 @@ const Post = ({ onClose }) => {
     const [AIopen, setAIopen] = useState(false)
     const dispatch = useDispatch()
     const AiText = useSelector((state) => state.Aitext.AiText)
-    const { t } = useTranslation('');
+    const [query, setQuery] = useState("");
+    const [suggestions, setSuggestions] = useState([]);
+    const [noHashtagMessage, setNoHashtagMessage] = useState("");
+    const [showInput, setShowInput] = useState(false);
+    console.log(image1);
 
     const handleSelectIconAndSendToParent = (selectedIcons, mediaPlatform) => {
         setSelectedIcons(selectedIcons);
@@ -83,12 +84,11 @@ const Post = ({ onClose }) => {
         }
         console.log(mediaPlatform);
     };
-
     const [warningMessages, setWarningMessages] = useState([]);
     const maxTitleCharacters = 100;
     const maxCaptionCharacters = 500;
-
     const closeDialog = () => {
+        console.log("closeDialog triggered");
         setOpen(false);
         setFile(null);
         setFileType('');
@@ -96,8 +96,13 @@ const Post = ({ onClose }) => {
         setScheduleDateTime(null);
         setTitle('');
         setCaption('');
+        dispatch(updateCaption(''));
         setCommentValue('');
         setMediaPlatform([]);
+        setQuery('');
+        setSuggestions([]);
+        setNoHashtagMessage('');
+        setShowInput(false);
         onClose();
     };
 
@@ -193,10 +198,18 @@ const Post = ({ onClose }) => {
             dispatch(clearAiText());
             setChangesMade(false);
             closeDialog();
+            setQuery('');
+            setSuggestions([]);
+            setNoHashtagMessage('');
+
         } else {
             setCaption('');
             dispatch(clearAiText());
             closeDialog();
+            setQuery('');
+            setSuggestions([]);
+            setNoHashtagMessage('');
+
         }
     };
 
@@ -218,6 +231,7 @@ const Post = ({ onClose }) => {
             const isVideo = file.type.startsWith('video/');
             const imageSizeLimit = 4.5 * 1024 * 1024;
             const videoSizeLimit = 40 * 1024 * 1024;
+
             if (isImage && file.size > imageSizeLimit) {
                 toast.error("Image size is too large! Maximum allowed is 4.5MB.");
                 return;
@@ -226,16 +240,26 @@ const Post = ({ onClose }) => {
                 toast.error("Video size is too large! Maximum allowed is 40MB.");
                 return;
             }
+
             let processedFile = file;
-            if (isImage && file.type !== 'image/jpeg') {
-                // toast("Converting image to JPG...");
-                processedFile = await convertImageToJPG(file);
-            }
             if (isVideo && file.type !== 'video/mp4') {
                 toast.error("Only MP4 videos are supported. Please upload an MP4 file.");
                 return;
             }
-            setFile(processedFile);
+            const unsupportedImageFormats = ['image/heic', 'image/tiff'];
+            if (isImage && unsupportedImageFormats.includes(file.type)) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const filePreviewUrl = e.target.result;
+                    setFile(file);
+                    setImageUrl(filePreviewUrl);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                setFile(file);
+                setImageUrl(URL.createObjectURL(file));
+            }
+
             setFileType(isImage ? 'image' : 'video');
             setShareButtonDisabled(false);
             console.log('File selected:', processedFile);
@@ -603,7 +627,10 @@ const Post = ({ onClose }) => {
         setChangesMade(false);
         setSelectedIcons([]);
         setMediaPlatform([]);
-        setImageUrl('')
+        setImageUrl('');
+        setQuery('');
+        setSuggestions([]);
+        setNoHashtagMessage('');
     };
 
     const convertImageToJPG = (file) => {
@@ -662,45 +689,62 @@ const Post = ({ onClose }) => {
         setAnchorEl(null);
     };
 
-    const handleHashtagIconClick = (event) => {
-        setAnchorEl1(event.currentTarget);
-    };
-
-    const handleClosePopover1 = () => {
-        setAnchorEl1(null);
-    };
-
-    const handleInputChange = (event) => {
-        const value = event.target.value;
-        setInputValue(value);
-
-        const filtered = suggestions.filter((item) =>
-            item.name.toLowerCase().includes(value.toLowerCase())
-        );
-        setFilteredSuggestions(filtered);
-        handleChangesMade();
-    };
-
-    const handleSuggestionClick = (suggestion) => {
-        setInputValue(suggestion.name);
-        setFilteredSuggestions([]);
-    }
-
-    const handleTextAreaKeyPress = (event) => {
-        if (event.key === 'Enter') {
-            event.preventDefault()
-            setInputValue(inputValue + ' #')
+    const fetchSuggestions = async (query) => {
+        try {
+            const response = await axiosInstance.get(`/quantum-share/Hashtag-suggestions`, {
+                params: { query },
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            console.log(response.data.data);
+            console.log("Full Response:", response);
+            console.log("Response Status:", response.data.status);
+            console.log("Response Data:", response.data.data);
+            if (response.data.status === "sucess" && response.data.data) {
+                const hashtags = response.data.data;
+                if (hashtags.length > 0) {
+                    setSuggestions(hashtags);
+                    setNoHashtagMessage("");
+                } else {
+                    setSuggestions([]);
+                    setNoHashtagMessage("No hashtag found");
+                }
+            } else {
+                setSuggestions([]);
+                setNoHashtagMessage(response.data.message || "No hashtag found");
+            }
+        } catch (error) {
+            console.error("Error fetching hashtag suggestions:", error);
         }
-    }
+    };
+    const handleInputChange = (e) => {
+        const value = e.target.value;
+        setQuery(value);
+    };
 
-    const handleSendClick = () => {
-        if (inputValue.trim() !== '') {
-            setCaption((prevValue) => prevValue + ' #' + inputValue.trim());
-            setInputValue('');
+    const handleFetchClick = () => {
+        if (query) {
+            fetchSuggestions(query);
         }
-        setAnchorEl1(null);
-    }
-
+    };
+    const handleHashtagSelect = (hashtag) => {
+        const updatedCaption = `${caption} ${hashtag}`.trim();
+        if (updatedCaption.length <= maxCaptionCharacters) {
+            setCaption(updatedCaption);
+            dispatch(updateCaption(updatedCaption));
+            setChangesMade(true);
+        }
+        setSuggestions(suggestions.filter((s) => s !== hashtag));
+    };
+    const handleIconClick = () => {
+        setShowInput(!showInput);
+        if (showInput) {
+            setQuery('');
+            setSuggestions([]);
+            setNoHashtagMessage('');
+        }
+    };
     const handleClickOpen = () => {
         setOpen1(true);
     };
@@ -790,6 +834,7 @@ const Post = ({ onClose }) => {
                                                 onChange={handleFileChange}
                                                 name="mediaFile"
                                             />
+
                                             {showCamera && (
                                                 <div style={{
                                                     position: 'fixed',
@@ -844,54 +889,101 @@ const Post = ({ onClose }) => {
                                                 <FmdGoodOutlinedIcon />
                                             </IconButton>
                                         </Tooltip>
-                                        <Tooltip TransitionComponent={Zoom} title="Hashtag" enterDelay={100} leaveDelay={100} placement="top-end">
-                                            <IconButton>
-                                                <TagOutlinedIcon onClick={handleHashtagIconClick} />
-                                                <Popover
-                                                    open={Boolean(anchorEl1)}
-                                                    anchorEl={anchorEl1}
-                                                    onClose={handleClosePopover1}
-                                                    anchorOrigin={{
-                                                        vertical: 'bottom',
-                                                        horizontal: 'center',
-                                                    }}
-                                                    transformOrigin={{
-                                                        vertical: 'top',
-                                                        horizontal: 'center',
-                                                    }}
-                                                    PaperProps={{
-                                                        style: {
-                                                            width: '300px',
-                                                            height: '185px',
-                                                            background: '#f5f5f5'
-                                                        },
-                                                    }}>
-                                                    <div style={{ padding: '10px', width: '100px', display: 'flex', flexDirection: 'column' }}>
-                                                        <textarea
-                                                            type="text"
-                                                            value={inputValue}
-                                                            onChange={handleInputChange}
-                                                            onKeyDown={handleTextAreaKeyPress}
-                                                            placeholder="Enter text only"
-                                                            style={{ width: '280px', resize: 'none', border: '0.5px solid grey', outline: 'none', borderRadius: '10px', paddingTop: '5px' }}
-                                                        />
-                                                        {filteredSuggestions.length > 0 && (
-                                                            <div>
-                                                                {filteredSuggestions.map((suggestion, index) => (
-                                                                    <div key={index} onClick={() => handleSuggestionClick(suggestion)} style={{ cursor: 'pointer', padding: '5px 0', display: 'flex', justifyContent: 'space-between' }}>
-                                                                        <div>{suggestion.name}</div>
-                                                                        <div>{suggestion.view}</div>
-                                                                    </div>
-                                                                ))}
-                                                            </div>
-                                                        )}
-                                                        <Button onClick={handleSendClick} variant="contained" style={{ marginTop: 'auto', padding: '5px 10px', transform: 'translate(200px,80px)' }} >
-                                                            Add
-                                                        </Button>
-                                                    </div>
-                                                </Popover>
+                                        <Tooltip
+                                            TransitionComponent={Zoom}
+                                            title="Hashtag"
+                                            enterDelay={100}
+                                            leaveDelay={100}
+                                            placement="top-end"
+                                        >
+                                            <IconButton onClick={handleIconClick}>
+                                                <TagIcon />
                                             </IconButton>
                                         </Tooltip>
+
+                                        {showInput && (
+                                            <div
+                                                style={{
+                                                    position: "absolute",
+                                                    bottom: "70%",
+                                                    left: '25%',
+                                                    transform: "translateY(-16px)",
+                                                    // padding: "8px",
+                                                    border: "1px solid #ccc",
+                                                    borderRadius: "8px",
+                                                    background: "#fff",
+                                                    boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
+                                                    width: "300px",
+
+                                                }}
+                                            >
+                                                <input
+                                                    type="text"
+                                                    value={query}
+                                                    onChange={handleInputChange}
+                                                    placeholder="Type to search hashtags"
+                                                    style={{
+                                                        padding: "10px",
+                                                        width: "100%",
+                                                        border: "1px solid #ccc",
+                                                        borderRadius: "4px",
+                                                        outline: "none",
+                                                        fontSize: "14px",
+                                                        width: '250px'
+                                                    }}
+                                                />
+                                                <IconButton onClick={handleFetchClick} sx={{ position: 'relative', left: '6px' }}>
+                                                    <SendIcon sx={{ color: 'blue' }} />
+                                                </IconButton>
+                                                <div
+                                                    style={{
+                                                        width: "300px",
+                                                        height: "200px",
+                                                        borderRadius: "4px",
+                                                        overflowY: "auto",
+                                                        boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
+                                                        border: "1px solid #ccc",
+                                                        background: "#fff",
+                                                        marginTop: "8px",
+                                                    }}
+                                                >
+                                                    {Array.isArray(suggestions) && suggestions.length > 0 ? (
+                                                        suggestions.map((hashtag, index) => (
+                                                            <div
+                                                                key={index}
+                                                                style={{
+                                                                    padding: "8px",
+                                                                    cursor: "pointer",
+                                                                    fontSize: "14px",
+                                                                    borderBottom: "1px solid #f0f0f0",
+                                                                }}
+                                                                onClick={() => handleHashtagSelect(hashtag)}
+                                                            >
+                                                                {hashtag}
+                                                            </div>
+                                                        ))
+                                                    ) : (
+                                                        noHashtagMessage && (
+                                                            <div
+                                                                style={{
+                                                                    padding: "8px",
+                                                                    textAlign: "center",
+                                                                    fontSize: "14px",
+                                                                    color: "#999",
+                                                                    border: "1px solid #ccc",
+                                                                    borderRadius: "4px",
+                                                                    background: "#fff",
+                                                                    marginTop: "8px",
+                                                                }}
+                                                            >
+                                                                {noHashtagMessage}
+                                                            </div>
+                                                        )
+                                                    )}
+
+                                                </div>
+                                            </div>
+                                        )}
                                         <Tooltip>
                                             <IconButton
                                                 onClick={handleAIComponent}
@@ -995,7 +1087,6 @@ const Post = ({ onClose }) => {
                 </DialogContent>
                 <DialogActions className="action">
                     <div style={{ display: 'flex' }}>
-                        {/* Warning Message and Tooltip */}
                         {warningMessages.length > 0 && (
                             <div style={{ display: 'flex' }}>
                                 <Tooltip

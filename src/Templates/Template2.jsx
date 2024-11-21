@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Logo from '../Assets/Quantum_Logo.webp';
-import '../CssFolder/Template.css';
+import '../CssFolder/template.css';
 import EditContainer from './EditContainer';
 
 const Template2 = () => {

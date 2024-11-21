@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../CssFolder/Template.css';
+import '../CssFolder/template.css';
 import { FaCalendarAlt, FaClock } from 'react-icons/fa';
 import profileImage from '../Assets/T4p.jpg'; // Replace with the actual image path
 import Draggable from 'react-draggable';

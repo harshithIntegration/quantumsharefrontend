@@ -3,7 +3,7 @@ import Draggable from 'react-draggable'; // npm install react-draggable
 import html2canvas from 'html2canvas'; // Import html2canvas
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDownload } from '@fortawesome/free-solid-svg-icons';
-import '../CssFolder/Template.css';
+import '../CssFolder/template.css';
 import b7img from '../Assets/T7p.jpg';
 import b7lgo from '../Assets/T7l.png'; 
 
