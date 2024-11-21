@@ -1,39 +1,3 @@
-// import React, { createContext, useContext } from 'react';
-// import { toast, ToastContainer } from 'react-toastify';
-
-// const ToastContext = createContext();
-
-// export const useToast = () => useContext(ToastContext);
-
-// export const ToastProvider = ({ children }) => {
-//     const showToast = (type, message) => {
-//         switch (type) {
-//             case 'success':
-//                 toast.success(message);
-//                 break;
-//             case 'error':
-//                 toast.error(message);
-//                 break;
-//             case 'info':
-//                 toast.info(message);
-//                 break;
-//             case 'loading':
-//                 return toast.loading(message);
-//             default:
-//                 toast(message);
-//         }
-//     };
-
-//     return (
-//         <ToastContext.Provider value={{ showToast }}>
-//             {children}
-//             <ToastContainer />
-//         </ToastContext.Provider>
-//     );
-// };
-
-
-// ToastContext.js
 import React, { createContext, useContext, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -65,16 +29,8 @@ export const ToastProvider = ({ children }) => {
         }
     };
 
-    const renderToast = () => {
-        if (message && type) {
-            toast[type](message);
-            setMessage(null);
-            setType(null);
-        }
-    };
-
     return (
-        <ToastContext.Provider value={{ showToast, renderToast }}>
+        <ToastContext.Provider value={{ showToast, message, type }}>
             {children}
         </ToastContext.Provider>
     );

@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import axiosInstance from '../Helper/AxiosInstance';
 import { FaCirclePlay } from "react-icons/fa6";
+import { useTranslation } from 'react-i18next';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
     borderRadius: theme.spacing(2),
@@ -35,6 +36,7 @@ const SectionTitle = styled(Typography)(({ theme }) => ({
 const Pricing = () => {
     const token = sessionStorage.getItem('token');
     const navigate = useNavigate();
+    const {t} = useTranslation('');
 
     const handleFreeTrialClick = () => {
         if (!token) {
@@ -147,7 +149,7 @@ const Pricing = () => {
         <>
             <HelmetProvider>
                 <Helmet>
-                    <title>Quantum Share Pricing - Flexible Plans to Elevate Your Social Media Strategy</title>
+                    <title>{t('quantumSharePricing')}</title>
                     <meta name="description" content="Discover Quantum Share's transparent and flexible pricing plans, designed to meet the needs of individuals, small businesses, and enterprises. Whether you're managing a single account or multiple platforms, our pricing offers a range of features including AI-driven content generation, cross-platform posting, advanced analytics, and enhanced privacy. Choose a plan that fits your budget and start streamlining your social media management with ease." />
                     <link rel="canonical" href='/Features' />
                 </Helmet>
@@ -159,7 +161,7 @@ const Pricing = () => {
                 <PricingContainer>
                     <SectionTitle variant="h4" align="center">
                         <h1 style={{ textAlign: 'center', color: '#ba343b', fontSize: '32px' }}>
-                            Try Social Media free with a 15-days trial
+                            {t('trySocialMedia')}
                         </h1>
                     </SectionTitle>
                     <Grid container justifyContent="center" spacing={4}>
@@ -167,66 +169,66 @@ const Pricing = () => {
                             <StyledPaper sx={{ backgroundColor: "#fcf8f8", }}>
                                 <Grid item xs={12} sm={12} md={12} >
                                     <Typography gutterBottom sx={{ textAlign: "start", fontSize: "22px", fontWeight: "bold" }}>
-                                        Free Trial Plan
+                                        {t('freeTrialPlan')}
                                     </Typography>
                                 </Grid>
                                 <Typography variant="subtitle1" gutterBottom sx={{ textAlign: "start" }}>
-                                    No annual billing
+                                    {t('noAnnualBilling')}
                                 </Typography>
                                 <Typography variant="h6" gutterBottom sx={{ textAlign: "start" }}>
-                                    <span style={{ fontSize: "22px", color: "#b43f4f" }}>$</span><div style={{ marginTop: "-52px", marginLeft: "12px" }}><span style={{ fontSize: "56px", color: "#b43f4f", fontWeight: "bold" }}>0</span><span style={{ color: "#a3a3a5" }}>/month</span></div>
+                                    <span style={{ fontSize: "22px", color: "#b43f4f" }}>$</span><div style={{ marginTop: "-52px", marginLeft: "12px" }}><span style={{ fontSize: "56px", color: "#b43f4f", fontWeight: "bold" }}>0</span><span style={{ color: "#a3a3a5" }}>{t('permonth')}</span></div>
                                 </Typography>
                                 <Button variant="contained" onClick={handleFreeTrialClick} sx={{ width: "200px", background: "#fcf8f8", color: "#b43f4f", boxShadow: "none", border: "1px solid #b43f4f", fontSize: '16px', fontWeight: '600', marginTop: '-5px', '&:hover': { background: 'none' } }} >
-                                    Start a free trial
+                                   {t('startFreeTrial')}
                                 </Button>
                                 <Typography variant="body2" style={{ marginTop: '16px', marginBottom: "20px", fontSize: '14px', fontWeight: '600' }} >
-                                    No credit card required.
+                                    {t('noCreditCard')}
                                 </Typography>
                                 <Typography variant="subtitle1" style={{ marginTop: '8px', textAlign: "start", fontSize: '18px', fontWeight: '600' }}>
-                                    Includes :
+                                   {t('includes')}
                                 </Typography>
                                 <Grid container spacing={1} sx={{ marginTop: '5px' }} >
                                     <Grid item xs={1}>
                                         <CheckCircleOutlineIcon style={{ color: 'green' }} />
                                     </Grid>
                                     <Grid item xs={11}>
-                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }} >Connect 5 Social Media Profiles</Typography>
+                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }} >{t('connect5Profiles')}</Typography>
                                     </Grid>
                                     <Grid item xs={1}>
                                         <CheckCircleOutlineIcon style={{ color: 'green' }} />
                                     </Grid>
                                     <Grid item xs={11}>
-                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>Planning & Publishing</Typography>
+                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>{t('planningPublishing')}</Typography>
                                     </Grid>
                                     <Grid item xs={1}>
                                         <CheckCircleOutlineIcon style={{ color: 'green' }} />
                                     </Grid>
                                     <Grid item xs={11}>
-                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>Unified User Dashboard</Typography>
+                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>{t('userDashboard')}</Typography>
                                     </Grid>
                                     <Grid item xs={1}>
                                         <CheckCircleOutlineIcon style={{ color: 'green' }} />
                                     </Grid>
                                     <Grid item xs={11}>
-                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>5 Credits per day</Typography>
+                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>{t('creditsPerDay5')}</Typography>
                                     </Grid>
                                     <Grid item xs={1}>
                                         <CheckCircleOutlineIcon style={{ color: 'green' }} />
                                     </Grid>
                                     <Grid item xs={11}>
-                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>Language Translator</Typography>
+                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>{t('languageTranslator')}</Typography>
                                     </Grid>
                                     <Grid item xs={1}>
                                         <CancelIcon style={{ color: 'red' }} />
                                     </Grid>
                                     <Grid item xs={11}>
-                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>AI Assistant</Typography>
+                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>{t('aiAssistant')}</Typography>
                                     </Grid>
                                     <Grid item xs={1}>
                                         <CancelIcon style={{ color: 'red' }} />
                                     </Grid>
                                     <Grid item xs={11}>
-                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>Advanced Analytics</Typography>
+                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>{t('advancedAnalytics')}</Typography>
                                     </Grid>
                                 </Grid>
                             </StyledPaper>
@@ -235,66 +237,66 @@ const Pricing = () => {
                             <StyledPaper sx={{ backgroundColor: "#fcf8f8" }}>
                                 <Grid item xs={12} sm={12} md={12} sx={{ backgroundColor: "#fcf8f8", display: "grid", gridTemplateColumns: "auto auto" }}>
                                     <Typography gutterBottom sx={{ textAlign: "start", fontSize: "22px", fontWeight: "bold", marginBottom: "0px" }}>
-                                        Standard Plan
+                                        {t('standardPlan')}
                                     </Typography>
                                 </Grid>
                                 <Typography variant="subtitle1" gutterBottom sx={{ fontSize: "25px", textAlign: "start", marginBottom: "0px" }}>
                                     ****
                                 </Typography>
                                 <Typography variant="h6" gutterBottom sx={{ textAlign: "start" }}>
-                                    <span style={{ fontSize: "22px", color: "#b43f4f" }}>$</span><div style={{ marginTop: "-52px", marginLeft: "12px" }}><span style={{ fontSize: "56px", color: "#b43f4f", fontWeight: "bold" }}>14</span><span style={{ color: "#a3a3a5" }}>/month</span></div>
+                                    <span style={{ fontSize: "22px", color: "#b43f4f" }}>$</span><div style={{ marginTop: "-52px", marginLeft: "12px" }}><span style={{ fontSize: "56px", color: "#b43f4f", fontWeight: "bold" }}>14</span><span style={{ color: "#a3a3a5" }}>{t('perMonth')}</span></div>
                                 </Typography>
                                 <Button variant="contained" onClick={handlePayment} sx={{ width: "200px", background: "#b43f4f", color: "white", boxShadow: "none", fontSize: '16px', fontWeight: '600', marginTop: '-5px' }} disabled >
-                                    Buy now
+                                    {t('buyNow')}
                                 </Button>
                                 <Typography variant="body2" style={{ marginTop: '16px', marginBottom: "20px", fontSize: '14px', fontWeight: '600' }} >
-                                    No credit card required.
+                                    {t('noCreditCard')}
                                 </Typography>
                                 <Typography variant="subtitle1" style={{ marginTop: '8px', textAlign: "start", fontSize: '18px', fontWeight: '600' }}>
-                                    Includes :
+                                    {t('includes')}
                                 </Typography>
                                 <Grid container spacing={1} sx={{ marginTop: '5px' }}>
                                     <Grid item xs={1}>
                                         <CheckCircleOutlineIcon style={{ color: 'green' }} />
                                     </Grid>
                                     <Grid item xs={11}>
-                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>Connect 5 Social Media Profiles</Typography>
+                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>{t('connect5Profiles')}</Typography>
                                     </Grid>
                                     <Grid item xs={1}>
                                         <CheckCircleOutlineIcon style={{ color: 'green' }} />
                                     </Grid>
                                     <Grid item xs={11}>
-                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>Planning & Publishing</Typography>
+                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>{t('planningPublishing')}</Typography>
                                     </Grid>
                                     <Grid item xs={1}>
                                         <CheckCircleOutlineIcon style={{ color: 'green' }} />
                                     </Grid>
                                     <Grid item xs={11}>
-                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>Unified User Dashboard</Typography>
+                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>{t('userDashboard')}</Typography>
                                     </Grid>
                                     <Grid item xs={1}>
                                         <CheckCircleOutlineIcon style={{ color: 'green' }} />
                                     </Grid>
                                     <Grid item xs={11}>
-                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>Unlimited Credits per day</Typography>
+                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>{t('unlimitedCredits')}</Typography>
                                     </Grid>
                                     <Grid item xs={1}>
                                         <CheckCircleOutlineIcon style={{ color: 'green' }} />
                                     </Grid>
                                     <Grid item xs={11}>
-                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>Language Translator</Typography>
+                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>{t('languageTranslator')}</Typography>
                                     </Grid>
                                     <Grid item xs={1}>
                                         <CheckCircleOutlineIcon style={{ color: 'green' }} />
                                     </Grid>
                                     <Grid item xs={11}>
-                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>AI Assistant</Typography>
+                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>{t('aiAssistant')}</Typography>
                                     </Grid>
                                     <Grid item xs={1}>
                                         <CheckCircleOutlineIcon style={{ color: 'green' }} />
                                     </Grid>
                                     <Grid item xs={11}>
-                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>Advanced Analytics</Typography>
+                                        <Typography variant="body2" sx={{ textAlign: "start", paddingLeft: "25px", fontSize: '16px', fontWeight: '600' }}>{t('advancedAnalytics')}</Typography>
                                     </Grid>
                                 </Grid>
                             </StyledPaper>
@@ -304,7 +306,7 @@ const Pricing = () => {
             </Box>
             <div className="icon-container">
                 <Link to='/reference-video'><FaCirclePlay className="circle-icon" /></Link>
-                <div className="hover-content">reference video</div>
+                <div className="hover-content">{t('referencevideo')}</div>
             </div>
             <Footer />
         </>

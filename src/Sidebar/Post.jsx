@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogActions, Grid, Button, Tooltip, Popover, Z
 import IconButton from '@mui/material/IconButton';
 import MoodOutlinedIcon from '@mui/icons-material/MoodOutlined';
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
+import TagOutlinedIcon from '@mui/icons-material/TagOutlined';
 import SendIcon from '@mui/icons-material/Send';
 import Stack from '@mui/material/Stack';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
@@ -26,8 +27,9 @@ import { useDispatch, useSelector } from "react-redux";
 import WarningIcon from '@mui/icons-material/Warning';
 import { clearAiText, updateCaption } from "../Redux/action/AiTextSlice";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
-import QI from './QI'
+import QI from './QI';
 import TagIcon from '@mui/icons-material/Tag';
+import { useTranslation } from "react-i18next";
 
 const Post = ({ onClose }) => {
     const navigate = useNavigate();
@@ -111,7 +113,7 @@ const Post = ({ onClose }) => {
                 return false;
             };
 
-            window.history.pushState(null, '', location.pathname); // Push current state
+            window.history.pushState(null, '', location.pathname);
             window.addEventListener('popstate', handleBackNavigation);
 
             return () => {
@@ -119,6 +121,7 @@ const Post = ({ onClose }) => {
             };
         }
     }, [open, location.pathname]);
+
     const validatePlatforms = () => {
         let newWarningMessages = [];
         let shouldDisableShare = false;
@@ -188,7 +191,6 @@ const Post = ({ onClose }) => {
             validatePlatforms();
         }
     }, [mediaPlatform, title, sr, file, fileType, caption]);
-
 
     const handleConfirmCloseOpen = () => {
         if (changesMade) {
@@ -612,6 +614,7 @@ const Post = ({ onClose }) => {
         }
     };
 
+
     const resetState = () => {
         setFile(null);
         setFileType('');
@@ -629,6 +632,29 @@ const Post = ({ onClose }) => {
         setSuggestions([]);
         setNoHashtagMessage('');
     };
+
+    const convertImageToJPG = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (e) => {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    canvas.toBlob((blob) => {
+                        resolve(blob);
+                    }, 'image/jpeg');
+                };
+            };
+            reader.onerror = (err) => reject(err);
+        });
+    };
+
     const handleTitleChange = (e) => {
         const newTitle = e.target.value;
         if (newTitle.length <= maxTitleCharacters) { setTitle(newTitle); handleChangesMade(); }
@@ -760,7 +786,6 @@ const Post = ({ onClose }) => {
                 <DialogContent>
                     <Grid container spacing={1}>
                         <Grid item lg={7} md={7} xs={12} >
-
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <h4 id="newPost">New Post</h4>
                                 <Media onMediaPlatform={handleSelectIconAndSendToParent} initialMediaPlatform={mediaPlatform} postSubmitted={postSubmitted} />
@@ -850,7 +875,6 @@ const Post = ({ onClose }) => {
                                                         vertical: 'bottom',
                                                         horizontal: 'center',
                                                     }}
-
                                                     transformOrigin={{
                                                         vertical: 'top',
                                                         horizontal: 'center',

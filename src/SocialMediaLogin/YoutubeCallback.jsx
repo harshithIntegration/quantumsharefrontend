@@ -10,6 +10,7 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, B
 import { setYoutubeProfile } from '../Redux/action/pageUrlsSlice';
 import { setYouName } from '../Redux/action/NameSlice';
 import { setYouLoggedIn } from '../Redux/action/loginStatusSilce';
+import { useTranslation } from 'react-i18next';
 
 const YoutubeCallback = () => {
     const token = sessionStorage.getItem('token');
@@ -22,6 +23,7 @@ const YoutubeCallback = () => {
     const [dialogMessage, setDialogMessage] = useState(''); 
     const location = useLocation();
     const navigate = useNavigate();
+    const {t} = useTranslation('');
 
     useEffect(() => {
         const query = new URLSearchParams(location.search);
@@ -88,14 +90,14 @@ const YoutubeCallback = () => {
 
             <Dialog open={openDialog} onClose={handleCloseDialog}>
                 <DialogTitle sx={{ color: '#ba343b', fontSize: '16px', textAlign: 'center', fontWeight: '600' }}>
-                    Oops! we couldn't find any YouTube channel in your account.
+                    {t('oopsNoYouTubeChannel')}
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText sx={{ color: 'black' }}>{dialogMessage}</DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseDialog}>
-                        Close
+                        {t('close')}
                     </Button>
                 </DialogActions>
             </Dialog>

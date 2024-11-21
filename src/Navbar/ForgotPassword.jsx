@@ -6,6 +6,7 @@ import QS from '../Assets/QS.webp';
 import axiosInstance from '../Helper/AxiosInstance';
 import { useNavigate } from 'react-router-dom';
 import { TailSpin } from 'react-loader-spinner';
+import { useTranslation } from 'react-i18next';
 
 const ForgotPassword = () => {
     let navigate = useNavigate();
@@ -16,6 +17,7 @@ const ForgotPassword = () => {
     const [emailError, setEmailError] = useState('');
     const [loading, setLoading] = useState(false);
     const [submittedEmail, setSubmittedEmail] = useState('');
+    const {t} = useTranslation('');
 
     const validateEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -110,14 +112,14 @@ const ForgotPassword = () => {
                         <img src={QS} alt="" style={{ height: 35 }} />
                     </Typography>
                     <Typography sx={{ color: '#ba343b', fontSize: '20px', textAlign: 'center' }}>
-                        Find your Quantum Share account
+                        {t('findQuantumShareAccount')}
                     </Typography>
                     <Typography
                         variant="body2"
                         textAlign="center"
                         sx={{ margin: '10px 0', color: 'gray' }}
                     >
-                        Enter your email-id associated with your account to change your password.
+                        {t('enterEmailToChangePassword')}
                     </Typography>
                     <Box component="form" noValidate sx={{ mt: 2 }}>
                         <Grid container spacing={2} justifyContent="center">
@@ -187,7 +189,7 @@ const ForgotPassword = () => {
                     }}
                 >
                     <Typography id="success-modal-title" variant="h6" component="h2" sx={{ color: 'green' }}>
-                        Email Sent!
+                        {t('emailSent')}
                     </Typography>
                     <Typography
                         id="success-modal-description"
@@ -199,7 +201,7 @@ const ForgotPassword = () => {
                             whiteSpace: 'normal', 
                         }}
                     >
-                        A reset password link has been sent to your email <b style={{ color: '#ba343b' }}>{submittedEmail}</b>
+                        {t('resetPasswordLinkSent')} <b style={{ color: '#ba343b' }}>{submittedEmail}</b>
                     </Typography>
                     <Button
                         onClick={handleSuccessModalClose}
@@ -212,7 +214,7 @@ const ForgotPassword = () => {
                             },
                         }}
                     >
-                        Close
+                        {t('close')}
                     </Button>
                 </Box>
             </Modal>

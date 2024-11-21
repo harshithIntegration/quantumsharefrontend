@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { Box, Typography } from '@mui/material';
 import Nav from '../Navbar/Nav';
@@ -15,8 +15,18 @@ import { FaCirclePlay } from "react-icons/fa6";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import RedditLogin from './RedditLogin';
 import PinterestLogin from './PinterestLogin';
+import { useToast } from '../Context/ToastContext';
+import { useTranslation } from 'react-i18next';
 
 const SocialMediaLogin = () => {
+    const { t } = useTranslation('');
+    // const { showToast, message, type } = useToast();
+
+    // useEffect(() => {
+    //     if (message) {
+    //         showToast(type, message); 
+    //     }
+    // }, [type, message, showToast]);
 
     return (
         <>
@@ -26,7 +36,7 @@ const SocialMediaLogin = () => {
                 <Box sx={{ flexGrow: 1, marginLeft: '1rem' }}>
                     <div style={{ width: '100%', maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
                         <h1 style={{ textAlign: 'center', color: '#ba343b', fontSize: '1.7rem' }}>
-                            Connect a Social Network
+                            {t('connectSocialNetwork')}
                         </h1>
                         <div style={{ display: 'flex', justifyContent: 'center' }}>
                             <div className='container-soc'>
@@ -40,7 +50,7 @@ const SocialMediaLogin = () => {
                             </div>
                         </div>
                         <h1 style={{ textAlign: 'center', color: '#ba343b', fontSize: '24px', margin: '10px auto' }}>
-                            Upcoming Media Platforms
+                            {t('upcomingMediaPlatforms')}
                         </h1>
                         <div style={{ display: 'flex', justifyContent: 'center', padding: '20px', marginTop: '-2rem' }}>
                             <div className='container-soc' style={{ maxWidth: '1200px', width: '100%' }}>

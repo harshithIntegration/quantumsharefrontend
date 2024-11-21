@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { MdDashboardCustomize } from "react-icons/md";
+import { MdDashboardCustomize, MdOutlineFilterFrames } from "react-icons/md";
 import { MdOutlineAccountCircle } from "react-icons/md";
 import { MdOutlineJoinRight } from "react-icons/md";
 import EqualizerOutlinedIcon from '@mui/icons-material/EqualizerOutlined';
@@ -10,11 +10,13 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { RiSendPlaneFill } from "react-icons/ri";
 import { Outlet } from 'react-router-dom';
 import QI from '../Sidebar/QI';
+import { useTranslation } from 'react-i18next';
 
 const Sidenav = ({ children }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [openPost, setOpenPost] = useState(false);
     const [AIopen, setAIopen] = useState(false)
+    const {t} = useTranslation('');
 
     const handleMouseEnter = () => {
         setIsOpen(true);
@@ -46,30 +48,35 @@ const Sidenav = ({ children }) => {
 
     const menuItem = [
         {
-            name: "Dashboard",
+            name: t('dashboard'),
             icon: <MdDashboardCustomize />,
             path: "/dashboard"
         },
         {
-            name: 'Social Integration',
+            name: t('socialIntegration'),
             icon: <MdOutlineJoinRight />,
             path: '/social-integration'
         },
         {
-            name: <div onClick={handlePublish}>Publish</div>,
+            name: <div onClick={handlePublish}>{t('publish')}</div>,
             icon: <RiSendPlaneFill onClick={handlePublish} />
         },
         {
-            name: <div onClick={handleAIComponent}>Quantum AI</div>,
+            name: <div onClick={handleAIComponent}>{t('quantumAI')}</div>,
             icon: <AutoAwesomeIcon onClick={handleAIComponent} />
         },
         {
-            name: "Analytics",
+            name: t('analytics'),
             icon: <EqualizerOutlinedIcon />,
             path: '/analytics'
         },
+        // {
+        //     name: t('templates'),
+        //     icon: <MdOutlineFilterFrames />,
+        //     path: "/gallery"
+        // },
         {
-            name: "Account Overview",
+            name: t('accountOverview'),
             icon: <MdOutlineAccountCircle />,
             path: "/account-overview"
         }

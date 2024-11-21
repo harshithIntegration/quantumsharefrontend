@@ -21,7 +21,7 @@ const PrivacyPolicy = () => {
                                         <Typography variant="h4" gutterBottom sx={{ color: '#b4232a', fontSize: '2.2rem', fontWeight: '600' }}><b>Privacy Policy</b></Typography>
                                         <Typography variant="h6" gutterBottom sx={{ fontSize: '2rem', fontWeight: '600' }}>Quantum Share</Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.3rem' }}>
-                                            Last Updated November 7, 2024
+                                            Last Updated November 20, 2024
                                         </Typography>
                                         <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>What Does Quantum Share Do ?</b></Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
@@ -35,10 +35,6 @@ const PrivacyPolicy = () => {
                                         <Typography variant="subtitle1" gutterBottom sx={{ fontSize: '1.5rem' }}><b>Personal Data :</b></Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
                                             Personally identifiable information, such as your name, email address, and telephone number, and demographic information, and interests, that you voluntarily give to us when you register with the Service or when you choose to participate in various activities related to the Service like sharing files. You are under no obligation to provide us with personal information of any kind; however, your refusal to do so may prevent you from using certain features of the Service.
-                                        </Typography>
-                                        <Typography variant="subtitle1" gutterBottom sx={{ fontSize: '1.5rem' }}><b>Usage Data :</b></Typography>
-                                        <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
-                                            Information about your interactions with the Service, such as the files you upload, download, share, and any other activities performed on the Service.
                                         </Typography>
                                         <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>2. Use of Your Information</b></Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
@@ -102,7 +98,6 @@ const PrivacyPolicy = () => {
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
                                             Upon your request to terminate your account, we will deactivate or delete your account and information from our active databases. However, some information may be retained in our files to prevent fraud, troubleshoot problems, assist with any investigations, enforce our Terms of Use and/or comply with legal requirements.
                                         </Typography>
-
                                         <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>7. Explicit User Consent for AI Models</b></Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
                                             Quantum Share utilizes third-party AI models for enhancing user experience and providing personalized content recommendations. The following outlines our use of AI models:
@@ -125,8 +120,10 @@ const PrivacyPolicy = () => {
                                         </Typography>
                                         <Typography variant="subtitle1" gutterBottom sx={{ fontSize: '1.5rem' }}><b>User Control and Opt-Out Options:</b></Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
-                                            Users can opt out of data sharing with AI models through the account settings at any time.
-                                            Detailed instructions on opting out are provided in the account settings section.
+                                            Users have control over the data shared with AI models for personalization. If you wish to opt-out, you can adjust your preferences by accessing the account settings under the "Privacy Preferences" section. Disabling AI-based personalization may limit certain content recommendations and other personalized features of the Service.
+                                        </Typography>
+                                        <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
+                                            For any concerns or questions about data usage or opting out, please contact us at <a href="mailto:info@quantumparadigm.in">info@quantumparadigm.in</a>
                                         </Typography>
                                         <Typography variant="subtitle1" gutterBottom sx={{ fontSize: '1.5rem' }}><b>Responsible and Ethical Use:</b></Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
@@ -144,7 +141,21 @@ const PrivacyPolicy = () => {
                                         <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>9. Google Privacy Policy</b></Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
                                             We utilize the Google API for YouTube integration to enhance our service offerings. This integration allows users to access and share YouTube content seamlessly within the Quantum Share platform.<br />
-                                            <b>For more information, you can also review Google's Privacy Policy :</b> <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google Privacy Policy</a>
+                                            For more information, you can also review Google's Privacy Policy : <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google Privacy Policy</a><br />
+                                            By using our application, you agree to be bound by the : <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer">YouTube's Terms of Service</a>
+                                        </Typography>
+                                        <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
+                                            <b>Information We Collect and Access</b> <br />
+                                            Our application may collect and access certain user data provided through the YouTube API, including:
+                                            <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem', margin: '1rem 3rem' }}>
+                                                • Basic profile information (e.g., channel name, channel profile photo & subscribers count).<br />
+                                                • Analytics data.
+                                            </Typography>
+                                            This information is used solely for the purpose of enhancing user experience and providing app functionality. We do not share this information with unauthorized third parties.
+                                        </Typography>
+                                        <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
+                                            <b>Data Deletion and Revocation</b> <br />
+                                            When a user disconnects their YouTube profile from our application, all stored information related to their channel details is automatically deleted from our servers.
                                         </Typography>
                                         <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>10. Contact Us</b></Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>

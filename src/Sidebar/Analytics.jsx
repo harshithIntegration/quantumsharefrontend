@@ -33,6 +33,7 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import ThumbDownOffAltOutlinedIcon from '@mui/icons-material/ThumbDownOffAltOutlined';
 import StarBorderPurple500OutlinedIcon from '@mui/icons-material/StarBorderPurple500Outlined';
+import { useTranslation } from 'react-i18next';
 
 const Analytics = () => {
     let token = sessionStorage.getItem("token");
@@ -44,6 +45,7 @@ const Analytics = () => {
     const [errorMessage, setErrorMessage] = useState(null);
     const [loading, setLoading] = useState(false);
     const [recentLoading, setRecentLoding] = useState(true);
+    const {t} = useTranslation('');
 
     const fetchAnalyticsData = async () => {
         try {
@@ -196,7 +198,7 @@ const Analytics = () => {
                                     <Grid container spacing={2}>
                                         <Grid item xs={12}>
                                             <div style={{ backgroundColor: 'white', padding: '20px', marginBottom: '20px', marginRight: '15px' }}>
-                                                <h2 style={{ color: '#ba343b', fontSize: '1.4rem' }}>Recent Posts</h2><br />
+                                                <h2 style={{ color: '#ba343b', fontSize: '1.4rem' }}>{t('recentPosts')}</h2><br />
                                                 <Grid container spacing={2}>
                                                     {recentPosts.filter(post => post.imageUrl).length > 0 ? (
                                                         <>
@@ -369,7 +371,7 @@ const Analytics = () => {
                                                                                     marginRight: '20px'
                                                                                 }}
                                                                             >
-                                                                                View Insights
+                                                                                {t('viewInsights')}
                                                                             </button>
                                                                         </div>
                                                                     </Grid>
@@ -402,7 +404,7 @@ const Analytics = () => {
                                                         </>
                                                     ) : (
                                                         <div style={{ margin: '0 16px' }}>
-                                                            <p>No Recent Posts Available.</p>
+                                                            <p>{t('noRecentPosts')}</p>
                                                         </div>
                                                     )}
                                                 </Grid>
@@ -415,7 +417,7 @@ const Analytics = () => {
                                         <Grid item xs={12} md={12} lg={12}>
                                             <div style={{ backgroundColor: 'white', padding: '20px', marginLeft: '25px', marginRight: '10px' }}>
                                                 <h2 style={{ color: '#ba343b', fontSize: '1.18rem' }}>
-                                                    Performance Summary
+                                                    {t('performanceSummary')}
                                                 </h2>
                                                 <div
                                                     style={{
@@ -438,7 +440,7 @@ const Analytics = () => {
                                                             minWidth: '180px',
                                                         }}
                                                     >
-                                                        <p style={{ fontSize: 16 }}>Profile Visitors</p>
+                                                        <p style={{ fontSize: 16 }}>{t('profileVisitors')}</p>
                                                         <div style={{ display: 'flex', alignItems: 'center' }}>
                                                             <p style={{ color: '#000066', fontWeight: 'bold', fontSize: 30, margin: '10px' }}>621</p>
                                                             <CallMadeIcon sx={{ marginTop: '10px', fontSize: 16, color: 'green' }} />
@@ -456,7 +458,7 @@ const Analytics = () => {
                                                             minWidth: '180px',
                                                         }}
                                                     >
-                                                        <p style={{ fontSize: 16 }}>Post View Counts</p>
+                                                        <p style={{ fontSize: 16 }}>{t('postViewCounts')}</p>
                                                         <div style={{ display: 'flex', alignItems: 'center' }}>
                                                             <p style={{ color: '#000066', fontWeight: 'bold', fontSize: 30, margin: '10px' }}>7,256</p>
                                                             <CallReceivedIcon sx={{ marginTop: '10px', fontSize: 16, color: 'red' }} />
@@ -474,7 +476,7 @@ const Analytics = () => {
                                                             minWidth: '180px',
                                                         }}
                                                     >
-                                                        <p style={{ fontSize: 16 }}>Engagement</p>
+                                                        <p style={{ fontSize: 16 }}>{t('engagement')}</p>
                                                         <div style={{ display: 'flex', alignItems: 'center' }}>
                                                             <p style={{ color: '#000066', fontWeight: 'bold', fontSize: 30, margin: '10px' }}>23,142</p>
                                                             <CallMadeIcon sx={{ marginTop: '10px', fontSize: 16, color: 'green' }} />
@@ -511,7 +513,7 @@ const Analytics = () => {
                                         </Grid>
                                         <Grid item xs={12} md={6} lg={6} >
                                             <div style={{ background: '#fff', padding: '20px', paddingRight: '5px', marginLeft: '20px', marginRight: '15px' }}>
-                                                <p>Post Engagement</p>
+                                                <p>{t('postEngagement')}</p>
                                                 <div style={{ padding: '18px' }}>
                                                     <PieChart
                                                         series={[
@@ -532,7 +534,7 @@ const Analytics = () => {
                                         <Grid item xs={12} md={12} lg={12}>
                                             <div style={{ backgroundColor: 'white', padding: '20px', marginLeft: '25px', marginRight: '5px' }}>
                                                 <h2 style={{ color: '#ba343b', fontSize: '1.2rem' }}>
-                                                    Audience Summary
+                                                    {t('audienceSummary')}
                                                 </h2>
                                                 <div
                                                     style={{
@@ -555,7 +557,7 @@ const Analytics = () => {
                                                             minWidth: '180px'
                                                         }}
                                                     >
-                                                        <p style={{ fontSize: 16 }}>Followers</p>
+                                                        <p style={{ fontSize: 16 }}>{t('followers')}</p>
                                                         <div style={{ display: 'flex', alignItems: 'center' }}>
                                                             <p style={{ color: '#000066', fontWeight: 'bold', fontSize: 30, margin: '10px' }}>1423</p>
                                                             <CallMadeIcon sx={{ marginTop: '10px', fontSize: 16, color: 'green' }} />
@@ -573,7 +575,7 @@ const Analytics = () => {
                                                             minWidth: '180px'
                                                         }}
                                                     >
-                                                        <p style={{ fontSize: 16 }}>Likes</p>
+                                                        <p style={{ fontSize: 16 }}>{t('likes')}</p>
                                                         <div style={{ display: 'flex', alignItems: 'center' }}>
                                                             <p style={{ color: '#000066', fontWeight: 'bold', fontSize: 30, margin: '10px' }}>5,642</p>
                                                             <CallMadeIcon sx={{ marginTop: '10px', fontSize: 16, color: 'green' }} />
@@ -591,7 +593,7 @@ const Analytics = () => {
                                                             minWidth: '180px'
                                                         }}
                                                     >
-                                                        <p style={{ fontSize: 16 }}>Comments</p>
+                                                        <p style={{ fontSize: 16 }}>{t('comments')}</p>
                                                         <div style={{ display: 'flex', alignItems: 'center' }}>
                                                             <p style={{ color: '#000066', fontWeight: 'bold', fontSize: 30, margin: '10px' }}>1,023</p>
                                                             <CallMadeIcon sx={{ marginTop: '10px', fontSize: 16, color: 'green' }} />
@@ -609,7 +611,7 @@ const Analytics = () => {
                                                             minWidth: '180px'
                                                         }}
                                                     >
-                                                        <p style={{ fontSize: 16 }}>Dislikes</p>
+                                                        <p style={{ fontSize: 16 }}>{t('dislikes')}</p>
                                                         <div style={{ display: 'flex', alignItems: 'center' }}>
                                                             <p style={{ color: '#000066', fontWeight: 'bold', fontSize: 30, margin: '10px' }}>20</p>
                                                             <CallReceivedIcon sx={{ marginTop: '10px', fontSize: 16, color: 'red' }} />
@@ -627,7 +629,7 @@ const Analytics = () => {
                 </div>
                 <Dialog open={viewMoreOpen} onClose={handleViewMoreClose} maxWidth="lg" fullWidth>
                     <DialogTitle sx={{ color: '#ba343b', fontSize: '1.2rem', fontWeight: '600', textAlign: 'center' }}>
-                        All Posts
+                        {t('allPosts')}
                     </DialogTitle>
                     <DialogContent dividers>
                         <Grid container spacing={2}>
@@ -795,7 +797,7 @@ const Analytics = () => {
                                                 transform: 'translateX(-50%)',
                                             }}
                                         >
-                                            View Insights
+                                            {t('viewInsights')}
                                         </button>
                                     </div>
                                 </Grid>
@@ -804,7 +806,7 @@ const Analytics = () => {
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleViewMoreClose} style={{ color: '#ba343b' }}>
-                            Close
+                            {t('close')}
                         </Button>
                     </DialogActions>
                 </Dialog>
@@ -813,7 +815,7 @@ const Analytics = () => {
                 </Backdrop>
                 <Dialog open={open} onClose={handleViewInsightsClose} maxWidth="md" fullWidth>
                     <DialogTitle sx={{ color: '#ba343b', fontSize: '1.2rem', fontWeight: '600', position: 'relative', paddingRight: '70px' }}>
-                        Post Insights
+                        {t('postInsights')}
                         {selectedPost && selectedPost.platform && (
                             <>
                                 {selectedPost.platform === 'instagram' && (
@@ -956,12 +958,12 @@ const Analytics = () => {
                                                 <span style={{ fontWeight: '600' }}>Comments : {selectedPost.data.commentCount}</span>
                                             </p>
                                         )}
-                                        {selectedPost.data.media_type === 'video/mp4' && selectedPost.data.viewCount !== undefined && (
+                                        {/* {selectedPost.data.media_type === 'video/mp4' && selectedPost.data.viewCount !== undefined && (
                                             <p style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                                 <VisibilityOutlinedIcon sx={{ color: 'grey', fontSize: '20px', marginRight: '8px' }} />
                                                 <span style={{ fontWeight: '600' }}>Views : {selectedPost.data.viewCount}</span>
                                             </p>
-                                        )}
+                                        )} */}
                                         {/* {selectedPost.data.media_type === 'video/mp4' && selectedPost.data.likeCount !== undefined && (
                                             <p style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                                 <FavoriteBorderOutlinedIcon sx={{ color: 'grey', fontSize: '20px', marginRight: '8px' }} />
@@ -987,7 +989,7 @@ const Analytics = () => {
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleViewInsightsClose} style={{ color: '#ba343b' }}>
-                            Close
+                            {t('close')}
                         </Button>
                     </DialogActions>
                 </Dialog>

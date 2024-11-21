@@ -25,6 +25,7 @@ import ForgotPassword from './Navbar/ForgotPassword';
 import ResetPassword from './Navbar/ResetPassword';
 import UpdateVerification from './Navbar/UpdateVerification';
 import RegeneratePassword from './Navbar/RegeneratePassword';
+import Gallery from './Templates/Gallery';
 
 const App = () => {
     return (
@@ -55,6 +56,7 @@ const App = () => {
                     <Route path='/social-integration' element={<PrivateRoute><SocialMediaLogin /></PrivateRoute>} />
                     <Route path='/account-overview' element={<PrivateRoute><AccountOverview /></PrivateRoute>} />
                     <Route path='/analytics' element={<PrivateRoute><Analytics /></PrivateRoute>} />
+                    <Route path='/gallery' element={<PrivateRoute><Gallery /></PrivateRoute>} />
                     <Route path='/connect-socialmedia' element={<PrivateRoute><ConnectSocialMedia /></PrivateRoute>} />
                     <Route path='/quantum-share/linkedin/callback/success' element={<PrivateRoute><LinkedInCallback /></PrivateRoute>} />
                     <Route path='/youtube/callback/getChannelDetails' element={<PrivateRoute><YoutubeCallback /></PrivateRoute>} />

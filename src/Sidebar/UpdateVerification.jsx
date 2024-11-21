@@ -8,6 +8,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import QS from "../Assets/QS.webp";
 import emg1 from '../Assets/msg.webp';
 import { Link } from 'react-router-dom';
+import { t } from 'i18next';
 
 function UpdateVerification() {
     const location = useLocation();
@@ -54,7 +55,7 @@ function UpdateVerification() {
                                 <h2>{verificationResult ? "Email Verified!" : "Update Successful! Verify Your Email"}</h2>
                                 {verificationResult ? (
                                     <div>
-                                        <p style={{ marginTop: '12px', color: 'gray', fontSize: '18px' }}>Your email <b style={{ color: '#ba343b' }}>{verificationResult.data.email}</b> has been successfully updated. You can now log in to access the platform.</p>
+                                        <p style={{ marginTop: '12px', color: 'gray', fontSize: '18px' }}>Your email <b style={{ color: '#ba343b' }}>{verificationResult.data.email}</b>{t('successfullyUpdated')} </p>
                                         <Link to='/login'><button style={{ backgroundColor: '#ba343b', color: '#fff', padding: '10px 20px', borderRadius: '15px', border: 'none', cursor: 'pointer', fontSize: '18px', fontWeight: '600', margin: '30px' }}>Login</button></Link>
                                     </div>
                                 ) : (
