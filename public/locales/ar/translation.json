@@ -340,5 +340,12 @@
   "waitForResponse": "يرجى الانتظار بضع دقائق للحصول على رد في تليجرام.",
   "instructions": "تعليمات",
   "connectTelegramGroup": "لربط مجموعة تليجرام.",
-  "oopsNoYouTubeChannel": "عذرًا! لم نتمكن من العثور على أي قناة يوتيوب في حسابك."
+  "oopsNoYouTubeChannel": "عذرًا! لم نتمكن من العثور على أي قناة يوتيوب في حسابك.",
+  "postCannotBeSharedWithoutContent": "لا يمكن مشاركة المنشور بدون نص أو وسائط.",
+  "selectAtLeastOneMediaPlatform": "يرجى اختيار منصة وسائط واحدة على الأقل لمشاركة المنشور.",
+  "enterTitleForYouTube": "يرجى إدخال عنوان لليوتيوب.",
+  "imageSharedToPlatformsExceptYouTube": "سيتم مشاركة الصورة المحددة إلى جميع المنصات المحددة باستثناء يوتيوب. يمكن مشاركة ملفات الفيديو فقط إلى يوتيوب.",
+  "onlyVideoFilesToYouTube": "يمكن مشاركة ملفات الفيديو فقط إلى يوتيوب. يرجى اختيار ملف فيديو.",
+  "enterTitleForReddit": "يرجى إدخال عنوان لـ Reddit.",
+  "enterSubredditForReddit": "يرجى إدخال subreddit لـ Reddit."
 }

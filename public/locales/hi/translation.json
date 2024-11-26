@@ -395,7 +395,13 @@
   "waitForResponse": "टेलीग्राम में उत्तर के लिए कुछ मिनट प्रतीक्षा करें।",
   "instructions": "निर्देश",
   "connectTelegramGroup": "टेलीग्राम समूह से कनेक्ट करने के लिए।",
-  "oopsNoYouTubeChannel": "ओह! हमें आपके खाते में कोई YouTube चैनल नहीं मिला।"
-    
+  "oopsNoYouTubeChannel": "ओह! हमें आपके खाते में कोई YouTube चैनल नहीं मिला।",
+  "postCannotBeSharedWithoutContent": "पोस्ट को बिना टेक्स्ट या मीडिया के साझा नहीं किया जा सकता।",
+  "selectAtLeastOneMediaPlatform": "पोस्ट को साझा करने के लिए कृपया कम से कम एक मीडिया प्लेटफॉर्म चुनें।",
+  "enterTitleForYouTube": "कृपया YouTube के लिए एक शीर्षक दर्ज करें।",
+  "imageSharedToPlatformsExceptYouTube": "चयनित छवि को YouTube को छोड़कर सभी चयनित प्लेटफॉर्म पर साझा किया जाएगा। केवल वीडियो फ़ाइलों को YouTube पर साझा किया जा सकता है।",
+  "onlyVideoFilesToYouTube": "केवल वीडियो फ़ाइलों को YouTube पर साझा किया जा सकता है। कृपया एक वीडियो चुनें।",
+  "enterTitleForReddit": "Reddit के लिए एक शीर्षक दर्ज करें।",
+  "enterSubredditForReddit": "Reddit के लिए एक Subreddit दर्ज करें।" 
 
 }

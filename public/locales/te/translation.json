@@ -401,6 +401,13 @@
   "instructions": "సూచనలు",
   "connectTelegramGroup": "టెలిగ్రామ్ గ్రూప్‌ను కనెక్ట్ చేయడానికి.",
 
-  "oopsNoYouTubeChannel": "అయ్యో! మీ ఖాతాలో ఎటువంటి YouTube ఛానల్ కనుగొనలేకపోయాము."
+  "oopsNoYouTubeChannel": "అయ్యో! మీ ఖాతాలో ఎటువంటి YouTube ఛానల్ కనుగొనలేకపోయాము.",
+  "postCannotBeSharedWithoutContent": "టెక్స్ట్ లేదా మీడియా లేకుండా పోస్ట్‌ను పంచలేరు.",
+  "selectAtLeastOneMediaPlatform": "పోస్ట్‌ను పంచుకోవడానికి కనీసం ఒక మీడియా ప్లాట్‌ఫారమ్‌ను ఎంచుకోండి.",
+  "enterTitleForYouTube": "దయచేసి YouTube కోసం శీర్షికను నమోదు చేయండి.",
+  "imageSharedToPlatformsExceptYouTube": "ఎంచుకున్న చిత్రం YouTube తప్ప అన్ని ఎంచుకున్న ప్లాట్‌ఫారమ్‌లకు పంచబడుతుంది. YouTubeకి వీడియో ఫైల్స్ మాత్రమే పంచవచ్చు.",
+  "onlyVideoFilesToYouTube": "YouTubeకి వీడియో ఫైల్స్ మాత్రమే పంచవచ్చు. దయచేసి ఒక వీడియోను ఎంచుకోండి.",
+  "enterTitleForReddit": "Reddit కోసం శీర్షికను నమోదు చేయండి.",
+  "enterSubredditForReddit": "Reddit కోసం Subreddit ని నమోదు చేయండి."
 
 }

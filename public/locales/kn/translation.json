@@ -405,7 +405,14 @@
   "instructions": "ಸೂಚನೆಗಳು",
   "connectTelegramGroup": "ಟೆಲಿಗ್ರಾಮ್ ಗುಂಪು ಸಂಪರ್ಕಿಸಲು.",
 
-  "oopsNoYouTubeChannel": "ಅಯ್ಯೋ! ನಿಮ್ಮ ಖಾತೆಯಲ್ಲಿ ಯಾವುದೇ YouTube ಚಾನೆಲ್ ಕಂಡುಬಂದಿಲ್ಲ."
+  "oopsNoYouTubeChannel": "ಅಯ್ಯೋ! ನಿಮ್ಮ ಖಾತೆಯಲ್ಲಿ ಯಾವುದೇ YouTube ಚಾನೆಲ್ ಕಂಡುಬಂದಿಲ್ಲ.",
+  "postCannotBeSharedWithoutContent": "ಪೋಸ್ಟ್ ಅನ್ನು ಪಠ್ಯ ಅಥವಾ ಮಾಧ್ಯಮವಿಲ್ಲದೆ ಹಂಚಲಾಗುವುದಿಲ್ಲ.",
+  "selectAtLeastOneMediaPlatform": "ದಯವಿಟ್ಟು ಪೋಸ್ಟ್ ಹಂಚಲು ಕನಿಷ್ಠ ಒಂದು ಮಾಧ್ಯಮ ವೇದಿಕೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ.",
+  "enterTitleForYouTube": "ದಯವಿಟ್ಟು YouTubeಗಾಗಿ ಶೀರ್ಷಿಕೆ ನಮೂದಿಸಿ.",
+  "imageSharedToPlatformsExceptYouTube": "ಆಯ್ಕೆಯಾದ ಚಿತ್ರವನ್ನು YouTube ಹೊರತುಪಡಿಸಿ ಎಲ್ಲಾ ಆಯ್ಕೆಮಾಡಿದ ವೇದಿಕೆಗಳಿಗೆ ಹಂಚಲಾಗುತ್ತದೆ. YouTube ಗೆ ಕೇವಲ ವೀಡಿಯೊ ಫೈಲ್‌ಗಳನ್ನು ಮಾತ್ರ ಹಂಚಬಹುದು.",
+  "onlyVideoFilesToYouTube": "YouTube ಗೆ ಕೇವಲ ವೀಡಿಯೊ ಫೈಲ್‌ಗಳನ್ನು ಮಾತ್ರ ಹಂಚಬಹುದು. ದಯವಿಟ್ಟು ವೀಡಿಯೊ ಆಯ್ಕೆಮಾಡಿ.",
+  "enterTitleForReddit": "Redditಗೆ ಶೀರ್ಷಿಕೆ ನಮೂದಿಸಿ.",
+  "enterSubredditForReddit": "Redditಗೆ subreddit ನಮೂದಿಸಿ."
 
 
 }

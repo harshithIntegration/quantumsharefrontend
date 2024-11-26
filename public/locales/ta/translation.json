@@ -403,7 +403,14 @@
   "instructions": "வழிமுறைகள்",
   "connectTelegramGroup": "டெலிகிராம் குழுவை இணைக்க.",
 
-   "oopsNoYouTubeChannel": "ஓஹோ! உங்கள் கணக்கில் எந்த YouTube சேனலையும் காணவில்லை."
+   "oopsNoYouTubeChannel": "ஓஹோ! உங்கள் கணக்கில் எந்த YouTube சேனலையும் காணவில்லை.",
+   "postCannotBeSharedWithoutContent": "உள்ளடக்கம் அல்லது ஊடகமில்லாமல் பதிவு பகிர முடியாது.",
+  "selectAtLeastOneMediaPlatform": "பதிவை பகிர, குறைந்தபட்சம் ஒரு ஊடக தளத்தைத் தேர்ந்தெடுக்கவும்.",
+  "enterTitleForYouTube": "YouTube க்காக தலைப்பை உள்ளிடவும்.",
+  "imageSharedToPlatformsExceptYouTube": "தேர்ந்தெடுக்கப்பட்ட படங்கள் YouTube தவிர அனைத்து தேர்ந்தெடுக்கப்பட்ட தளங்களுக்கும் பகிரப்படும். YouTubeக்கு வீடியோ கோப்புகளை மட்டுமே பகிரலாம்.",
+  "onlyVideoFilesToYouTube": "YouTubeக்கு வீடியோ கோப்புகளை மட்டுமே பகிரலாம். தயவுசெய்து ஒரு வீடியோவைத் தேர்ந்தெடுக்கவும்.",
+  "enterTitleForReddit": "Reddit க்கான தலைப்பை உள்ளிடவும்.",
+  "enterSubredditForReddit": "Reddit க்கான Subreddit ஐ உள்ளிடவும்."
 
   
   

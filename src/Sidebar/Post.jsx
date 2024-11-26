@@ -127,27 +127,27 @@ const Post = ({ onClose }) => {
         let shouldDisableShare = false;
 
         if (!file && !caption) {
-            newWarningMessages.push("A post cannot be shared without either text or media.");
+            newWarningMessages.push([t('postCannotBeSharedWithoutContent')]);
             shouldDisableShare = true;
         }
 
         if (file && !mediaPlatform.length) {
-            newWarningMessages.push("Please select at least one media platform to share the post.");
+            newWarningMessages.push([t('selectAtLeastOneMediaPlatform')]);
             shouldDisableShare = true;
         }
         if (mediaPlatform.includes('youtube')) {
             if (!title) {
-                newWarningMessages.push("Please enter a title for YouTube.");
+                newWarningMessages.push([t('enterTitleForYouTube')]);
                 shouldDisableShare = true;
             } else if (fileType !== 'video') {
                 if (mediaPlatform.length > 1) {
                     newWarningMessages.push(
-                        "The selected image will be shared to all selected platforms except YouTube. Only video files can be shared to YouTube."
+                       [t('imageSharedToPlatformsExceptYouTube')]
                     );
                     shouldDisableShare = true;
                 } else {
                     newWarningMessages.push(
-                        "Only video files can be shared to YouTube. Please select a video."
+                        [t('onlyVideoFilesToYouTube')]
                     );
                     shouldDisableShare = true;
                 }
@@ -156,8 +156,8 @@ const Post = ({ onClose }) => {
 
         if (mediaPlatform.includes('Reddit')) {
             if (!title || !sr) {
-                if (!title) newWarningMessages.push("Please enter a title for Reddit.");
-                if (!sr) newWarningMessages.push("Please enter a subreddit for Reddit.");
+                if (!title) newWarningMessages.push([t('enterTitleForReddit')]);
+                if (!sr) newWarningMessages.push([t('enterSubredditForReddit')]);
                 shouldDisableShare = true;
             }
         }
@@ -182,7 +182,7 @@ const Post = ({ onClose }) => {
 
     useEffect(() => {
         if (!mediaPlatform.length && !file && !caption) {
-            setWarningMessages(["A post cannot be shared without either text or media."]);
+            setWarningMessages([t('postCannotBeSharedWithoutContent')]);
             setShareButtonDisabled(true);
         } else if (file && !mediaPlatform.length) {
             setWarningMessages(["Please select at least one media platform to share the post."]);
@@ -787,7 +787,7 @@ const Post = ({ onClose }) => {
                     <Grid container spacing={1}>
                         <Grid item lg={7} md={7} xs={12} >
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <h4 id="newPost">New Post</h4>
+                                <h4 id="newPost">{t('newPost')}</h4>
                                 <Media onMediaPlatform={handleSelectIconAndSendToParent} initialMediaPlatform={mediaPlatform} postSubmitted={postSubmitted} />
                             </div>
                             <div className="choose">
@@ -1049,7 +1049,7 @@ const Post = ({ onClose }) => {
                         </Grid>
                         <Grid item lg={5} md={5} xs={12} sx={{ border: 1, borderStyle: 'ridge', display: 'flex', flexDirection: 'column', background: '#f5f5f5' }}>
                             <div className="preview" style={{ padding: '8px' }}>
-                                <h4 id="newPost">Media Preview</h4>
+                                <h4 id="newPost">{t('mediaPreview')}</h4>
                             </div>
                             <div style={{ background: '#fff', width: '95%', maxWidth: '100%', height: '100%', borderRadius: '10px' }}>
                                 <div className="main-preview" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '10px', background: '#fff' }}>
@@ -1064,11 +1064,11 @@ const Post = ({ onClose }) => {
                                         {fileType === 'video' && file && (
                                             <video controls className="file-preview" style={{ maxHeight: '100%', maxWidth: '100%' }}>
                                                 <source src={URL.createObjectURL(file)} type="video/mp4" />
-                                                Your browser does not support the video tag.
+                                                {t('unsupportedVideo')}
                                             </video>
                                         )}
                                         {!file && !imageUrl && (
-                                            <p id="imgPreview" style={{ marginTop: '100px', color: '#808080' }}>Image / Video Preview</p>
+                                            <p id="imgPreview" style={{ marginTop: '100px', color: '#808080' }}>{t('imageVideoPreview')}</p>
                                         )}
                                     </div>
                                 </div>
@@ -1110,14 +1110,14 @@ const Post = ({ onClose }) => {
                             </div>
                         )}
                         <Button onClick={handleConfirmCloseOpen} color="error">Cancel</Button>
-                        <Button variant="contained" disabled={shareButtonDisabled} endIcon={<SendIcon />} onClick={handleClickOpen} sx={{ borderRadius: '20px' }}>Share</Button>
+                        <Button variant="contained" disabled={shareButtonDisabled} endIcon={<SendIcon />} onClick={handleClickOpen} sx={{ borderRadius: '20px' }}>{'share'}</Button>
                         <Dialog open={open1} onClose={handleClose} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description" fullWidth>
                             <DialogContent>
-                                <DialogContentText sx={{ color: 'black', fontSize: '18px' }}>Are you sure you want to Post?</DialogContentText>
+                                <DialogContentText sx={{ color: 'black', fontSize: '18px' }}>{t('confirmPost')}</DialogContentText>
                             </DialogContent>
                             <DialogActions>
-                                <Button onClick={handleClose} style={{ color: '#ba343b' }}>Cancel</Button>
-                                <Button onClick={handleSubmit} style={{ color: '#ba343b' }} autoFocus>Yes</Button>
+                                <Button onClick={handleClose} style={{ color: '#ba343b' }}>{t('cancel')}</Button>
+                                <Button onClick={handleSubmit} style={{ color: '#ba343b' }} autoFocus>{t('yes')}</Button>
                             </DialogActions>
                         </Dialog>
                     </div>

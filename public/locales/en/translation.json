@@ -405,6 +405,14 @@
   "instructions": "Instructions",
   "connectTelegramGroup": "to connect Telegram Group.",
 
-  "oopsNoYouTubeChannel": "Oops! We couldn't find any YouTube channel in your account."
+  "oopsNoYouTubeChannel": "Oops! We couldn't find any YouTube channel in your account.",
+  
+  "postCannotBeSharedWithoutContent": "A post cannot be shared without either text or media.",
+  "selectAtLeastOneMediaPlatform": "Please select at least one media platform to share the post.",
+  "enterTitleForYouTube": "Please enter a title for YouTube.",
+  "imageSharedToPlatformsExceptYouTube": "The selected image will be shared to all selected platforms except YouTube. Only video files can be shared to YouTube.",
+  "onlyVideoFilesToYouTube": "Only video files can be shared to YouTube. Please select a video.",
+  "enterTitleForReddit": "Please enter a title for Reddit.",
+  "enterSubredditForReddit": "Please enter a subreddit for Reddit."
 
 }
