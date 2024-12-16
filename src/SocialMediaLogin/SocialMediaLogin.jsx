@@ -45,6 +45,7 @@ const SocialMediaLogin = () => {
                                     <InstagramLogin />
                                     <LinkedInLogin />
                                     <YoutubeLogin />
+                                    <RedditLogin />
                                     <TelegramLogin />
                                 </div>
                             </div>
@@ -59,10 +60,10 @@ const SocialMediaLogin = () => {
                                         <TwitterLogin />
                                         <AutoAwesomeIcon style={{ position: 'absolute', top: '10px', right: '25px', color: '#ffbf00', fontSize: '2rem' }} />
                                     </div>
-                                    <div style={{ position: 'relative', textAlign: 'center' }}>
+                                    {/* <div style={{ position: 'relative', textAlign: 'center' }}>
                                         <RedditLogin />
                                         <AutoAwesomeIcon style={{ position: 'absolute', top: '10px', right: '25px', color: '#ffbf00', fontSize: '2rem' }} />
-                                    </div>
+                                    </div> */}
                                     <div style={{ position: 'relative', textAlign: 'center' }}>
                                         <PinterestLogin />
                                         <AutoAwesomeIcon style={{ position: 'absolute', top: '10px', right: '25px', color: '#ffbf00', fontSize: '2rem' }} />

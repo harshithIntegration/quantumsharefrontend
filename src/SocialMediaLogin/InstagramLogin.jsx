@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 /* global FB */
 import React, { useEffect, useState } from 'react';
@@ -7,7 +8,7 @@ import axiosInstance from "../Helper/AxiosInstance";
 import instagram1 from '../Assets/instagram1.svg';
 import instaicon from '../Assets/instagramsmall.svg';
 import { ReactSVG } from 'react-svg';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Avatar, FormControlLabel, Radio, List, ListItem } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,9 +27,12 @@ const InstagramLogin = () => {
     const [instagramUrl, setInstaProfileImage] = useState('');
     const [InstagramUsername, setInstaUsername] = useState('');
     const [Instagram_follwers_count, setInstaFollowers] = useState('');
+    const [instaUser, setInstaUser] = useState([]);
+    const [openInstaDetails, setOpenInstaDetails] = useState(false);
+    const [selectedProfile, setSelectedProfile] = useState([]);
 
     const dispatch = useDispatch()
-    const { instaLoggedIn }=useSelector((state)=>state.loginStatus)
+    const { instaLoggedIn } = useSelector((state) => state.loginStatus)
 
     const fetchConnectedSocial = async () => {
         try {
@@ -129,22 +133,62 @@ const InstagramLogin = () => {
         console.log('statusChangeCallback');
         console.log(response);
         if (response.status === 'connected') {
-            const accessToken = response.authResponse.accessToken;
-            await sendTokenToBackend(accessToken);
+            const code = response.authResponse.accessToken;
+            await sendTokenToBackend(code);
         } else {
             dispatch(setInstaLoggedIn(false))
             setLoading(false);
         }
     };
 
-    const sendTokenToBackend = async (accessToken) => {
+    const sendTokenToBackend = async (code) => {
         try {
-            const response = await axiosInstance.post(`/quantum-share/instagram/user/verify-token?code=${accessToken}`, null, {
+            const response = await axiosInstance.get(`/quantum-share/instagram/user/verify-token?code=${code}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: 'application/json'
+                },
+            });
+            if (response.data.status === "success" && response.data.data) {
+                setInstaUser(response.data.data);
+            }
+            setOpenInstaDetails(true)
+        } catch (error) {
+            console.error('Error sending token to backend:', error);
+            toast.error("Error Connecting to Instagram. Please try again later.");
+        }
+    };
+
+    const handleProfileChange = (event) => {
+        const selectedProfile = instaUser.find(profile => profile.instaUserId === event.target.value);
+        setSelectedProfile(selectedProfile);
+    };
+
+    const handleInstaDetailsClose = () => {
+        setOpenInstaDetails(false);
+        setSelectedProfile([]);
+        setLoading(false);
+    }
+
+    const handleSubmit = async () => {
+        handleInstaDetailsClose();
+        
+        const requestBody = {
+            instaId: selectedProfile.instaId,
+            instaUserId: selectedProfile.instaUserId,
+            instaUsername: selectedProfile.instaUsername,
+            follwersCount: selectedProfile.follwersCount,
+            pictureUrl: selectedProfile.pictureUrl,
+            instUserAccessToken: selectedProfile.instUserAccessToken,
+        };
+
+        try {
+            const response = await axiosInstance.post(`/quantum-share/instagram/user/save/profile`, requestBody, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
             });
-            console.log('Token sent to backend successfully');
+            setLoading(true);
             if (response.data.status === 'success' && response.data.data) {
                 const { instagramUrl, InstagramUsername, Instagram_follwers_count } = response.data.data;
                 setInstaProfileImage(instagramUrl);
@@ -225,7 +269,7 @@ const InstagramLogin = () => {
                                     whiteSpace: 'nowrap',
                                     textOverflow: 'ellipsis',
                                     maxWidth: '200px',
-                                    height: '2rem', 
+                                    height: '2rem',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
@@ -265,14 +309,14 @@ const InstagramLogin = () => {
 
             <Dialog open={open} onClose={handleConnectClose}>
                 <DialogTitle sx={{ m: 0, p: 2, color: '#ba343b', fontSize: '20px', textAlign: 'center' }}>
-                  {t('linkInstagramProfile')}
+                    {t('linkInstagramProfile')}
                 </DialogTitle>
                 <DialogContent dividers>
                     <DialogContentText sx={{ fontSize: '18px' }}>
-                       {t('ensureAccountConverted')} <b>{t('instagramBusiness')}</b> or <b>{t('instagramCreator')}</b> {t('account')}
+                        {t('ensureAccountConverted')} <b>{t('instagramBusiness')}</b> or <b>{t('instagramCreator')}</b> {t('account')}
                     </DialogContentText>
                     <DialogContentText sx={{ fontSize: '18px' }}>
-                       {t('verifyInstagramConnected')} <b>Facebook Page</b>.
+                        {t('verifyInstagramConnected')} <b>Facebook Page</b>.
                     </DialogContentText>
                     <br />
                     <DialogContentText sx={{ fontSize: '17px', textAlign: 'center' }}>
@@ -286,6 +330,52 @@ const InstagramLogin = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
+
+            <Dialog open={openInstaDetails} onClose={handleInstaDetailsClose} fullWidth>
+                <DialogTitle sx={{ color: '#b4232a', fontSize: '20px', fontWeight: 'bold' }}>Instagram Profile Details</DialogTitle>
+                <DialogContent>
+                    <List>
+                        {Array.isArray(instaUser) && instaUser.length > 0 ? (
+                            instaUser.map((profile) => (
+                                <ListItem key={profile.instaUserId}>
+                                    <FormControlLabel
+                                        control={
+                                            <Radio
+                                                value={profile.instaUserId}
+                                                checked={selectedProfile?.instaUserId === profile.instaUserId}
+                                                onChange={handleProfileChange}
+                                            />
+                                        }
+                                        label={
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <Avatar src={profile.pictureUrl} alt={profile.instaUsername} style={{ marginRight: 10 }} />
+                                                {profile.instaUsername}
+                                            </div>
+                                        }
+                                        style={{ marginRight: 4 }}
+                                    />
+                                </ListItem>
+                            ))
+                        ) : (
+                            <ListItem>
+                                <DialogContentText>No profiles available.</DialogContentText>
+                            </ListItem>
+                        )}
+                    </List>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleInstaDetailsClose} color="error">Cancel</Button>
+                    <Button
+                        onClick={handleSubmit}
+                        variant="contained"
+                        sx={{ bgcolor: '#ba343b', color: 'white', '&:hover': { bgcolor: '#9e2b31' } }}
+                        disabled={selectedProfile.length === 0}
+                    >
+                        Submit
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
             <Dialog open={open1} onClose={handleClose} maxWidth='lg'>
                 <DialogContent>
                     <DialogContentText sx={{ color: 'black', fontSize: '17px' }}>

@@ -21,7 +21,7 @@ const PrivacyPolicy = () => {
                                         <Typography variant="h4" gutterBottom sx={{ color: '#b4232a', fontSize: '2.2rem', fontWeight: '600' }}><b>Privacy Policy</b></Typography>
                                         <Typography variant="h6" gutterBottom sx={{ fontSize: '2rem', fontWeight: '600' }}>Quantum Share</Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.3rem' }}>
-                                            Last Updated November 20, 2024
+                                            Last Updated December 06, 2024
                                         </Typography>
                                         <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>What Does Quantum Share Do ?</b></Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
@@ -51,7 +51,11 @@ const PrivacyPolicy = () => {
                                             • Upcoming features like Notifications of updates to the Service.<br />
                                             • Prevent fraudulent transactions, monitor against theft, and protect against criminal activity.
                                         </Typography>
-                                        <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>3. Disclosure of Your Information</b></Typography>
+                                        <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>3. Cookies and Tracking Technologies</b></Typography>
+                                        <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
+                                            Our application does not use cookies or similar tracking technologies to collect user data. We do not track your online activities across different websites or collect information through cookies.
+                                        </Typography>
+                                        <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>4. Disclosure of Your Information</b></Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
                                             We may share information we have collected about you in certain situations. Your information may be disclosed as follows :
                                         </Typography>
@@ -63,9 +67,9 @@ const PrivacyPolicy = () => {
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
                                             We may share or transfer your information in connection with, or during negotiations of, any merger, sale of company assets, financing, or acquisition of all or a portion of our business to another company.
                                         </Typography>
-                                        <Typography variant="subtitle1" gutterBottom sx={{ fontSize: '1.5rem' }}><b>Third-Party Service Providers :</b></Typography>
+                                        <Typography variant="subtitle1" gutterBottom sx={{ fontSize: '1.5rem' }}><b>Third-Party Service Providers:</b></Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
-                                            We may share your information with third parties that perform services for us or on our behalf, including payment processing, data analysis, email delivery, hosting services, customer service, and marketing assistance.
+                                            We may share your information with third parties that perform services for us or on our behalf, including payment processing, data analysis, email delivery, hosting services, customer service, and marketing assistance. These third parties may collect information directly from your device through their own means, but we do not use cookies or similar technologies for this purpose.
                                         </Typography>
                                         <Typography variant="subtitle1" gutterBottom sx={{ fontSize: '1.5rem' }}><b>Marketing Communications :</b></Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
@@ -79,15 +83,15 @@ const PrivacyPolicy = () => {
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
                                             When you post comments, contributions, or other content to the Service, your posts may be viewed by all users and may be publicly distributed outside the Service in perpetuity.
                                         </Typography>
-                                        <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>4. Security of Your Information</b></Typography>
+                                        <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>5. Security of Your Information</b></Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
                                             We use administrative, technical, and physical security measures to help protect your personal information. While we have taken reasonable steps to secure the personal information you provide to us, please be aware that despite our efforts, no security measures are perfect or impenetrable, and no method of data transmission can be guaranteed against any interception or other type of misuse. Any information disclosed online is vulnerable to interception and misuse by unauthorized parties. Therefore, we cannot guarantee complete security if you provide personal information.
                                         </Typography>
-                                        <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>5. Policy for Children</b></Typography>
+                                        <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>6. Policy for Children</b></Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
                                             We do not knowingly solicit information from or market to children under the age of 13. If we learn that we have collected personal information from a child under age 13 without verification of parental consent, we will delete that information as quickly as possible. If you believe we might have any information from or about a child under 13, please contact us at info@quantumparadigm.in.
                                         </Typography>
-                                        <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>6. Options Regarding Your Information</b></Typography>
+                                        <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>7. Options Regarding Your Information</b></Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
                                             You may at any time review or change the information in your account or terminate your account by:
                                         </Typography>
@@ -98,7 +102,7 @@ const PrivacyPolicy = () => {
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
                                             Upon your request to terminate your account, we will deactivate or delete your account and information from our active databases. However, some information may be retained in our files to prevent fraud, troubleshoot problems, assist with any investigations, enforce our Terms of Use and/or comply with legal requirements.
                                         </Typography>
-                                        <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>7. Explicit User Consent for AI Models</b></Typography>
+                                        <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>8. Explicit User Consent for AI Models</b></Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
                                             Quantum Share utilizes third-party AI models for enhancing user experience and providing personalized content recommendations. The following outlines our use of AI models:
                                         </Typography>
@@ -132,17 +136,19 @@ const PrivacyPolicy = () => {
                                         <Typography variant="subtitle1" gutterBottom sx={{ fontSize: '1.5rem' }}><b>User Consent:</b></Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
                                             Users are explicitly informed about the use of AI models and the potential data sharing involved.
-                                            Explicit consent is obtained from users before any data is shared with third-party AI models. Users must actively consent through a clear action, such as clicking a button, before data sharing occurs.
+                                            Explicit consent is obtained from users before any data is shared with third-party AI models. Users must actively consent through a clear action, such as clicking a button, before data sharing occurs. <br /><br />
+                                            By using our Service, you consent to the collection and use of your information as described in this Privacy Policy. If you do not agree with the terms of this Privacy Policy, please do not access the Service.
                                         </Typography>
-                                        <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>8. Limited Use Disclosure</b></Typography>
+                                        <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>9. Limited Use Disclosure</b></Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
                                             Quantum Share’s use and transfer of information received from Google APIs will adhere to the Google API Services User Data Policy, including the Limited Use requirements.
                                         </Typography>
-                                        <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>9. Google Privacy Policy</b></Typography>
+                                        <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>10. Google Privacy Policy</b></Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
                                             We utilize the Google API for YouTube integration to enhance our service offerings. This integration allows users to access and share YouTube content seamlessly within the Quantum Share platform.<br />
                                             For more information, you can also review Google's Privacy Policy : <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google Privacy Policy</a><br />
-                                            By using our application, you agree to be bound by the : <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer">YouTube's Terms of Service</a>
+                                            By using our application, you agree to be bound by the : <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer">YouTube's Terms of Service</a><br />
+                                            By using our application, you acknowledge and agree to adhere to the security policies outlined by Google: <a href="https://security.google.com/settings/" target="_blank" rel="noopener noreferrer">Google Security Settings</a>
                                         </Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
                                             <b>Information We Collect and Access</b> <br />
@@ -153,11 +159,22 @@ const PrivacyPolicy = () => {
                                             </Typography>
                                             This information is used solely for the purpose of enhancing user experience and providing app functionality. We do not share this information with unauthorized third parties.
                                         </Typography>
+                                        <Typography variant="subtitle1" gutterBottom sx={{ fontSize: '1.5rem' }}><b>API Data:</b></Typography>
+                                        <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
+                                            We may collect and store data related to your interactions with our API, including but not limited to API requests, responses, and usage patterns. This data helps us improve our services and provide a better user experience.
+                                        </Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
                                             <b>Data Deletion and Revocation</b> <br />
                                             When a user disconnects their YouTube profile from our application, all stored information related to their channel details is automatically deleted from our servers.
                                         </Typography>
-                                        <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>10. Contact Us</b></Typography>
+                                        <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>11. API Client Location</b></Typography>
+                                        <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
+                                            Our application is hosted at <a href="https://quantumshare.quantumparadigm.in" target="_blank" rel="noopener noreferrer">https://quantumshare.quantumparadigm.in</a>, this domain and its underlying hosting infrastructure is the "API client location." <br />
+                                        </Typography>
+                                        <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
+                                            Our application is hosted on <b>AWS</b> infrastructure located in the <b>ap-south-1a</b> region to ensure reliability and performance.
+                                        </Typography>
+                                        <Typography variant="h6" gutterBottom sx={{ fontSize: '1.6rem' }}><b>12. Contact Us</b></Typography>
                                         <Typography variant="body1" paragraph sx={{ fontSize: '1.2rem' }}>
                                             If you have questions or comments about this Privacy Policy, please contact us at :
                                         </Typography>
