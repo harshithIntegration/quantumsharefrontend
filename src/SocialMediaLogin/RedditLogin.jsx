@@ -1,122 +1,212 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react'
-import Button from '@mui/material/Button';
-import axiosInstance from "../Helper/AxiosInstance";
-import reddit1 from '../Assets/Reddit1.svg';
-import redditicon from '../Assets/redditSmall.svg';
+import React, { useEffect, useState } from 'react';
 import { ReactSVG } from 'react-svg';
+import reddit from '../Assets/redditB1.svg'
+import { Button } from '@mui/material';
+import axiosInstance from '../Helper/AxiosInstance';
 import { toast } from 'react-toastify';
 import { Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
-import { useTranslation } from 'react-i18next';
+import redditsmall from '../Assets/redditsm1.svg'
+import { useDispatch, useSelector } from 'react-redux';
+import { setRedditLoggedIn } from '../Redux/action/loginStatusSilce';
+import { setRedditName } from '../Redux/action/NameSlice';
+import { setRedditProfile } from '../Redux/action/pageUrlsSlice'
 
 const RedditLogin = () => {
+    const [loading, setLoading] = useState(false);
     const token = sessionStorage.getItem('token');
     const [open, setOpen] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [loading, setLoading] = useState(false);
     const [disconnecting, setDisconnecting] = useState(false);
-    const [channelImageUrl, setChannelImageUrl] = useState('');
-    const [channelName, setChannelName] = useState('');
-    const [subscriberCount, setSubscriberCount] = useState('');
-    const {t} =  useTranslation('');
+    const [redditProfileImage, setRedditProfileImage] = useState('');
+    const [redditUsername, setRedditUsername] = useState('');
+    const [subcribersCount, setSubcribersCount] = useState('');
+    const dispatch = useDispatch()
+    const { redditLoggedIn } = useSelector((state) => state.loginStatus)
+    const fetchConnectedSocial = async () => {
+        try {
+            const endpoint = '/quantum-share/user/connected/socialmedia/reddit'
+            const response = await axiosInstance.get(endpoint, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            console.log(response.data.data)
+            if (response.data.status === 'success' && response.data.data) {
+                const { redditUsername, redditProfileImage, subscribersCount } = response.data.data.reddit;
+                setRedditUsername(redditUsername);
+                dispatch(setRedditName(redditUsername))
+                setRedditProfileImage(redditProfileImage)
+                dispatch(setRedditProfile(redditProfileImage))
+                setSubcribersCount(subscribersCount)
+                dispatch(setRedditLoggedIn(true));
+            }
+        }
+        catch (error) {
+            console.error(error)
+        }
+    }
 
+    useEffect(() => {
+        fetchConnectedSocial()
+    }, [token])
+    
     const handleRedditLogin = async () => {
         setLoading(true);
         try {
-            const response = await axiosInstance.get('/quantum-share/reddit/user/connect', {
+            const response = await axiosInstance.get('/quantum-share/connect/reddit', {
                 headers: {
                     Authorization: `Bearer ${token}`,
+                    'Accept': 'application/json',
                 }
             });
-            const oauthUrl = response.data.data;
-        } catch (error) {
-            console.error('Error', error);
-            toast.error('Error loading Reddit Login Page. Please try again later.');
-        } 
-    }    
+            console.log(token);
+            console.log("Reddit Login Data:", response.data);
+            const { client_id: clientId, redirect_uri: redirectUri, scope } = response.data;
 
-    const handleDisconnect = () => {
-        setOpen(true);
+            if (!clientId || !redirectUri || !scope) {
+                throw new Error("Missing required parameters for Reddit OAuth");
+            }
+
+            const authorizationUrl = `https://www.reddit.com/api/v1/authorize` +
+                `?response_type=code` +
+                `&client_id=${clientId}` +
+                `&state=string` +
+                `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+                `&duration=permanent` +
+                `&scope=${encodeURIComponent(scope)}`;
+            console.log("Authorization URL:", authorizationUrl)
+            const state = Math.random().toString(36).substring(7);
+            window.location.href = authorizationUrl;
+        } catch (error) {
+            console.error("Failed to fetch Reddit authorization URL:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleClose = () => {
         setOpen(false);
     };
 
+    const handleDisconnect = () => {
+        setOpen(true);
+    };
+
     const handleConfirmDisconnect = async () => {
         handleClose();
         setDisconnecting(true)
         try {
-            await axiosInstance.get('/quantum-share/disconnect/youtube', {
+            await axiosInstance.get('/quantum-share/disconnect/reddit', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
-            setIsLoggedIn(false);
-            toast.success("Disconnected from Youtube!");
+            dispatch(setRedditLoggedIn(false));
+            setRedditUsername('');
+            setRedditProfileImage('');
+            toast.success("Disconnected from Reddit profile!");
         } catch (error) {
-            console.error('Error disconnecting from Youtube:', error);
-            toast.error("Error disconnecting from Youtube. Please try again later.");
+            console.error('Error disconnecting from reddit:', error);
+            toast.error("Error disconnecting from reddit. Please try again later.");
         } finally {
             setDisconnecting(false)
         }
     };
-    
+
+    const adjustFontSize = (username) => {
+        if (!username) return '1.2rem';
+        if (username.length > 20) return '0.875rem';
+        if (username.length > 15) return '0.962rem';
+        if (username.length > 10) return '1.2rem';
+        return '1.2rem';
+    };
+
     return (
         <>
             <section className='box-soc' style={{ paddingTop: '20px' }}>
-                {isLoggedIn ? (
-                    <div className="profile-container">
-                        <div className="profile-circle">
-                            <img
-                                src={channelImageUrl}
-                                alt="User Profile"
-                                style={{ width: '3.9rem', height: '3.9rem', borderRadius: '50%' }}
-                            />
-                            <div className="instagram-icon">
-                                <ReactSVG src={redditicon} />
+                {redditLoggedIn ? (
+                    <>
+                        <div className="profile-container">
+                            <div className="profile-circle">
+                                <img
+                                    src={redditProfileImage}
+                                    alt="User Profile"
+                                    style={{ width: '3.9rem', height: '3.9rem', borderRadius: '50%' }}
+                                />
+                                <div className="instagram-icon1">
+                                    <ReactSVG src={redditsmall} />
+                                </div>
                             </div>
                         </div>
-                    </div>
+                        <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <div
+                                style={{
+                                    textAlign: 'center',
+                                    overflow: 'hidden',
+                                    whiteSpace: 'nowrap',
+                                    textOverflow: 'ellipsis',
+                                    maxWidth: '200px',
+                                    height: '2rem',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <p style={{ marginTop: '1px', fontSize: adjustFontSize(redditUsername) }}>
+                                    <span style={{ color: 'gray' }}>
+                                        {redditUsername ? redditUsername : 'Reddit'}
+                                    </span>
+                                </p>
+                            </div>
+                            <div>
+                                {subcribersCount ? (
+                                    <h5>{`Subcribers : ${subcribersCount}`}</h5>
+                                ) : (
+                                    <h5 style={{ visibility: 'hidden' }}>{'Subcribers : 0'}</h5>
+                                )}
+                            </div>
+                        </div>
+                    </>
                 ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '10px' }}>
-                        <ReactSVG src={reddit1}></ReactSVG>
-                    </div>
+                    <>
+                        <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '10px' }}>
+                            <ReactSVG src={reddit}></ReactSVG>
+                        </div>
+                        <div style={{ marginTop: '15px', textAlign: 'center', overflow: 'visible', whiteSpace: 'nowrap' }}>
+                            <p style={{ marginTop: '1px', fontSize: '1.2rem', overflow: 'visible' }}>
+                                <span style={{ color: 'gray' }}>Reddit</span>
+                            </p>
+                        </div>
+                    </>
+
                 )}
-                <div style={{ marginTop: '15px' }}>
-                    <p style={{ marginTop: '1px', fontSize: '1.2rem' }}>
-                        <span style={{ color: 'gray' }}>
-                            {channelName ? channelName : 'Reddit'}
-                        </span>
-                    </p>
-                    <h5>{subscriberCount ? `Subsrcibers Count : ${subscriberCount}` : ''}</h5>
-                </div>
+
                 {loading || disconnecting ? (
-                    <Button variant='contained' sx={{ margin: '30px auto', marginBottom: '10px', fontWeight: '600' }} disabled>
+                    <Button variant='contained' sx={{ marginTop: redditLoggedIn ? '15px' : '30px', marginBottom: '10px', fontWeight: '600' }} disabled>
                         {loading ? 'Connecting...' : 'Disconnecting...'}
                     </Button>
                 ) : (
-                    !isLoggedIn ? (
-                        <Button variant='contained' sx={{ margin: '30px auto', marginBottom: '10px', fontWeight: '600' }} onClick={handleRedditLogin} disabled>{t('connect')}</Button>
+                    !redditLoggedIn ? (
+                        <Button variant='contained' sx={{ marginTop: '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handleRedditLogin}>Connect</Button>
                     ) : (
-                        <Button variant='contained' sx={{ margin: '30px auto', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>{t('disconnect')}</Button>
+                        <Button variant='contained' sx={{ marginTop: '20px', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>Disconnect</Button>
                     )
                 )}
             </section>
             <Dialog open={open} onClose={handleClose} maxWidth='lg'>
                 <DialogContent>
                     <DialogContentText sx={{ color: 'black', fontSize: '17px' }}>
-                       {t('confirmDisconnect')} {channelName} Youtube Channel ?
+                        Are you sure you want to disconnect from <b>{redditUsername}</b> Reddit Profile ?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>{t('no')}</Button>
-                    <Button onClick={handleConfirmDisconnect} autoFocus>{t('yes')}</Button>
+                    <Button onClick={handleClose}>No</Button>
+                    <Button onClick={handleConfirmDisconnect} autoFocus>Yes</Button>
                 </DialogActions>
             </Dialog>
         </>
     );
-}
+};
 
-export default RedditLogin
+export default RedditLogin;

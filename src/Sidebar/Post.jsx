@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-undef */
 /* eslint-disable no-mixed-operators */
 /* eslint-disable no-unused-vars */
@@ -70,7 +71,7 @@ const Post = ({ onClose }) => {
     const [suggestions, setSuggestions] = useState([]);
     const [noHashtagMessage, setNoHashtagMessage] = useState("");
     const [showInput, setShowInput] = useState(false);
-    const {t} = useTranslation();
+    const { t } = useTranslation();
 
     const handleSelectIconAndSendToParent = (selectedIcons, mediaPlatform) => {
         setSelectedIcons(selectedIcons);
@@ -162,9 +163,9 @@ const Post = ({ onClose }) => {
             }
         }
 
-        if (mediaPlatform.includes('Reddit') && (fileType === 'image' || fileType === 'video')) {
+        if (mediaPlatform.includes('Reddit') && fileType === 'video') {
             newWarningMessages.push(
-                "Reddit does not support image or video sharing. Please remove the media or deselect Reddit."
+                "Reddit does not support video sharing. Please remove the media or deselect Reddit."
             );
             shouldDisableShare = true;
         }
@@ -201,7 +202,6 @@ const Post = ({ onClose }) => {
             setQuery('');
             setSuggestions([]);
             setNoHashtagMessage('');
-
         } else {
             setCaption('');
             dispatch(clearAiText());
@@ -352,7 +352,8 @@ const Post = ({ onClose }) => {
         'instagram': 'Instagram',
         'telegram': 'Telegram',
         'LinkedIn': 'LinkedIn',
-        'youtube': 'Youtube'
+        'youtube': 'Youtube',
+        'Reddit': 'Reddit'
     };
 
     const getDisplayPlatformName = (platform) => {
@@ -376,6 +377,8 @@ const Post = ({ onClose }) => {
                 return '/quantum-share/post/file/linkedIn';
             case 'youtube':
                 return '/quantum-share/post/file/youtube';
+            case 'Reddit':
+                return '/quantum-share/post/file/reddit';
             default:
                 throw new Error(`Unsupported platform: ${platform}`);
         }
@@ -412,7 +415,7 @@ const Post = ({ onClose }) => {
             );
             const responses = await Promise.all(platforms.map(async platform => {
                 const endpoint = getEndpointForPlatform(platform);
-                const formData = createFormData(file, caption, title, visibility, platform, image1, sr);
+                const formData = createFormData(file, caption, title, visibility, platform, sr, image1);
                 try {
                     const response = await axiosInstance.post(endpoint, formData, {
                         headers: {
@@ -540,6 +543,18 @@ const Post = ({ onClose }) => {
                         } else if (response.data.structure?.code === 404) {
                             toast.error(response.data.structure.message);
                         }
+                    } else if (platform === 'Reddit') {
+                        if (response.data && response.data.message) {
+                            console.log('sr', sr);
+                            const res = response.data;
+                            toast.success(res.message);
+                        } else if (response.data.status === "error" && response.data.code === 114) {
+                            const res = response.data;
+                            console.error('Credit Depleted Error Message:', res.message);
+                            toast.info(res.message);
+                        } else if (response.data.code === 404) {
+                            toast.error(response.data.message);
+                        }
                     }
                     return { platform, success: true };
                 } catch (error) {
@@ -593,6 +608,14 @@ const Post = ({ onClose }) => {
                             toast.info(err.message);
                         } else if (responseData.structure?.code === 404) {
                             toast.error(responseData.structure.message);
+                        }
+                    } else if (platform === 'Reddit') {
+                        if (responseData.status === "error" && responseData.code === 114) {
+                            const err = responseData;
+                            console.error('Credit Depleted Error Message:', err.message);
+                            toast.info(err.message);
+                        } else if (responseData?.code === 404) {
+                            toast.error(responseData.message);
                         }
                     } else if (responseData.code === 115) {
                         toast.error("Token Expired, Please Login Again");
@@ -718,6 +741,7 @@ const Post = ({ onClose }) => {
             console.error("Error fetching hashtag suggestions:", error);
         }
     };
+
     const handleInputChange = (e) => {
         const value = e.target.value;
         setQuery(value);
@@ -728,6 +752,7 @@ const Post = ({ onClose }) => {
             fetchSuggestions(query);
         }
     };
+
     const handleHashtagSelect = (hashtag) => {
         const updatedCaption = `${caption} ${hashtag}`.trim();
         if (updatedCaption.length <= maxCaptionCharacters) {
@@ -737,6 +762,7 @@ const Post = ({ onClose }) => {
         }
         setSuggestions(suggestions.filter((s) => s !== hashtag));
     };
+
     const handleIconClick = () => {
         setShowInput(!showInput);
         if (showInput) {
@@ -745,6 +771,7 @@ const Post = ({ onClose }) => {
             setNoHashtagMessage('');
         }
     };
+
     const handleClickOpen = () => {
         setOpen1(true);
     };
@@ -802,7 +829,9 @@ const Post = ({ onClose }) => {
                                         </div>)}
                                     {mediaPlatform.includes('Reddit') && (
                                         <div style={{ display: 'flex', flexDirection: 'column', width: '48.5%' }}>
-                                            <label style={{ fontSize: '12px', fontWeight: 'bold' }}>SubReddit <span style={{ color: 'red' }}>*</span></label>
+                                            <label style={{ fontSize: '12px', fontWeight: 'bold' }}>
+                                                SubReddit <span style={{ color: 'red' }}>*</span>
+                                            </label>
                                             <input required className="area" placeholder="SubReddit ... [Reddit]" value={sr} name="subreddit" onChange={handleSubReddit} style={{
                                                 height: '40px', border: '1px solid #ccc', borderRadius: '5px', resize: 'none', outline: 'none', fontSize: '12px', padding: '12px'
                                             }} />
@@ -834,7 +863,6 @@ const Post = ({ onClose }) => {
                                                 onChange={handleFileChange}
                                                 name="mediaFile"
                                             />
-
                                             {showCamera && (
                                                 <div style={{
                                                     position: 'fixed',
@@ -900,7 +928,6 @@ const Post = ({ onClose }) => {
                                                 <TagIcon />
                                             </IconButton>
                                         </Tooltip>
-
                                         {showInput && (
                                             <div
                                                 style={{
@@ -924,7 +951,6 @@ const Post = ({ onClose }) => {
                                                     placeholder="Type to search hashtags"
                                                     style={{
                                                         padding: "10px",
-                                                        width: "100%",
                                                         border: "1px solid #ccc",
                                                         borderRadius: "4px",
                                                         outline: "none",
@@ -1057,10 +1083,9 @@ const Post = ({ onClose }) => {
                                         {fileType === 'image' && file && (
                                             <img src={URL.createObjectURL(file)} alt="File Preview" className="file-preview" style={{ maxHeight: '100%', maxWidth: '100%' }} />
                                         )}
-                                        {imageUrl && (
+                                        {/* {imageUrl && (
                                             <img src={imageUrl} alt="Captured Preview" className="file-preview" style={{ maxHeight: '100%', maxWidth: '100%' }} />
-                                        )}
-
+                                        )} */}
                                         {fileType === 'video' && file && (
                                             <video controls className="file-preview" style={{ maxHeight: '100%', maxWidth: '100%' }}>
                                                 <source src={URL.createObjectURL(file)} type="video/mp4" />
@@ -1073,10 +1098,16 @@ const Post = ({ onClose }) => {
                                     </div>
                                 </div>
                                 <div className="text-preview" style={{ wordBreak: 'break-all', padding: '10px' }}>
-                                    {(mediaPlatform.includes('youtube') || mediaPlatform.includes('Reddit')) && title.split('\n').map((line, index) => (
-                                        <div key={index}>{line}</div>
-                                    ))}
-                                    {mediaPlatform.includes('Reddit') && sr && <div>{`${sr}`}</div>}
+                                    {(mediaPlatform.includes('youtube') || mediaPlatform.includes('Reddit')) &&
+                                        title.split('\n').map((line, index) => (
+                                            <div key={index}>{line}</div>
+                                        ))
+                                    }
+                                    {mediaPlatform.includes('Reddit') &&
+                                        sr.split('\n').map((line, index) => (
+                                            <div key={index}>{line}</div>
+                                        ))
+                                    }
                                 </div>
                                 <div className="text-preview" style={{ wordBreak: 'break-all', padding: '10px' }}>{caption.split('\n').map((line, index) => (
                                     <div key={index}>{line}</div>

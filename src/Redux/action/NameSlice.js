@@ -6,6 +6,7 @@ const initialState = {
     linkname:null,
     youname:null,
     telname:null,
+    redditname:null
 }
 
 const NameSlice = createSlice({
@@ -31,9 +32,13 @@ const NameSlice = createSlice({
         setTelName:(state,action)=>{
             // console.log(action.payload);
             state.telname=action.payload
+        },
+        setRedditName:(state,action)=>{
+            // console.log(action.payload);
+            state.redditname=action.payload
         }
     }
 })
 
-export const { setFbName, setInstaName, setLinkName, setYouName, setTelName }=NameSlice.actions
+export const { setFbName, setInstaName, setLinkName, setYouName, setTelName,setRedditName }=NameSlice.actions
 export default NameSlice.reducer

@@ -56,7 +56,7 @@ const Home = () => {
         <>
             <HelmetProvider>
                 <Helmet>
-                    <title>Q{t('quantumShare1')}</title>
+                    <title>{t('quantumShare1')}</title>
                     <meta name="description" content="Quantum Share offers a seamless and secure way to share files and posts across social media. Revolutionize your sharing experience with our easy-to-use, privacy-focused platform." />
                     <link rel="canonical" href='/home' />
                 </Helmet>

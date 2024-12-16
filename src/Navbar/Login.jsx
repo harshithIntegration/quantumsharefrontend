@@ -409,7 +409,7 @@ const Login = () => {
                                     }} />
                             </Grid>
                             <Grid item xs={11}>
-                                <Button fullWidth variant="contained" onClick={handleGoogleSubmit} sx={{ bgcolor: '#ba343b', color: 'white', height: 50, fontSize: 16, '&:hover': { bgcolor: '#9e2b31', }, mt: 15, '&:disabled': { bgcolor: '#e0e0e0', color: '#a0a0a0', } }}
+                                <Button fullWidth variant="contained" onClick={handleGoogleSubmit} sx={{ bgcolor: '#ba343b', color: 'white', height: 50, fontSize: 16, '&:hover': { bgcolor: '#9e2b31' }, mt: 15, '&:disabled': { bgcolor: '#e0e0e0', color: '#a0a0a0', } }}
                                     disabled={!password || !confirm_password || loading}
                                 >
                                     {loading ? <TailSpin color="#ba343b" height={25} width={25} /> : 'Submit'}

@@ -598,6 +598,14 @@ a {
     height: 2.5rem;
 }
 
+.instagram-icon1{
+    position: relative;
+    bottom: 2.5rem;
+    right: -1.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
 /* Feature */
 .main-container-feature {
     width: 100%;

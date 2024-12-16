@@ -70,11 +70,6 @@ const Sidenav = ({ children }) => {
             icon: <EqualizerOutlinedIcon />,
             path: '/analytics'
         },
-        // {
-        //     name: t('templates'),
-        //     icon: <MdOutlineFilterFrames />,
-        //     path: "/gallery"
-        // },
         {
             name: t('accountOverview'),
             icon: <MdOutlineAccountCircle />,
