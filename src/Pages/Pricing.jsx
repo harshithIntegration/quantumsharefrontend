@@ -176,7 +176,7 @@ const Pricing = () => {
                                     {t('noAnnualBilling')}
                                 </Typography>
                                 <Typography variant="h6" gutterBottom sx={{ textAlign: "start" }}>
-                                    <span style={{ fontSize: "22px", color: "#b43f4f" }}>$</span><div style={{ marginTop: "-52px", marginLeft: "12px" }}><span style={{ fontSize: "56px", color: "#b43f4f", fontWeight: "bold" }}>0</span><span style={{ color: "#a3a3a5" }}>{t('permonth')}</span></div>
+                                    <span style={{ fontSize: "22px", color: "#b43f4f" }}>{"\u20B9"}</span><div style={{ marginTop: "-52px", marginLeft: "12px" }}><span style={{ fontSize: "56px", color: "#b43f4f", fontWeight: "bold" }}>0</span><span style={{ color: "#a3a3a5" }}>{t('perMonth')}</span></div>
                                 </Typography>
                                 <Button variant="contained" onClick={handleFreeTrialClick} sx={{ width: "200px", background: "#fcf8f8", color: "#b43f4f", boxShadow: "none", border: "1px solid #b43f4f", fontSize: '16px', fontWeight: '600', marginTop: '-5px', '&:hover': { background: 'none' } }} >
                                    {t('startFreeTrial')}
@@ -244,9 +244,9 @@ const Pricing = () => {
                                     ****
                                 </Typography>
                                 <Typography variant="h6" gutterBottom sx={{ textAlign: "start" }}>
-                                    <span style={{ fontSize: "22px", color: "#b43f4f" }}>$</span><div style={{ marginTop: "-52px", marginLeft: "12px" }}><span style={{ fontSize: "56px", color: "#b43f4f", fontWeight: "bold" }}>14</span><span style={{ color: "#a3a3a5" }}>{t('perMonth')}</span></div>
+                                    <span style={{ fontSize: "22px", color: "#b43f4f" }}>{"\u20B9"}</span><div style={{ marginTop: "-52px", marginLeft: "12px" }}><span style={{ fontSize: "56px", color: "#b43f4f", fontWeight: "bold" }}>599</span><span style={{ color: "#a3a3a5" }}>{t('perMonth')}</span></div>
                                 </Typography>
-                                <Button variant="contained" onClick={handlePayment} sx={{ width: "200px", background: "#b43f4f", color: "white", boxShadow: "none", fontSize: '16px', fontWeight: '600', marginTop: '-5px' }}  >
+                                <Button variant="contained" onClick={handlePayment} sx={{ width: "200px", background: "#b43f4f", color: "white", boxShadow: "none", fontSize: '16px', fontWeight: '600', marginTop: '-5px', '&:hover': { bgcolor: '#9e2b31' } }}  >
                                     {t('buyNow')}
                                 </Button>
                                 <Typography variant="body2" style={{ marginTop: '16px', marginBottom: "20px", fontSize: '14px', fontWeight: '600' }} >
