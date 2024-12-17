@@ -47,7 +47,7 @@ const Pricing = () => {
         navigate('/dashboard');
     };
 
-    const endpoint = `/quantum-share/user/subscription/create/payment?amount=1507&packageName=standard`;
+    const endpoint = `/quantum-share/user/subscription/create/payment?amount=599&packageName=standard`;
 
     const createOrder = async () => {
         try {
@@ -246,7 +246,7 @@ const Pricing = () => {
                                 <Typography variant="h6" gutterBottom sx={{ textAlign: "start" }}>
                                     <span style={{ fontSize: "22px", color: "#b43f4f" }}>$</span><div style={{ marginTop: "-52px", marginLeft: "12px" }}><span style={{ fontSize: "56px", color: "#b43f4f", fontWeight: "bold" }}>14</span><span style={{ color: "#a3a3a5" }}>{t('perMonth')}</span></div>
                                 </Typography>
-                                <Button variant="contained" onClick={handlePayment} sx={{ width: "200px", background: "#b43f4f", color: "white", boxShadow: "none", fontSize: '16px', fontWeight: '600', marginTop: '-5px' }} disabled >
+                                <Button variant="contained" onClick={handlePayment} sx={{ width: "200px", background: "#b43f4f", color: "white", boxShadow: "none", fontSize: '16px', fontWeight: '600', marginTop: '-5px' }}  >
                                     {t('buyNow')}
                                 </Button>
                                 <Typography variant="body2" style={{ marginTop: '16px', marginBottom: "20px", fontSize: '14px', fontWeight: '600' }} >
