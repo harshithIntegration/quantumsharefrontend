@@ -637,7 +637,6 @@ const Post = ({ onClose }) => {
         }
     };
 
-
     const resetState = () => {
         setFile(null);
         setFileType('');
