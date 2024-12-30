@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars*/
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import './global.css';
@@ -27,7 +27,7 @@ import ResetPassword from './Navbar/ResetPassword';
 import UpdateVerification from './Navbar/UpdateVerification';
 import RegeneratePassword from './Navbar/RegeneratePassword';
 import RedditCallback from './SocialMediaLogin/RedditCallback';
-import Session from './Pages/Session';
+
 
 const App = () => {
     return (
@@ -62,7 +62,6 @@ const App = () => {
                     <Route path='/quantum-share/linkedin/callback/success' element={<PrivateRoute><LinkedInCallback /></PrivateRoute>} />
                     <Route path='/youtube/callback/getChannelDetails' element={<PrivateRoute><YoutubeCallback /></PrivateRoute>} />
                     <Route path='/quantum-share/callback/reddit' element={<PrivateRoute><RedditCallback /></PrivateRoute>} />
-                    <Route path='/session'element={<Session />}/>
                     <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
             </BrowserRouter>
