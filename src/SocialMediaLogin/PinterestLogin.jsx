@@ -9,9 +9,10 @@ import { ReactSVG } from 'react-svg';
 import { toast } from 'react-toastify';
 import { Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 const PinterestLogin = () => {
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
     const [open, setOpen] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -20,6 +21,7 @@ const PinterestLogin = () => {
     const [channelName, setChannelName] = useState('');
     const [subscriberCount, setSubscriberCount] = useState('');
     const {t} = useTranslation('');
+    const navigate=useNavigate()
 
     const handlePinterestLogin = async () => {
         setLoading(true);
@@ -32,7 +34,13 @@ const PinterestLogin = () => {
             const oauthUrl = response.data.data;
         } catch (error) {
             console.error('Error', error);
-            toast.error('Error loading Pinterest Login Page. Please try again later.');
+            if(error){
+                toast.error('Error loading Pinterest Login Page. Please try again later.');
+            }else if(error.response.data.code===121){
+                localStorage.removeItem('token')
+                navigate('/session')
+            }
+            
         } 
     }    
 
@@ -57,7 +65,12 @@ const PinterestLogin = () => {
             toast.success("Disconnected from Youtube!");
         } catch (error) {
             console.error('Error disconnecting from Youtube:', error);
+           if (error) {
             toast.error("Error disconnecting from Youtube. Please try again later.");
+           }else if(error.response.data.code===121){
+            localStorage.removeItem('token')
+            navigate('/session')
+        }
         } finally {
             setDisconnecting(false)
         }

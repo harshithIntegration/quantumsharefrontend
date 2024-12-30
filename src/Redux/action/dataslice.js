@@ -87,7 +87,7 @@ const dataSlice = createSlice({
             state.loading = false;
             console.log(action.payload);
             state.remainingDays = action.payload.data.remainingdays;
-            state.remainingCredits = action.payload.data.user.credit;
+            state.remainingCredits = action.payload.data.credit;
             state.data = action.payload;
         },
         setRemainingDays: (state, action) => {

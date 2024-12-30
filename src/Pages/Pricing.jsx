@@ -1,12 +1,10 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useState } from 'react';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CancelIcon from '@mui/icons-material/Cancel';
-import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import Nav from '../Navbar/Nav';
 import Sidenav from '../Navbar/Sidenav';
@@ -17,7 +15,8 @@ import Box from '@mui/material/Box';
 import axiosInstance from '../Helper/AxiosInstance';
 import { FaCirclePlay } from "react-icons/fa6";
 import { useTranslation } from 'react-i18next';
-
+import { Dialog, DialogContent, DialogContentText, Button, IconButton, Typography } from '@mui/material';
+import WarningIcon from '@mui/icons-material/Warning';
 const StyledPaper = styled(Paper)(({ theme }) => ({
     borderRadius: theme.spacing(2),
     padding: theme.spacing(3),
@@ -34,10 +33,10 @@ const SectionTitle = styled(Typography)(({ theme }) => ({
 }));
 
 const Pricing = () => {
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
     const navigate = useNavigate();
     const {t} = useTranslation('');
-
+    const [isSessionExpired, setIsSessionExpired] = useState(false);
     const handleFreeTrialClick = () => {
         if (!token) {
             toast.error('Please Log In to Proceed.');
@@ -48,7 +47,6 @@ const Pricing = () => {
     };
 
     const endpoint = `/quantum-share/user/subscription/create/payment?amount=1507&packageName=standard`;
-
     const createOrder = async () => {
         try {
             const response = await axiosInstance.get(endpoint, {
@@ -66,7 +64,10 @@ const Pricing = () => {
             }
         } catch (error) {
             console.error('Error creating order:', error);
-            if (error.response && error.response.status === 401) {
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            }else if (error.response && error.response.status === 401) {
                 toast.error('Your session has expired. Please log in again.');
                 navigate('/login');
             } else {
@@ -141,7 +142,12 @@ const Pricing = () => {
             rzp1.open();
         } catch (error) {
             console.error('Error initializing Razorpay:', error);
-            alert('Error initializing payment');
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            }else if(error){
+                alert('Error initializing payment');
+            }
         }
     };
 
@@ -309,6 +315,27 @@ const Pricing = () => {
                 <div className="hover-content">{t('referencevideo')}</div>
             </div>
             <Footer />
+            <Dialog open={isSessionExpired} aria-labelledby="alert-dialog-title" PaperProps={{ sx: { backgroundColor: '#ffffff', width: '40vw', height: '30vh' } }}>
+                <DialogContent sx={{ backgroundColor: '#ffffff' }}>
+                    <DialogContentText sx={{ color: 'black', display: 'flex', fontSize: '20px', alignItems: 'center' }}>
+                        <IconButton>
+                            <WarningIcon
+                                style={{ color: 'orange', cursor: 'pointer', marginTop: '5px', fontSize: '40px', }}
+                            />
+                        </IconButton>
+                        <div>
+                            <Typography sx={{ fontSize: '20px', fontWeight: 'bold' }}>Your session has expired</Typography>
+                            <Typography sx={{ fontSize: '20px', position: 'relative', top: '5px' }}>Please log in again to continue using the app</Typography>
+                        </div>
+                    </DialogContentText>
+                    <DialogContentText sx={{ backgroundColor: '#ffffff', fontSize: '20px', fontWeight: 'bold', textAlign: 'center' }}>
+                        <Link to="/login">
+                            <Button sx={{ color: '#ba343b', fontSize: '15px', fontWeight: '600', border: '1px solid #ba343b', margin: '18px auto' }} variant="outlined">
+                                Login</Button>
+                        </Link>
+                    </DialogContentText>
+                </DialogContent>
+            </Dialog>
         </>
     );
 };

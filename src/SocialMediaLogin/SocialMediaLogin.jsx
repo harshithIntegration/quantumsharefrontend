@@ -15,7 +15,6 @@ import { FaCirclePlay } from "react-icons/fa6";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import RedditLogin from './RedditLogin';
 import PinterestLogin from './PinterestLogin';
-import { useToast } from '../Context/ToastContext';
 import { useTranslation } from 'react-i18next';
 
 const SocialMediaLogin = () => {
@@ -45,6 +44,7 @@ const SocialMediaLogin = () => {
                                     <InstagramLogin />
                                     <LinkedInLogin />
                                     <YoutubeLogin />
+                                    <RedditLogin />
                                     <TelegramLogin />
                                 </div>
                             </div>
@@ -59,10 +59,10 @@ const SocialMediaLogin = () => {
                                         <TwitterLogin />
                                         <AutoAwesomeIcon style={{ position: 'absolute', top: '10px', right: '25px', color: '#ffbf00', fontSize: '2rem' }} />
                                     </div>
-                                    <div style={{ position: 'relative', textAlign: 'center' }}>
+                                    {/* <div style={{ position: 'relative', textAlign: 'center' }}>
                                         <RedditLogin />
                                         <AutoAwesomeIcon style={{ position: 'absolute', top: '10px', right: '25px', color: '#ffbf00', fontSize: '2rem' }} />
-                                    </div>
+                                    </div> */}
                                     <div style={{ position: 'relative', textAlign: 'center' }}>
                                         <PinterestLogin />
                                         <AutoAwesomeIcon style={{ position: 'absolute', top: '10px', right: '25px', color: '#ffbf00', fontSize: '2rem' }} />

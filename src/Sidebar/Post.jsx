@@ -1,12 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-undef */
 /* eslint-disable no-mixed-operators */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState, useContext, useRef } from "react";
-import { Dialog, DialogContent, DialogActions, Grid, Button, Tooltip, Popover, Zoom, DialogContentText, Modal, Box } from "@mui/material";
-import IconButton from '@mui/material/IconButton';
+import { Grid, Tooltip, Popover, Zoom } from "@mui/material";
 import MoodOutlinedIcon from '@mui/icons-material/MoodOutlined';
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
-import TagOutlinedIcon from '@mui/icons-material/TagOutlined';
 import SendIcon from '@mui/icons-material/Send';
 import Stack from '@mui/material/Stack';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
@@ -24,17 +23,17 @@ import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import { FaVideo } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import WarningIcon from '@mui/icons-material/Warning';
 import { clearAiText, updateCaption } from "../Redux/action/AiTextSlice";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import QI from './QI';
 import TagIcon from '@mui/icons-material/Tag';
 import { useTranslation } from "react-i18next";
-
+import { Dialog, DialogContent, DialogContentText,DialogActions, Button, IconButton, Typography } from '@mui/material';
+import WarningIcon from '@mui/icons-material/Warning';
 const Post = ({ onClose }) => {
     const navigate = useNavigate();
     const location = useLocation();
-    let token = sessionStorage.getItem("token");
+    let token = localStorage.getItem("token");
     const [open, setOpen] = useState(true);
     const [open1, setOpen1] = useState(false);
     const [file, setFile] = useState(null);
@@ -70,7 +69,8 @@ const Post = ({ onClose }) => {
     const [suggestions, setSuggestions] = useState([]);
     const [noHashtagMessage, setNoHashtagMessage] = useState("");
     const [showInput, setShowInput] = useState(false);
-    const {t} = useTranslation();
+    const { t } = useTranslation();
+    const [isSessionExpired, setIsSessionExpired] = useState(false);
 
     const handleSelectIconAndSendToParent = (selectedIcons, mediaPlatform) => {
         setSelectedIcons(selectedIcons);
@@ -162,9 +162,9 @@ const Post = ({ onClose }) => {
             }
         }
 
-        if (mediaPlatform.includes('Reddit') && (fileType === 'image' || fileType === 'video')) {
+        if (mediaPlatform.includes('Reddit') && fileType === 'video') {
             newWarningMessages.push(
-                "Reddit does not support image or video sharing. Please remove the media or deselect Reddit."
+                "Reddit does not support video sharing. Please remove the media or deselect Reddit."
             );
             shouldDisableShare = true;
         }
@@ -201,7 +201,6 @@ const Post = ({ onClose }) => {
             setQuery('');
             setSuggestions([]);
             setNoHashtagMessage('');
-
         } else {
             setCaption('');
             dispatch(clearAiText());
@@ -352,7 +351,8 @@ const Post = ({ onClose }) => {
         'instagram': 'Instagram',
         'telegram': 'Telegram',
         'LinkedIn': 'LinkedIn',
-        'youtube': 'Youtube'
+        'youtube': 'Youtube',
+        'Reddit': 'Reddit'
     };
 
     const getDisplayPlatformName = (platform) => {
@@ -376,6 +376,8 @@ const Post = ({ onClose }) => {
                 return '/quantum-share/post/file/linkedIn';
             case 'youtube':
                 return '/quantum-share/post/file/youtube';
+            case 'Reddit':
+                return '/quantum-share/post/file/reddit';
             default:
                 throw new Error(`Unsupported platform: ${platform}`);
         }
@@ -412,7 +414,7 @@ const Post = ({ onClose }) => {
             );
             const responses = await Promise.all(platforms.map(async platform => {
                 const endpoint = getEndpointForPlatform(platform);
-                const formData = createFormData(file, caption, title, visibility, platform, image1, sr);
+                const formData = createFormData(file, caption, title, visibility, platform, sr, image1);
                 try {
                     const response = await axiosInstance.post(endpoint, formData, {
                         headers: {
@@ -456,7 +458,7 @@ const Post = ({ onClose }) => {
                                         delay = 5000;
                                     }
                                     setTimeout(async () => {
-                                        await axiosInstance.get(`/quatumshare/socialmedia/get/recent/post`, {
+                                        await axiosInstance.get(`/quantum-share/socialmedia/get/recent/post`, {
                                             headers: {
                                                 'Accept': 'application/json',
                                                 Authorization: `Bearer ${token}`
@@ -476,7 +478,7 @@ const Post = ({ onClose }) => {
                             toast.success(res.message);
                             const postId = res.data.id;
                             setTimeout(async () => {
-                                await axiosInstance.get(`/quatumshare/socialmedia/get/recent/post`, {
+                                await axiosInstance.get(`/quantum-share/socialmedia/get/recent/post`, {
                                     headers: {
                                         'Accept': 'application/json',
                                         Authorization: `Bearer ${token}`
@@ -501,7 +503,7 @@ const Post = ({ onClose }) => {
                             toast.success(res.message);
                             const postId = res.data.id;
                             setTimeout(async () => {
-                                await axiosInstance.get(`/quatumshare/socialmedia/get/recent/post`, {
+                                await axiosInstance.get(`/quantum-share/socialmedia/get/recent/post`, {
                                     headers: {
                                         'Accept': 'application/json',
                                         Authorization: `Bearer ${token}`
@@ -540,6 +542,18 @@ const Post = ({ onClose }) => {
                         } else if (response.data.structure?.code === 404) {
                             toast.error(response.data.structure.message);
                         }
+                    } else if (platform === 'Reddit') {
+                        if (response.data && response.data.message) {
+                            console.log('sr', sr);
+                            const res = response.data;
+                            toast.success(res.message);
+                        } else if (response.data.status === "error" && response.data.code === 114) {
+                            const res = response.data;
+                            console.error('Credit Depleted Error Message:', res.message);
+                            toast.info(res.message);
+                        } else if (response.data.code === 404) {
+                            toast.error(response.data.message);
+                        }
                     }
                     return { platform, success: true };
                 } catch (error) {
@@ -548,7 +562,10 @@ const Post = ({ onClose }) => {
                     if (error.response?.status === 403) {
                         toast.error('Forbidden: You do not have permission to access this resource.');
                     } else if (platform === 'facebook') {
-                        if (Array.isArray(responseData)) {
+                        if (error.response?.data?.code === 121) {
+                            setIsSessionExpired(true); // Show session expired dialog
+                            localStorage.removeItem('token');
+                        }else if (Array.isArray(responseData)) {
                             responseData.forEach(err => {
                                 if (err.status === "error" && err.code === 114) {
                                     console.error('Credit Depleted Error Message:', err.message);
@@ -559,7 +576,10 @@ const Post = ({ onClose }) => {
                             toast.error(responseData.structure.message);
                         }
                     } else if (platform === 'instagram') {
-                        if (responseData.code === 116) {
+                        if (error.response?.data?.code === 121) {
+                            setIsSessionExpired(true); // Show session expired dialog
+                            localStorage.removeItem('token');
+                        }else if (responseData.code === 116) {
                             toast.info('Unsupported aspect ratio. Please use one of Instagram\'s formats: 4:5, 1:1, or 1.91:1.');
                         } else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
                             const err = responseData.structure;
@@ -569,7 +589,10 @@ const Post = ({ onClose }) => {
                             toast.error(responseData.structure.message);
                         }
                     } else if (platform === 'youtube') {
-                        if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
+                        if (error.response?.data?.code === 121) {
+                            setIsSessionExpired(true); // Show session expired dialog
+                            localStorage.removeItem('token');
+                        }else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
                             const err = responseData.structure;
                             console.error('Credit Depleted Error Message:', err.message);
                             toast.info(err.message);
@@ -579,7 +602,10 @@ const Post = ({ onClose }) => {
                             toast.error('YouTube: Failed to send media, Quota Exceeded Please try again after 24 hrs.');
                         }
                     } else if (platform === 'telegram') {
-                        if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
+                        if (error.response?.data?.code === 121) {
+                            setIsSessionExpired(true); // Show session expired dialog
+                            localStorage.removeItem('token');
+                        }else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
                             const err = responseData.structure;
                             console.error('Credit Depleted Error Message:', err.message);
                             toast.info(err.message);
@@ -587,18 +613,35 @@ const Post = ({ onClose }) => {
                             toast.error(responseData.structure.message);
                         }
                     } else if (platform === 'LinkedIn') {
-                        if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
+                        if (error.response?.data?.code === 121) {
+                            setIsSessionExpired(true); // Show session expired dialog
+                            localStorage.removeItem('token');
+                        }else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
                             const err = responseData.structure;
                             console.error('Credit Depleted Error Message:', err.message);
                             toast.info(err.message);
                         } else if (responseData.structure?.code === 404) {
                             toast.error(responseData.structure.message);
                         }
+                    } else if (platform === 'Reddit') {
+                        if (error.response?.data?.code === 121) {
+                            setIsSessionExpired(true); // Show session expired dialog
+                            localStorage.removeItem('token');
+                        }else if (responseData.status === "error" && responseData.code === 114) {
+                            const err = responseData;
+                            console.error('Credit Depleted Error Message:', err.message);
+                            toast.info(err.message);
+                        } else if (responseData?.code === 404) {
+                            toast.error(responseData.message);
+                        }
                     } else if (responseData.code === 115) {
                         toast.error("Token Expired, Please Login Again");
                         setTimeout(() => {
                             navigate("/login");
                         }, 4000);
+                    }if (error.response?.data?.code === 121) {
+                        setIsSessionExpired(true); // Show session expired dialog
+                        localStorage.removeItem('token');
                     } else {
                         console.log('An error occurred while processing your request.');
                         toast.error('An error occurred while processing your request.');
@@ -716,8 +759,13 @@ const Post = ({ onClose }) => {
             }
         } catch (error) {
             console.error("Error fetching hashtag suggestions:", error);
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            }
         }
     };
+
     const handleInputChange = (e) => {
         const value = e.target.value;
         setQuery(value);
@@ -728,6 +776,7 @@ const Post = ({ onClose }) => {
             fetchSuggestions(query);
         }
     };
+
     const handleHashtagSelect = (hashtag) => {
         const updatedCaption = `${caption} ${hashtag}`.trim();
         if (updatedCaption.length <= maxCaptionCharacters) {
@@ -737,6 +786,7 @@ const Post = ({ onClose }) => {
         }
         setSuggestions(suggestions.filter((s) => s !== hashtag));
     };
+
     const handleIconClick = () => {
         setShowInput(!showInput);
         if (showInput) {
@@ -745,6 +795,7 @@ const Post = ({ onClose }) => {
             setNoHashtagMessage('');
         }
     };
+
     const handleClickOpen = () => {
         setOpen1(true);
     };
@@ -802,7 +853,9 @@ const Post = ({ onClose }) => {
                                         </div>)}
                                     {mediaPlatform.includes('Reddit') && (
                                         <div style={{ display: 'flex', flexDirection: 'column', width: '48.5%' }}>
-                                            <label style={{ fontSize: '12px', fontWeight: 'bold' }}>SubReddit <span style={{ color: 'red' }}>*</span></label>
+                                            <label style={{ fontSize: '12px', fontWeight: 'bold' }}>
+                                                SubReddit <span style={{ color: 'red' }}>*</span>
+                                            </label>
                                             <input required className="area" placeholder="SubReddit ... [Reddit]" value={sr} name="subreddit" onChange={handleSubReddit} style={{
                                                 height: '40px', border: '1px solid #ccc', borderRadius: '5px', resize: 'none', outline: 'none', fontSize: '12px', padding: '12px'
                                             }} />
@@ -834,7 +887,6 @@ const Post = ({ onClose }) => {
                                                 onChange={handleFileChange}
                                                 name="mediaFile"
                                             />
-
                                             {showCamera && (
                                                 <div style={{
                                                     position: 'fixed',
@@ -900,7 +952,6 @@ const Post = ({ onClose }) => {
                                                 <TagIcon />
                                             </IconButton>
                                         </Tooltip>
-
                                         {showInput && (
                                             <div
                                                 style={{
@@ -924,7 +975,6 @@ const Post = ({ onClose }) => {
                                                     placeholder="Type to search hashtags"
                                                     style={{
                                                         padding: "10px",
-                                                        width: "100%",
                                                         border: "1px solid #ccc",
                                                         borderRadius: "4px",
                                                         outline: "none",
@@ -1057,10 +1107,9 @@ const Post = ({ onClose }) => {
                                         {fileType === 'image' && file && (
                                             <img src={URL.createObjectURL(file)} alt="File Preview" className="file-preview" style={{ maxHeight: '100%', maxWidth: '100%' }} />
                                         )}
-                                        {imageUrl && (
+                                        {/* {imageUrl && (
                                             <img src={imageUrl} alt="Captured Preview" className="file-preview" style={{ maxHeight: '100%', maxWidth: '100%' }} />
-                                        )}
-
+                                        )} */}
                                         {fileType === 'video' && file && (
                                             <video controls className="file-preview" style={{ maxHeight: '100%', maxWidth: '100%' }}>
                                                 <source src={URL.createObjectURL(file)} type="video/mp4" />
@@ -1073,10 +1122,16 @@ const Post = ({ onClose }) => {
                                     </div>
                                 </div>
                                 <div className="text-preview" style={{ wordBreak: 'break-all', padding: '10px' }}>
-                                    {(mediaPlatform.includes('youtube') || mediaPlatform.includes('Reddit')) && title.split('\n').map((line, index) => (
-                                        <div key={index}>{line}</div>
-                                    ))}
-                                    {mediaPlatform.includes('Reddit') && sr && <div>{`${sr}`}</div>}
+                                    {(mediaPlatform.includes('youtube') || mediaPlatform.includes('Reddit')) &&
+                                        title.split('\n').map((line, index) => (
+                                            <div key={index}>{line}</div>
+                                        ))
+                                    }
+                                    {mediaPlatform.includes('Reddit') &&
+                                        sr.split('\n').map((line, index) => (
+                                            <div key={index}>{line}</div>
+                                        ))
+                                    }
                                 </div>
                                 <div className="text-preview" style={{ wordBreak: 'break-all', padding: '10px' }}>{caption.split('\n').map((line, index) => (
                                     <div key={index}>{line}</div>

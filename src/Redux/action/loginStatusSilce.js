@@ -5,7 +5,8 @@ const initialState = {
     instaLoggedIn: false,
     telLoggedIn: false,
     linkLoggedIn: false,
-    YouLoggedIn: false
+    YouLoggedIn: false,
+    redditLoggedIn:false
 };
 
 const loginStatusSlice = createSlice({
@@ -31,10 +32,14 @@ const loginStatusSlice = createSlice({
         setYouLoggedIn: (state, action) => {
             // console.log(action.payload);
             state.YouLoggedIn = action.payload
-        }
+        },
+        setRedditLoggedIn: (state, action) => {
+            // console.log(action.payload);
+            state.redditLoggedIn = action.payload
+        },
     },
 });
 
-export const { setIsLoggedIn, setInstaLoggedIn, setTelLoggedIn, setLinkLoggedIn, setYouLoggedIn } = loginStatusSlice.actions;
+export const { setIsLoggedIn, setInstaLoggedIn, setTelLoggedIn, setLinkLoggedIn, setYouLoggedIn,setRedditLoggedIn } = loginStatusSlice.actions;
 
 export default loginStatusSlice.reducer;

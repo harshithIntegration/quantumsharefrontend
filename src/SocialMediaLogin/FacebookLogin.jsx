@@ -5,21 +5,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* global FB */
 import React, { useEffect, useState } from 'react';
-import Button from '@mui/material/Button';
 import axiosInstance from "../Helper/AxiosInstance";
 import facebook1 from '../Assets/facebook1.svg';
 import fbicon from '../Assets/facebooksmall.svg';
 import { ReactSVG } from 'react-svg';
 import { toast } from 'react-toastify';
-import { Dialog, DialogActions, DialogContent, DialogContentText, MenuItem, Select } from '@mui/material';
+import { DialogTitle, MenuItem, Select, Checkbox, FormControlLabel, List, ListItem, Avatar } from "@mui/material";
 import { useDispatch, useSelector } from 'react-redux';
 import { setPageUrls } from '../Redux/action/pageUrlsSlice';
 import { setFbName } from '../Redux/action/NameSlice';
 import { setIsLoggedIn } from '../Redux/action/loginStatusSilce';
 import { useTranslation } from 'react-i18next';
+import { Dialog, DialogContent, DialogContentText, DialogActions, Button, IconButton, Typography } from '@mui/material';
+import WarningIcon from '@mui/icons-material/Warning';
 
 const FacebookLogin = () => {
-    let token = sessionStorage.getItem("token");
+    let token = localStorage.getItem("token");
     const [code, setCode] = useState('');
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -28,16 +29,19 @@ const FacebookLogin = () => {
     const [facebookUsername, setFBUsername] = useState('');
     const [facebookNumberofpages, setNumberOfPages] = useState('');
     const [pageData, setPageData] = useState([]);
-    const [selectedPage, setSelectedPage] = useState('');
-    const {t} = useTranslation('');
-    // const [processing, setProcessing] = useState(false);
-
+    const [selectedFBPage, setSelectedFBPage] = useState('');
+    const [fbUser, setFbUser] = useState(null);
+    const [fbPages, setFbPages] = useState([]);
+    const [selectedPages, setSelectedPages] = useState([]);
+    const [openFBDetails, setOpenFBDetails] = useState(false);
+    const { t } = useTranslation('');
+    const [isSessionExpired, setIsSessionExpired] = useState(false);
     const dispatch = useDispatch()
     const { isLoggedIn } = useSelector((state) => state.loginStatus)
 
     const fetchConnectedSocial = async () => {
         try {
-            const endpoint = 'quantum-share/user/connected/socialmedia/facebook'
+            const endpoint = '/quantum-share/user/connected/socialmedia/facebook'
             const response = await axiosInstance.get(endpoint, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -62,7 +66,10 @@ const FacebookLogin = () => {
             }
         }
         catch (error) {
-            console.error(error)
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); 
+                localStorage.removeItem('token');
+            }
         }
     }
 
@@ -77,8 +84,8 @@ const FacebookLogin = () => {
             } else {
                 window.fbAsyncInit = function () {
                     FB.init({
-                        appId: '421449853704517',
-                        // appId: '1397130744461736',
+                        // appId: '421449853704517',
+                        appId: '1397130744461736',
                         cookie: true,
                         xfbml: true,
                         version: 'v19.0'
@@ -132,23 +139,89 @@ const FacebookLogin = () => {
         console.log('statusChangeCallback');
         console.log(response);
         if (response.status === 'connected') {
-            const accessToken = response.authResponse.accessToken;
-            await sendTokenToBackend(accessToken);
+            const code = response.authResponse.accessToken;
+            await sendTokenToBackend(code);
         } else {
             dispatch(setIsLoggedIn(false))
             setLoading(false);
         }
     };
 
-    const sendTokenToBackend = async (accessToken) => {
-        // setProcessing(true); 
+    const sendTokenToBackend = async (code) => {
         try {
-            const response = await axiosInstance.post(`/quantum-share/facebook/user/verify-token?code=${accessToken}`, accessToken, {
+            const response = await axiosInstance.get(`/quantum-share/facebook/user/verify-token?code=${code}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: 'application/json'
+                },
+            });
+            if (response.data.status === "success" && response.data.data) {
+                console.log('FB Detail', response.data.data);
+                setFbUser(response.data.data.fbuser);
+                setFbPages(response.data.data.fbpages);
+            }
+            setOpenFBDetails(true)
+        } catch (error) {
+            console.error("Error fetching Facebook data:", error);
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            }else if(error){
+                toast.error("Failed to fetch Facebook data.");
+            } 
+        }
+    };
+
+    const handleCheckboxChange = (pageId) => {
+        setSelectedPages((prev) =>
+            prev.includes(pageId)
+                ? prev.filter((id) => id !== pageId)
+                : [...prev, pageId]
+        );
+    };
+
+    const handleFBDetailsClose = () => {
+        setOpenFBDetails(false);
+        setLoading(false);
+        setSelectedPages([]);
+    }
+
+    const handleSubmit = async () => {
+        handleFBDetailsClose();
+
+        try {
+            const selectedFbPages = fbPages.filter(page => selectedPages.includes(page.fbPageId));
+            const requestBody = {
+                fbuser: {
+                    fbId: fbUser.fbId,
+                    fbuserId: fbUser.fbuserId,
+                    fbuserUsername: fbUser.fbuserUsername,
+                    firstName: fbUser.firstName,
+                    lastName: fbUser.lastName,
+                    email: fbUser.email,
+                    birthday: fbUser.birthday,
+                    noOfFbPages: selectedFbPages.length,
+                    pictureUrl: fbUser.pictureUrl,
+                    userAccessToken: fbUser.userAccessToken,
+                    pageDetails: selectedFbPages
+                },
+                fbpages: selectedFbPages.map(page => ({
+                    pageTableId: 0,
+                    fbPageId: page.fbPageId,
+                    pageName: page.pageName,
+                    pictureUrl: page.pictureUrl,
+                    fbPageAceessToken: page.fbPageAceessToken,
+                    instagramId: page.instagramId
+                }))
+            };
+
+            const response = await axiosInstance.post(`/quantum-share/facebook/user/save/pages`, requestBody, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
             });
-            if (response.data.status === 'success' && response.data.data) {
+            setLoading(true);
+            if (response.data.status === 'success') {
                 const { facebookUrl, facebookUsername, facebookNumberofpages, pages_url } = response.data.data;
                 setFBProfileImage(facebookUrl);
                 setFBUsername(facebookUsername);
@@ -166,22 +239,17 @@ const FacebookLogin = () => {
                 setFBUsername(facebookUsername);
                 setNumberOfPages(facebookNumberofpages);
                 toast.success("Connected to Facebook!");
-                // const platform = response.data.platform;
-                // const platformResponse = await axiosInstance.get(`/quatumshare/fetch/all/post`, {
-                //     headers: {
-                //         Authorization: `Bearer ${token}`
-                //     },
-                //     params: { platform }
-                // });    
-                // console.log(platformResponse.data);
-                // setProcessing(false);
             }
         } catch (error) {
-            console.error('Error sending token to backend:', error);
-            toast.error("Error connecting to Facebook. Please try again later.");
+            console.error('Error sending selected pages to backend:', error);
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            } if (error) {
+                toast.error("Error saving pages. Please try again later.");
+            }
         } finally {
             setLoading(false);
-            // setProcessing(false);
         }
     };
 
@@ -210,7 +278,13 @@ const FacebookLogin = () => {
             toast.success("Disconnected from Facebook!");
         } catch (error) {
             console.error('Error disconnecting from Facebook:', error);
-            toast.error("Error disconnecting from Facebook. Please try again later.");
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            }else if(error){
+                toast.error("Error disconnecting from Facebook. Please try again later.");
+            }
+             
         } finally {
             setDisconnecting(false);
         }
@@ -264,12 +338,12 @@ const FacebookLogin = () => {
                                 )}
                                 {isLoggedIn && pageData.length > 0 && (
                                     <Select
-                                        value={selectedPage}
+                                        value={selectedFBPage}
                                         onChange={(e) => setSelectedPage(e.target.value)}
                                         style={{ width: '40px', height: '20px' }}
                                     >
                                         {/* <MenuItem value="" disabled>
-                                    Select Page
+                                        Select Page
                                     </MenuItem> */}
                                         {pageData.map((page, index) => (
                                             <MenuItem key={index} value={page.pageName}>
@@ -307,11 +381,58 @@ const FacebookLogin = () => {
                 )}
             </section>
 
-            {/* {processing && (
-                <div className="processing-overlay">
-                    <div className="processing-message">Processing...</div>
-                </div>
-            )} */}
+            <Dialog open={openFBDetails} onClose={handleFBDetailsClose} fullWidth>
+                <DialogTitle sx={{ color: '#b4232a', fontSize: '20px', fontWeight: 'bold' }}>Facebook Profile Details</DialogTitle>
+                <DialogContent>
+                    {fbUser && (
+                        <div style={{ display: "flex", alignItems: "center", marginBottom: 20 }}>
+                            <Avatar src={fbUser.pictureUrl} alt={fbUser.fbuserUsername} />
+                            <Typography variant="h6" style={{ marginLeft: 10 }}>
+                                {fbUser.fbuserUsername}
+                            </Typography>
+                        </div>
+                    )}
+                    <Typography variant="subtitle1" sx={{ color: '#b4232a', fontSize: '18px', fontWeight: 'bold' }}>Facebook Pages :</Typography>
+                    {fbPages.length > 0 ? (
+                        <List>
+                            {fbPages.map((page) => (
+                                <ListItem key={page.fbPageId}>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={selectedPages.includes(page.fbPageId)}
+                                                onChange={() => handleCheckboxChange(page.fbPageId)}
+                                            />
+                                        }
+                                        label={
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <Avatar src={page.pictureUrl} alt={page.pageName} style={{ marginRight: 10 }} />
+                                                {page.pageName}
+                                            </div>
+                                        }
+                                        style={{ marginLeft: 0 }}
+                                    />
+                                </ListItem>
+                            ))}
+                        </List>
+                    ) : (
+                        <Typography variant="body1" sx={{ color: '#b4232a', fontStyle: 'italic', marginTop: 2 }}>
+                            No pages found.
+                        </Typography>
+                    )}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleFBDetailsClose} color="error">Cancel</Button>
+                    <Button
+                        onClick={handleSubmit}
+                        variant="contained"
+                        sx={{ bgcolor: '#ba343b', color: 'white', '&:hover': { bgcolor: '#9e2b31' } }}
+                        disabled={selectedPages.length === 0}
+                    >
+                        Submit
+                    </Button>
+                </DialogActions>
+            </Dialog>
 
             <Dialog open={open} onClose={handleClose} maxWidth='lg'>
                 <DialogContent>

@@ -9,6 +9,7 @@ import QS from "../Assets/QS.webp";
 import emg1 from '../Assets/msg.webp';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from "react-router-dom";
 
 function Verification() {
     const location = useLocation();
@@ -16,6 +17,7 @@ function Verification() {
     const [verificationResult, setVerificationResult] = useState(null);
     const [signupMessage, setSignupMessage] = useState("A verification link has been sent to your email. Please verify to access login.");
     const {t} =useTranslation('');
+    const navigate = useNavigate()
 
     useEffect(() => {
         const token = new URLSearchParams(location.search).get('token');
@@ -31,7 +33,10 @@ function Verification() {
             setVerificationResult(response.data);
             setSignupMessage(null);
         } catch (error) {
-            console.error(error);
+            if(error.response.data.code === 121){
+                localStorage.removeItem('token');
+                navigate('/session');
+            }
         } finally {
             setLoading(false);
         }

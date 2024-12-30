@@ -5,7 +5,7 @@ import { Container, Typography, Grid, Card, CardMedia, CardContent, Dialog, Dial
 import { useTranslation } from 'react-i18next';
 
 const ReferenceVideo = () => {
-    const token = sessionStorage.getItem('token')
+    const token = localStorage.getItem('token')
     const [open, setOpen] = useState(false);
     const [selectedVideo, setSelectedVideo] = useState(null);
     const {t} = useTranslation('');

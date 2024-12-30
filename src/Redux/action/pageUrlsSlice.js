@@ -6,7 +6,8 @@ const initialState = {
   pageUrls:[],
   telegramProfileUrl:null,
   linkedinprofile:null,
-  youtubeProfile:null
+  youtubeProfile:null,
+  redditProfile:null
 };
 
 const pageUrlsSlice = createSlice({
@@ -32,9 +33,13 @@ const pageUrlsSlice = createSlice({
     setYoutubeProfile:(state,action)=>{
       // console.log(action.payload);
       state.youtubeProfile=action.payload
+    },
+    setRedditProfile:(state,action)=>{
+      // console.log(action.payload);
+      state.redditProfile=action.payload
     }
   },
 });
 
-export const { setPageUrls , setInstagramUrl , setTelegramUrl, setLinkedInProfile, setYoutubeProfile} = pageUrlsSlice.actions;
+export const { setPageUrls , setInstagramUrl , setTelegramUrl, setLinkedInProfile, setYoutubeProfile,setRedditProfile} = pageUrlsSlice.actions;
 export default pageUrlsSlice.reducer;

@@ -33,7 +33,7 @@ const LoginWithGoogle = () => {
                     'Content-Type': 'application/json',
                 },
             });
-            sessionStorage.setItem('token', response.data.data);
+            localStorage.setItem('token', response.data.data);
             navigate('/dashboard');
         } catch (error) {
             if (error.response) {
@@ -41,6 +41,9 @@ const LoginWithGoogle = () => {
                 if (status === 406) {
                     console.log("Account already exists.");
                     toast.error("Account already exists.");
+                }else if (error.response.data.code === 121) {
+                    localStorage.removeItem("token")
+                    navigate('/session'); 
                 } else {
                     console.error('Google Login Error:', error);
                     toast.error('Error signing in with Google.');

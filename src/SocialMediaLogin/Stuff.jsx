@@ -13,7 +13,7 @@ import { useToast } from '../Context/ToastContext';
 
 const Post = ({ onClose }) => {
     const navigate = useNavigate()
-    let token = sessionStorage.getItem("token");
+    let token = localStorage.getItem("token");
     const [open, setOpen] = useState(true);
     const [open1, setOpen1] = useState(false);
     const [file, setFile] = useState(null);

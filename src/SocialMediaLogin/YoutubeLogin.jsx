@@ -1,35 +1,38 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
-import Button from '@mui/material/Button';
 import axiosInstance from "../Helper/AxiosInstance";
 import youtube1 from '../Assets/youtube1.svg';
 import yticon from '../Assets/youtubesmall.svg';
 import { ReactSVG } from 'react-svg';
 import { toast } from 'react-toastify';
-import { Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
+import { DialogActions } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { setYoutubeProfile } from '../Redux/action/pageUrlsSlice';
 import { setYouLoggedIn } from '../Redux/action/loginStatusSilce';
 import { setYouName } from '../Redux/action/NameSlice';
 import { useTranslation } from 'react-i18next';
-
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { Dialog, DialogContent, DialogContentText, Button, IconButton, Typography } from '@mui/material';
+import WarningIcon from '@mui/icons-material/Warning';
 const YoutubeLogin = () => {
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [disconnecting, setDisconnecting] = useState(false);
     const [youtubeUrl, setYoutubeUrl] = useState('');
     const [youtubeChannelName, setYoutubeChannelName] = useState('');
     const [youtubeSubscriberCount, setYoutubeSubscriberCount] = useState('');
+    let navigate=useNavigate()
     const {t} = useTranslation('');
-
+    const [isSessionExpired, setIsSessionExpired] = useState(false);
     const dispatch = useDispatch()
     const { YouLoggedIn } = useSelector((state) => state.loginStatus)
 
     const fetchConnectedSocial = async () => {
         try {
-            const endpoint = 'quantum-share/user/connected/socialmedia/youtube'
+            const endpoint = '/quantum-share/user/connected/socialmedia/youtube'
             const response = await axiosInstance.get(endpoint, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -49,6 +52,10 @@ const YoutubeLogin = () => {
         }
         catch (error) {
             console.error(error)
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            }
         }
     }
 
@@ -69,7 +76,12 @@ const YoutubeLogin = () => {
             window.location.href = oauthUrl;
         } catch (error) {
             console.error('Error', error);
-            toast.error('Error loading Youtube Login Page. Please try again later.');
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            }else if(error){
+                toast.error('Error loading Youtube Login Page. Please try again later.');
+            }
         }
     }
 
@@ -97,7 +109,12 @@ const YoutubeLogin = () => {
             toast.success("Disconnected from YouTube!");
         } catch (error) {
             console.error('Error disconnecting from Youtube:', error);
-            toast.error("Error disconnecting from Youtube. Please try again later.");
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            }else if (error) {
+                toast.error("Error disconnecting from Youtube. Please try again later.");
+            }
         } finally {
             setDisconnecting(false)
         }
@@ -183,6 +200,27 @@ const YoutubeLogin = () => {
                     <Button onClick={handleClose}>{t('no')}</Button>
                     <Button onClick={handleConfirmDisconnect} autoFocus>{t('yes')}</Button>
                 </DialogActions>
+            </Dialog>
+            <Dialog open={isSessionExpired} aria-labelledby="alert-dialog-title" PaperProps={{ sx: { backgroundColor: '#ffffff', width: '40vw', height: '30vh' } }}>
+                <DialogContent sx={{ backgroundColor: '#ffffff' }}>
+                    <DialogContentText sx={{ color: 'black', display: 'flex', fontSize: '20px', alignItems: 'center' }}>
+                        <IconButton>
+                            <WarningIcon
+                                style={{ color: 'orange', cursor: 'pointer', marginTop: '5px', fontSize: '40px', }}
+                            />
+                        </IconButton>
+                        <div>
+                            <Typography sx={{ fontSize: '20px', fontWeight: 'bold' }}>Your session has expired</Typography>
+                            <Typography sx={{ fontSize: '20px', position: 'relative', top: '5px' }}>Please log in again to continue using the app</Typography>
+                        </div>
+                    </DialogContentText>
+                    <DialogContentText sx={{ backgroundColor: '#ffffff', fontSize: '20px', fontWeight: 'bold', textAlign: 'center' }}>
+                        <Link to="/login">
+                            <Button sx={{ color: '#ba343b', fontSize: '15px', fontWeight: '600', border: '1px solid #ba343b', margin: '18px auto' }} variant="outlined">
+                                Login</Button>
+                        </Link>
+                    </DialogContentText>
+                </DialogContent>
             </Dialog>
         </>
     );

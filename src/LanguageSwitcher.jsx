@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import i18n from './i18n'; // Make sure the path to your i18n file is correct
+import i18n from './i18n';
 
 const LanguageSwitcher = () => {
   const { t } = useTranslation();

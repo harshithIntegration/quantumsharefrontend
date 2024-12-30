@@ -1,13 +1,15 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
-import { Box, Grid, Typography, TextField, Button, IconButton, Modal } from '@mui/material';
+import { Box, Grid,TextField,Modal } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import QS from '../Assets/QS.webp';
 import axiosInstance from '../Helper/AxiosInstance';
 import { useNavigate } from 'react-router-dom';
 import { TailSpin } from 'react-loader-spinner';
 import { useTranslation } from 'react-i18next';
-
+import { Dialog, DialogContent, DialogContentText, Button, IconButton, Typography } from '@mui/material';
+import WarningIcon from '@mui/icons-material/Warning';
+import { Link } from 'react-router-dom';
 const ForgotPassword = () => {
     let navigate = useNavigate();
     const [email, setEmail] = useState('');
@@ -18,6 +20,7 @@ const ForgotPassword = () => {
     const [loading, setLoading] = useState(false);
     const [submittedEmail, setSubmittedEmail] = useState('');
     const {t} = useTranslation('');
+    const [isSessionExpired, setIsSessionExpired] = useState(false);
 
     const validateEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -54,7 +57,10 @@ const ForgotPassword = () => {
                 setSuccessModalOpen(true);
             }
         } catch (error) {
-            if (error.response && error.response.data) {
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            } if (error.response && error.response.data) {
                 const { message } = error.response.data;
                 setError(message);
             }
@@ -218,6 +224,27 @@ const ForgotPassword = () => {
                     </Button>
                 </Box>
             </Modal>
+            <Dialog open={isSessionExpired} aria-labelledby="alert-dialog-title" PaperProps={{ sx: { backgroundColor: '#ffffff', width: '40vw', height: '30vh' } }}>
+                <DialogContent sx={{ backgroundColor: '#ffffff' }}>
+                    <DialogContentText sx={{ color: 'black', display: 'flex', fontSize: '20px', alignItems: 'center' }}>
+                        <IconButton>
+                            <WarningIcon
+                                style={{ color: 'orange', cursor: 'pointer', marginTop: '5px', fontSize: '40px', }}
+                            />
+                        </IconButton>
+                        <div>
+                            <Typography sx={{ fontSize: '20px', fontWeight: 'bold' }}>Your session has expired</Typography>
+                            <Typography sx={{ fontSize: '20px', position: 'relative', top: '5px' }}>Please log in again to continue using the app</Typography>
+                        </div>
+                    </DialogContentText>
+                    <DialogContentText sx={{ backgroundColor: '#ffffff', fontSize: '20px', fontWeight: 'bold', textAlign: 'center' }}>
+                        <Link to="/login">
+                            <Button sx={{ color: '#ba343b', fontSize: '15px', fontWeight: '600', border: '1px solid #ba343b', margin: '18px auto' }} variant="outlined">
+                                Login</Button>
+                        </Link>
+                    </DialogContentText>
+                </DialogContent>
+            </Dialog>
         </>
     );
 };

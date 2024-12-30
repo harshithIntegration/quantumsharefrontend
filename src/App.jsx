@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-vars*/
+import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import './global.css';
@@ -12,7 +13,7 @@ import About from './Pages/About';
 import Features from './Pages/Features';
 import Pricing from './Pages/Pricing';
 import AccountOverview from './Sidebar/AccountOverview';
-import Analytics from './Sidebar/Analytics';
+import Analytics from './Sidebar/Analytics'
 import QuantumAIPage from './Pages/QuantumAIPage';
 import SocialMediaLogin from './SocialMediaLogin/SocialMediaLogin';
 import YoutubeCallback from './SocialMediaLogin/YoutubeCallback';
@@ -25,7 +26,8 @@ import ForgotPassword from './Navbar/ForgotPassword';
 import ResetPassword from './Navbar/ResetPassword';
 import UpdateVerification from './Navbar/UpdateVerification';
 import RegeneratePassword from './Navbar/RegeneratePassword';
-import Gallery from './Templates/Gallery';
+import RedditCallback from './SocialMediaLogin/RedditCallback';
+import Session from './Pages/Session';
 
 const App = () => {
     return (
@@ -56,10 +58,11 @@ const App = () => {
                     <Route path='/social-integration' element={<PrivateRoute><SocialMediaLogin /></PrivateRoute>} />
                     <Route path='/account-overview' element={<PrivateRoute><AccountOverview /></PrivateRoute>} />
                     <Route path='/analytics' element={<PrivateRoute><Analytics /></PrivateRoute>} />
-                    <Route path='/gallery' element={<PrivateRoute><Gallery /></PrivateRoute>} />
                     <Route path='/connect-socialmedia' element={<PrivateRoute><ConnectSocialMedia /></PrivateRoute>} />
                     <Route path='/quantum-share/linkedin/callback/success' element={<PrivateRoute><LinkedInCallback /></PrivateRoute>} />
                     <Route path='/youtube/callback/getChannelDetails' element={<PrivateRoute><YoutubeCallback /></PrivateRoute>} />
+                    <Route path='/quantum-share/callback/reddit' element={<PrivateRoute><RedditCallback /></PrivateRoute>} />
+                    <Route path='/session'element={<Session />}/>
                     <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
             </BrowserRouter>
