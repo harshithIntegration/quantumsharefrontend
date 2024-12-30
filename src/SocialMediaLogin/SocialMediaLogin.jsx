@@ -15,7 +15,6 @@ import { FaCirclePlay } from "react-icons/fa6";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import RedditLogin from './RedditLogin';
 import PinterestLogin from './PinterestLogin';
-import { useToast } from '../Context/ToastContext';
 import { useTranslation } from 'react-i18next';
 
 const SocialMediaLogin = () => {

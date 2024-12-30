@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-vars*/
+import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import './global.css';
@@ -12,7 +13,7 @@ import About from './Pages/About';
 import Features from './Pages/Features';
 import Pricing from './Pages/Pricing';
 import AccountOverview from './Sidebar/AccountOverview';
-import Analytics from './Sidebar/Analytics';
+import Analytics from './Sidebar/Analytics'
 import QuantumAIPage from './Pages/QuantumAIPage';
 import SocialMediaLogin from './SocialMediaLogin/SocialMediaLogin';
 import YoutubeCallback from './SocialMediaLogin/YoutubeCallback';
@@ -26,6 +27,7 @@ import ResetPassword from './Navbar/ResetPassword';
 import UpdateVerification from './Navbar/UpdateVerification';
 import RegeneratePassword from './Navbar/RegeneratePassword';
 import RedditCallback from './SocialMediaLogin/RedditCallback';
+
 
 const App = () => {
     return (

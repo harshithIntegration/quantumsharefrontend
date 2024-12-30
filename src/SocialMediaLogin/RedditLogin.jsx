@@ -3,25 +3,27 @@
 import React, { useEffect, useState } from 'react';
 import { ReactSVG } from 'react-svg';
 import reddit from '../Assets/redditB1.svg'
-import { Button } from '@mui/material';
 import axiosInstance from '../Helper/AxiosInstance';
 import { toast } from 'react-toastify';
-import { Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
+import {DialogActions} from '@mui/material';
 import redditsmall from '../Assets/redditsm1.svg'
 import { useDispatch, useSelector } from 'react-redux';
 import { setRedditLoggedIn } from '../Redux/action/loginStatusSilce';
 import { setRedditName } from '../Redux/action/NameSlice';
 import { setRedditProfile } from '../Redux/action/pageUrlsSlice'
-
+import { Dialog, DialogContent, DialogContentText, Button, IconButton, Typography } from '@mui/material';
+import WarningIcon from '@mui/icons-material/Warning';
+import { Link } from 'react-router-dom';
 const RedditLogin = () => {
     const [loading, setLoading] = useState(false);
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
     const [open, setOpen] = useState(false);
     const [disconnecting, setDisconnecting] = useState(false);
     const [redditProfileImage, setRedditProfileImage] = useState('');
     const [redditUsername, setRedditUsername] = useState('');
     const [subcribersCount, setSubcribersCount] = useState('');
     const dispatch = useDispatch()
+    const [isSessionExpired, setIsSessionExpired] = useState(false);
     const { redditLoggedIn } = useSelector((state) => state.loginStatus)
     const fetchConnectedSocial = async () => {
         try {
@@ -44,6 +46,10 @@ const RedditLogin = () => {
         }
         catch (error) {
             console.error(error)
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            }
         }
     }
 
@@ -80,6 +86,10 @@ const RedditLogin = () => {
             window.location.href = authorizationUrl;
         } catch (error) {
             console.error("Failed to fetch Reddit authorization URL:", error);
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            }
         } finally {
             setLoading(false);
         }
@@ -108,7 +118,12 @@ const RedditLogin = () => {
             toast.success("Disconnected from Reddit profile!");
         } catch (error) {
             console.error('Error disconnecting from reddit:', error);
-            toast.error("Error disconnecting from reddit. Please try again later.");
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            }else  if(error){
+                toast.error("Error disconnecting from reddit. Please try again later.");
+            }
         } finally {
             setDisconnecting(false)
         }
@@ -204,6 +219,27 @@ const RedditLogin = () => {
                     <Button onClick={handleClose}>No</Button>
                     <Button onClick={handleConfirmDisconnect} autoFocus>Yes</Button>
                 </DialogActions>
+            </Dialog>
+            <Dialog open={isSessionExpired} aria-labelledby="alert-dialog-title" PaperProps={{ sx: { backgroundColor: '#ffffff', width: '40vw', height: '30vh' } }}>
+                <DialogContent sx={{ backgroundColor: '#ffffff' }}>
+                    <DialogContentText sx={{ color: 'black', display: 'flex', fontSize: '20px', alignItems: 'center' }}>
+                        <IconButton>
+                            <WarningIcon
+                                style={{ color: 'orange', cursor: 'pointer', marginTop: '5px', fontSize: '40px', }}
+                            />
+                        </IconButton>
+                        <div>
+                            <Typography sx={{ fontSize: '20px', fontWeight: 'bold' }}>Your session has expired</Typography>
+                            <Typography sx={{ fontSize: '20px', position: 'relative', top: '5px' }}>Please log in again to continue using the app</Typography>
+                        </div>
+                    </DialogContentText>
+                    <DialogContentText sx={{ backgroundColor: '#ffffff', fontSize: '20px', fontWeight: 'bold', textAlign: 'center' }}>
+                        <Link to="/login">
+                            <Button sx={{ color: '#ba343b', fontSize: '15px', fontWeight: '600', border: '1px solid #ba343b', margin: '18px auto' }} variant="outlined">
+                                Login</Button>
+                        </Link>
+                    </DialogContentText>
+                </DialogContent>
             </Dialog>
         </>
     );

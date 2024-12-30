@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { Box, Typography, Grid } from '@mui/material';
 
 const PrivacyPolicy = () => {
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
     return (
         <>

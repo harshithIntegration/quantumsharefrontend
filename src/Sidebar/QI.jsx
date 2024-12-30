@@ -231,19 +231,15 @@
 
 /* eslint-disable no-unused-vars */
 import React, { useState, useContext } from 'react';
-import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import DownloadIcon from '@mui/icons-material/Download';
 import Grid from '@mui/material/Grid';
 import axiosInstance from '../Helper/AxiosInstance';
-import { Tooltip, CircularProgress, IconButton } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { RingLoader } from 'react-spinners';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import Zoom from '@mui/material/Zoom';
@@ -252,6 +248,9 @@ import Quantum from '../Assets/Quantum_Logo.webp'
 import { ImageContext } from '../Context/ImageContext';
 import { useDispatch } from 'react-redux';
 import { setAiText } from '../Redux/action/AiTextSlice';
+import { Link } from 'react-router-dom';
+import { Dialog, DialogContent, DialogContentText, Button, IconButton, Typography } from '@mui/material';
+import WarningIcon from '@mui/icons-material/Warning';
 
 const QI = ({ onAiClose }) => {
     var url = "";
@@ -263,8 +262,8 @@ const QI = ({ onAiClose }) => {
     const [error, setError] = useState('');
     const [textResponse, setTextResponse] = useState('');
     const { setImage1 } = useContext(ImageContext);
+    const [isSessionExpired, setIsSessionExpired] = useState(false);
     const dispatch = useDispatch()
-
     const handleTextSubmit = async () => {
         const endpoint = '/quantum-share/aitext';
         const formData = new FormData();
@@ -283,6 +282,10 @@ const QI = ({ onAiClose }) => {
             setTextResponse(data)
         } catch (error) {
             console.log('Error fetching response:', error);
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            }
         } finally {
             setLoading(false);
         }
@@ -492,6 +495,28 @@ const QI = ({ onAiClose }) => {
                         </Button>
                     </DialogActions>
                 </DialogActions>
+            </Dialog>
+            <Dialog open={isSessionExpired} aria-labelledby="alert-dialog-title" PaperProps={{ sx: { backgroundColor: '#ffffff', width: '40vw', height: '30vh' } }}>
+                <DialogContent sx={{ backgroundColor: '#ffffff' }}>
+                    <DialogContentText sx={{ color: 'black', display: 'flex', fontSize: '20px', alignItems: 'center' }}>
+                        <IconButton>
+                            <WarningIcon
+                                style={{ color: 'orange', cursor: 'pointer', marginTop: '5px', fontSize: '40px', }}
+                            />
+                        </IconButton>
+                        <div>
+                            <Typography sx={{ fontSize: '20px', fontWeight: 'bold' }}>Your session has expired</Typography>
+                            <Typography sx={{ fontSize: '20px', position: 'relative', top: '5px' }}>Please log in again to continue using the app</Typography>
+                        </div>
+                    </DialogContentText>
+
+                    <DialogContentText sx={{ backgroundColor: '#ffffff', fontSize: '20px', fontWeight: 'bold', textAlign: 'center' }}>
+                        <Link to="/login">
+                            <Button sx={{ color: '#ba343b', fontSize: '15px', fontWeight: '600', border: '1px solid #ba343b', margin: '18px auto' }} variant="outlined">
+                                Login</Button>
+                        </Link>
+                    </DialogContentText>
+                </DialogContent>
             </Dialog>
         </>
     );

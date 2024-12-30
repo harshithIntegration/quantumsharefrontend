@@ -67,7 +67,7 @@ const RegeneratePassword = () => {
                 },
             });
             console.log(response);
-            sessionStorage.setItem('token', response.data.data);
+            localStorage.setItem('token', response.data.data);
             navigate('/dashboard');
             await FetchUser(dispatch);
         } catch (error) {
@@ -76,6 +76,9 @@ const RegeneratePassword = () => {
                 const message = error.response.data?.message;
                 if (message && status === 406) {
                     toast.error(message);
+                }else if (error.response.data.code === 121) {
+                    localStorage.removeItem('token')
+                    navigate('/session'); 
                 } else {
                     console.error('Error regenerating password:', error);
                     toast.error('Error in regenerating password');

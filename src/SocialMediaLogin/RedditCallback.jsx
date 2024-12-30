@@ -7,17 +7,20 @@ import { toast } from 'react-toastify';
 import { setRedditLoggedIn } from '../Redux/action/loginStatusSilce';
 import { useDispatch } from 'react-redux';
 import { TailSpin } from 'react-loader-spinner';
-
+import { Link } from 'react-router-dom';
+import { Dialog, DialogContent, DialogContentText, Button, IconButton, Typography } from '@mui/material';
+import WarningIcon from '@mui/icons-material/Warning';
 const RedditCallback = () => {
     const location = useLocation();
     const dispatch = useDispatch();
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
     const [redditProfileImage, setRedditProfileImage] = useState('');
     const [redditUsername, setRedditUsername] = useState('');
     const [subcribersCount, setSubcribersCount] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
-    console.log("hi2");
+    const [isSessionExpired, setIsSessionExpired] = useState(false);
+    
 
     useEffect(() => {
         const urlParams = new URLSearchParams(location.search);
@@ -55,7 +58,12 @@ const RedditCallback = () => {
             }
         } catch (error) {
             console.error('Error sending token to backend:', error);
-            toast.error("Error connecting to Reddit. Please try again later.");
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            }else if (error) {
+                toast.error("Error connecting to Reddit. Please try again later.");
+            }
         } finally {
             setIsLoading(false);
         }
@@ -66,6 +74,27 @@ const RedditCallback = () => {
             {isLoading && <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
                 <TailSpin color="#d3040c" height={50} width={50} />
             </div>}
+            <Dialog open={isSessionExpired} aria-labelledby="alert-dialog-title" PaperProps={{ sx: { backgroundColor: '#ffffff', width: '40vw', height: '30vh' } }}>
+                <DialogContent sx={{ backgroundColor: '#ffffff' }}>
+                    <DialogContentText sx={{ color: 'black', display: 'flex', fontSize: '20px', alignItems: 'center' }}>
+                        <IconButton>
+                            <WarningIcon
+                                style={{ color: 'orange', cursor: 'pointer', marginTop: '5px', fontSize: '40px', }}
+                            />
+                        </IconButton>
+                        <div>
+                            <Typography sx={{ fontSize: '20px', fontWeight: 'bold' }}>Your session has expired</Typography>
+                            <Typography sx={{ fontSize: '20px', position: 'relative', top: '5px' }}>Please log in again to continue using the app</Typography>
+                        </div>
+                    </DialogContentText>
+                    <DialogContentText sx={{ backgroundColor: '#ffffff', fontSize: '20px', fontWeight: 'bold', textAlign: 'center' }}>
+                        <Link to="/login">
+                            <Button sx={{ color: '#ba343b', fontSize: '15px', fontWeight: '600', border: '1px solid #ba343b', margin: '18px auto' }} variant="outlined">
+                                Login</Button>
+                        </Link>
+                    </DialogContentText>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 };

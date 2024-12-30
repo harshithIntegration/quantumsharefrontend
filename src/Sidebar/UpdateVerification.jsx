@@ -9,12 +9,14 @@ import QS from "../Assets/QS.webp";
 import emg1 from '../Assets/msg.webp';
 import { Link } from 'react-router-dom';
 import { t } from 'i18next';
-
+import { Dialog, DialogContent, DialogContentText, Button, IconButton, Typography } from '@mui/material';
+import WarningIcon from '@mui/icons-material/Warning';
 function UpdateVerification() {
     const location = useLocation();
     const [loading, setLoading] = useState(false);
     const [verificationResult, setVerificationResult] = useState(null);
     const [signupMessage, setSignupMessage] = useState("A verification link has been sent to your email. Please verify to access login.");
+    const [isSessionExpired, setIsSessionExpired] = useState(false);
 
     useEffect(() => {
         const token = new URLSearchParams(location.search).get('token');
@@ -31,6 +33,10 @@ function UpdateVerification() {
             setSignupMessage(null);
         } catch (error) {
             console.error(error);
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            }
         } finally {
             setLoading(false);
         }
@@ -66,6 +72,27 @@ function UpdateVerification() {
                     </Grid>
                 </Grid>
             </Box>
+            <Dialog open={isSessionExpired} aria-labelledby="alert-dialog-title" PaperProps={{ sx: { backgroundColor: '#ffffff', width: '40vw', height: '30vh' } }}>
+                <DialogContent sx={{ backgroundColor: '#ffffff' }}>
+                    <DialogContentText sx={{ color: 'black', display: 'flex', fontSize: '20px', alignItems: 'center' }}>
+                        <IconButton>
+                            <WarningIcon
+                                style={{ color: 'orange', cursor: 'pointer', marginTop: '5px', fontSize: '40px', }}
+                            />
+                        </IconButton>
+                        <div>
+                            <Typography sx={{ fontSize: '20px', fontWeight: 'bold' }}>Your session has expired</Typography>
+                            <Typography sx={{ fontSize: '20px', position: 'relative', top: '5px' }}>Please log in again to continue using the app</Typography>
+                        </div>
+                    </DialogContentText>
+                    <DialogContentText sx={{ backgroundColor: '#ffffff', fontSize: '20px', fontWeight: 'bold', textAlign: 'center' }}>
+                        <Link to="/login">
+                            <Button sx={{ color: '#ba343b', fontSize: '15px', fontWeight: '600', border: '1px solid #ba343b', margin: '18px auto' }} variant="outlined">
+                                Login</Button>
+                        </Link>
+                    </DialogContentText>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

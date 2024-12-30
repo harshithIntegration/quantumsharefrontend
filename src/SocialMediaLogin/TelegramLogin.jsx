@@ -1,25 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import Button from '@mui/material/Button';
 import axiosInstance from "../Helper/AxiosInstance";
 import telegram1 from '../Assets/telegram1.svg';
 import tgicon from '../Assets/telegramsmall.svg';
 import { ReactSVG } from 'react-svg';
 import { toast } from 'react-toastify';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Tooltip } from '@mui/material';
+import {DialogActions,  DialogTitle, Tooltip } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import Zoom from '@mui/material/Zoom';
 import DoneIcon from '@mui/icons-material/Done';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { TailSpin } from 'react-loader-spinner';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTelLoggedIn } from '../Redux/action/loginStatusSilce';
 import { setTelName } from '../Redux/action/NameSlice';
 import { setTelegramUrl } from '../Redux/action/pageUrlsSlice';
 import { useTranslation } from 'react-i18next';
-
+import { Dialog, DialogContent, DialogContentText, Button, IconButton, Typography } from '@mui/material';
+import WarningIcon from '@mui/icons-material/Warning';
 const TelegramLogin = () => {
-    let token = sessionStorage.getItem("token");
+    let token = localStorage.getItem("token");
     const [open, setOpen] = useState(false);
     const [open1, setOpen1] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -30,14 +30,14 @@ const TelegramLogin = () => {
     const [telegramGroupMembersCount, setTelegramGroupMembersCount] = useState('');
     const [copied, setCopied] = useState(false);
     const [loadingCode, setLoadingCode] = useState(false);
-    const {t} = useTranslation('');
+    const {t} = useTranslation('');    const [isSessionExpired, setIsSessionExpired] = useState(false);
 
     const dispatch = useDispatch()
     const { telLoggedIn } = useSelector((state) => state.loginStatus)
 
     const fetchConnectedSocial = async () => {
         try {
-            const endpoint = 'quantum-share/user/connected/socialmedia/telegram';
+            const endpoint = '/quantum-share/user/connected/socialmedia/telegram';
             const response = await axiosInstance.get(endpoint, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -60,6 +60,10 @@ const TelegramLogin = () => {
         }
         catch (error) {
             console.error(error);
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            }
         }
     };
 
@@ -86,6 +90,10 @@ const TelegramLogin = () => {
             console.log(response.data);
         } catch (error) {
             console.error('Error', error);
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            }
         } finally {
             setLoadingCode(false);
         }
@@ -127,7 +135,10 @@ const TelegramLogin = () => {
             }
         } catch (error) {
             console.error('Error:', error);
-            if (error.response && error.response.data && error.response.data.code === 400) {
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            } else if (error.response && error.response.data && error.response.data.code === 400) {
                 toast.info("Please paste the Generated Code in your Group or Channel.");
             } else if (error.response && error.response.data && error.response.data.code === 500) {
                 toast.error("Telegram Server Error, Please Try Again Later");
@@ -163,7 +174,12 @@ const TelegramLogin = () => {
             toast.success("Disconnected from Telegram!");
         } catch (error) {
             console.error('Error disconnecting from Telegram:', error);
-            toast.error("Error disconnecting from Telegram. Please try again later.");
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            }else if(error){
+                toast.error("Error disconnecting from Telegram. Please try again later.");
+            }
         } finally {
             setDisconnecting(false);
         }
@@ -308,6 +324,27 @@ const TelegramLogin = () => {
                     <Button onClick={handleDisconnectPopup}>{t('cancel')}</Button>
                     <Button onClick={handleConfirmDisconnect} autoFocus>{t('yes')}</Button>
                 </DialogActions>
+            </Dialog>
+            <Dialog open={isSessionExpired} aria-labelledby="alert-dialog-title" PaperProps={{ sx: { backgroundColor: '#ffffff', width: '40vw', height: '30vh' } }}>
+                <DialogContent sx={{ backgroundColor: '#ffffff' }}>
+                    <DialogContentText sx={{ color: 'black', display: 'flex', fontSize: '20px', alignItems: 'center' }}>
+                        <IconButton>
+                            <WarningIcon
+                                style={{ color: 'orange', cursor: 'pointer', marginTop: '5px', fontSize: '40px', }}
+                            />
+                        </IconButton>
+                        <div>
+                            <Typography sx={{ fontSize: '20px', fontWeight: 'bold' }}>Your session has expired</Typography>
+                            <Typography sx={{ fontSize: '20px', position: 'relative', top: '5px' }}>Please log in again to continue using the app</Typography>
+                        </div>
+                    </DialogContentText>
+                    <DialogContentText sx={{ backgroundColor: '#ffffff', fontSize: '20px', fontWeight: 'bold', textAlign: 'center' }}>
+                        <Link to="/login">
+                            <Button sx={{ color: '#ba343b', fontSize: '15px', fontWeight: '600', border: '1px solid #ba343b', margin: '18px auto' }} variant="outlined">
+                                Login</Button>
+                        </Link>
+                    </DialogContentText>
+                </DialogContent>
             </Dialog>
         </>
     );

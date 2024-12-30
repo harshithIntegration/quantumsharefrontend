@@ -22,7 +22,7 @@ const Nav = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [open, setOpen] = useState(false);
     let navigate = useNavigate();
-    let token = sessionStorage.getItem("token");
+    let token = localStorage.getItem("token");
     const [translateVisible, setTranslateVisible] = useState(false);
     const [translateAnchorEl, setTranslateAnchorEl] = useState(null);
     const theme = useTheme();
@@ -45,7 +45,7 @@ const Nav = () => {
     };
 
     const handleLogout = () => {
-        sessionStorage.removeItem("token");
+        localStorage.removeItem("token");
         navigate("/");
     };
 
