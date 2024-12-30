@@ -9,11 +9,14 @@ import { useDispatch } from 'react-redux';
 import QS from '../Assets/QS.webp';
 import { setLinkLoggedIn } from '../Redux/action/loginStatusSilce';
 import { useTranslation } from 'react-i18next';
+import { Dialog, DialogContent, DialogContentText, Button, IconButton, Typography } from '@mui/material';
+import WarningIcon from '@mui/icons-material/Warning';
+import { Link } from 'react-router-dom';
 
 const LinkedInCallback = () => {
     const location = useLocation();
     const dispatch = useDispatch();
-    let token = sessionStorage.getItem("token");
+    let token = localStorage.getItem("token");
     const [code, setCode] = useState('');
     const [pages, setPages] = useState([]);
     const [linkedInUserName, setLinkedInUserName] = useState('');
@@ -29,6 +32,7 @@ const LinkedInCallback = () => {
     const [selectedAccessToken, setSelectedAccessToken] = useState('');
     const navigate = useNavigate();
     const {t} = useTranslation('');
+    const [isSessionExpired, setIsSessionExpired] = useState(false);
 
 
     useEffect(() => {
@@ -71,7 +75,12 @@ const LinkedInCallback = () => {
             }
         } catch (error) {
             console.error('Error fetching data from backend:', error);
-            toast.error("Error connecting to LinkedIn. Please try again later.");
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            }else if(error){
+                toast.error("Error connecting to LinkedIn. Please try again later.");
+            }
         } finally {
             setIsLoading(false);
         }
@@ -99,7 +108,12 @@ const LinkedInCallback = () => {
             }
         } catch (error) {
             console.error('Error saving the selected page/profile:', error);
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            }else if (error) {
             toast.error("Error saving the selected page/profile. Please try again later.");
+            }
         } finally {
             setIsPageConnecting(false);
         }
@@ -201,6 +215,27 @@ const LinkedInCallback = () => {
                     )}
                 </div>
             )}
+            <Dialog open={isSessionExpired} aria-labelledby="alert-dialog-title" PaperProps={{ sx: { backgroundColor: '#ffffff', width: '40vw', height: '30vh' } }}>
+                <DialogContent sx={{ backgroundColor: '#ffffff' }}>
+                    <DialogContentText sx={{ color: 'black', display: 'flex', fontSize: '20px', alignItems: 'center' }}>
+                        <IconButton>
+                            <WarningIcon
+                                style={{ color: 'orange', cursor: 'pointer', marginTop: '5px', fontSize: '40px', }}
+                            />
+                        </IconButton>
+                        <div>
+                            <Typography sx={{ fontSize: '20px', fontWeight: 'bold' }}>Your session has expired</Typography>
+                            <Typography sx={{ fontSize: '20px', position: 'relative', top: '5px' }}>Please log in again to continue using the app</Typography>
+                        </div>
+                    </DialogContentText>
+                    <DialogContentText sx={{ backgroundColor: '#ffffff', fontSize: '20px', fontWeight: 'bold', textAlign: 'center' }}>
+                        <Link to="/login">
+                            <Button sx={{ color: '#ba343b', fontSize: '15px', fontWeight: '600', border: '1px solid #ba343b', margin: '18px auto' }} variant="outlined">
+                                Login</Button>
+                        </Link>
+                    </DialogContentText>
+                </DialogContent>
+            </Dialog>
         </>
     );
 };

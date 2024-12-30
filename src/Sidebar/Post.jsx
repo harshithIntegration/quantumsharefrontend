@@ -3,11 +3,9 @@
 /* eslint-disable no-mixed-operators */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState, useContext, useRef } from "react";
-import { Dialog, DialogContent, DialogActions, Grid, Button, Tooltip, Popover, Zoom, DialogContentText, Modal, Box } from "@mui/material";
-import IconButton from '@mui/material/IconButton';
+import { Grid, Tooltip, Popover, Zoom } from "@mui/material";
 import MoodOutlinedIcon from '@mui/icons-material/MoodOutlined';
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
-import TagOutlinedIcon from '@mui/icons-material/TagOutlined';
 import SendIcon from '@mui/icons-material/Send';
 import Stack from '@mui/material/Stack';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
@@ -25,17 +23,17 @@ import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import { FaVideo } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import WarningIcon from '@mui/icons-material/Warning';
 import { clearAiText, updateCaption } from "../Redux/action/AiTextSlice";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import QI from './QI';
 import TagIcon from '@mui/icons-material/Tag';
 import { useTranslation } from "react-i18next";
-
+import { Dialog, DialogContent, DialogContentText,DialogActions, Button, IconButton, Typography } from '@mui/material';
+import WarningIcon from '@mui/icons-material/Warning';
 const Post = ({ onClose }) => {
     const navigate = useNavigate();
     const location = useLocation();
-    let token = sessionStorage.getItem("token");
+    let token = localStorage.getItem("token");
     const [open, setOpen] = useState(true);
     const [open1, setOpen1] = useState(false);
     const [file, setFile] = useState(null);
@@ -72,6 +70,7 @@ const Post = ({ onClose }) => {
     const [noHashtagMessage, setNoHashtagMessage] = useState("");
     const [showInput, setShowInput] = useState(false);
     const { t } = useTranslation();
+    const [isSessionExpired, setIsSessionExpired] = useState(false);
 
     const handleSelectIconAndSendToParent = (selectedIcons, mediaPlatform) => {
         setSelectedIcons(selectedIcons);
@@ -563,7 +562,10 @@ const Post = ({ onClose }) => {
                     if (error.response?.status === 403) {
                         toast.error('Forbidden: You do not have permission to access this resource.');
                     } else if (platform === 'facebook') {
-                        if (Array.isArray(responseData)) {
+                        if (error.response?.data?.code === 121) {
+                            setIsSessionExpired(true); // Show session expired dialog
+                            localStorage.removeItem('token');
+                        }else if (Array.isArray(responseData)) {
                             responseData.forEach(err => {
                                 if (err.status === "error" && err.code === 114) {
                                     console.error('Credit Depleted Error Message:', err.message);
@@ -574,7 +576,10 @@ const Post = ({ onClose }) => {
                             toast.error(responseData.structure.message);
                         }
                     } else if (platform === 'instagram') {
-                        if (responseData.code === 116) {
+                        if (error.response?.data?.code === 121) {
+                            setIsSessionExpired(true); // Show session expired dialog
+                            localStorage.removeItem('token');
+                        }else if (responseData.code === 116) {
                             toast.info('Unsupported aspect ratio. Please use one of Instagram\'s formats: 4:5, 1:1, or 1.91:1.');
                         } else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
                             const err = responseData.structure;
@@ -584,7 +589,10 @@ const Post = ({ onClose }) => {
                             toast.error(responseData.structure.message);
                         }
                     } else if (platform === 'youtube') {
-                        if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
+                        if (error.response?.data?.code === 121) {
+                            setIsSessionExpired(true); // Show session expired dialog
+                            localStorage.removeItem('token');
+                        }else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
                             const err = responseData.structure;
                             console.error('Credit Depleted Error Message:', err.message);
                             toast.info(err.message);
@@ -594,7 +602,10 @@ const Post = ({ onClose }) => {
                             toast.error('YouTube: Failed to send media, Quota Exceeded Please try again after 24 hrs.');
                         }
                     } else if (platform === 'telegram') {
-                        if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
+                        if (error.response?.data?.code === 121) {
+                            setIsSessionExpired(true); // Show session expired dialog
+                            localStorage.removeItem('token');
+                        }else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
                             const err = responseData.structure;
                             console.error('Credit Depleted Error Message:', err.message);
                             toast.info(err.message);
@@ -602,7 +613,10 @@ const Post = ({ onClose }) => {
                             toast.error(responseData.structure.message);
                         }
                     } else if (platform === 'LinkedIn') {
-                        if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
+                        if (error.response?.data?.code === 121) {
+                            setIsSessionExpired(true); // Show session expired dialog
+                            localStorage.removeItem('token');
+                        }else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
                             const err = responseData.structure;
                             console.error('Credit Depleted Error Message:', err.message);
                             toast.info(err.message);
@@ -610,7 +624,10 @@ const Post = ({ onClose }) => {
                             toast.error(responseData.structure.message);
                         }
                     } else if (platform === 'Reddit') {
-                        if (responseData.status === "error" && responseData.code === 114) {
+                        if (error.response?.data?.code === 121) {
+                            setIsSessionExpired(true); // Show session expired dialog
+                            localStorage.removeItem('token');
+                        }else if (responseData.status === "error" && responseData.code === 114) {
                             const err = responseData;
                             console.error('Credit Depleted Error Message:', err.message);
                             toast.info(err.message);
@@ -622,6 +639,9 @@ const Post = ({ onClose }) => {
                         setTimeout(() => {
                             navigate("/login");
                         }, 4000);
+                    }if (error.response?.data?.code === 121) {
+                        setIsSessionExpired(true); // Show session expired dialog
+                        localStorage.removeItem('token');
                     } else {
                         console.log('An error occurred while processing your request.');
                         toast.error('An error occurred while processing your request.');
@@ -738,6 +758,10 @@ const Post = ({ onClose }) => {
             }
         } catch (error) {
             console.error("Error fetching hashtag suggestions:", error);
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            }
         }
     };
 

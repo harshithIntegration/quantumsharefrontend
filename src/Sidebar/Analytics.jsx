@@ -7,12 +7,9 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Nav from '../Navbar/Nav';
 import Sidenav from '../Navbar/Sidenav';
+import { Link    } from 'react-router-dom';
 import axiosInstance from '../Helper/AxiosInstance';
-import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import Button from '@mui/material/Button';
 import { Share } from '@mui/icons-material';
 import BookmarksOutlinedIcon from '@mui/icons-material/BookmarksOutlined';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
@@ -33,12 +30,11 @@ import { PieChart } from '@mui/x-charts';
 import { TailSpin } from 'react-loader-spinner';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-import ThumbDownOffAltOutlinedIcon from '@mui/icons-material/ThumbDownOffAltOutlined';
-import StarBorderPurple500OutlinedIcon from '@mui/icons-material/StarBorderPurple500Outlined';
 import { useTranslation } from 'react-i18next';
-
+import { Dialog, DialogContent, DialogContentText, DialogActions, Button, IconButton, Typography } from '@mui/material';
+import WarningIcon from '@mui/icons-material/Warning';
 const Analytics = () => {
-    let token = sessionStorage.getItem("token");
+    let token = localStorage.getItem("token");
     const [recentPosts, setRecentPosts] = useState([]);
     const [open, setOpen] = useState(false);
     const [viewMoreOpen, setViewMoreOpen] = useState(false);
@@ -47,6 +43,7 @@ const Analytics = () => {
     const [errorMessage, setErrorMessage] = useState(null);
     const [loading, setLoading] = useState(false);
     const [recentLoading, setRecentLoding] = useState(true);
+    const [isSessionExpired, setIsSessionExpired] = useState(false);
     const {t} = useTranslation('');
 
     const fetchAnalyticsData = async () => {
@@ -60,6 +57,11 @@ const Analytics = () => {
             setRecentPosts(response.data.data);
         } catch (error) {
             console.error("Error fetching analytics data", error);
+            if (error.response?.data?.code === 121) {
+                console.log('1');
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            }
         } finally {
             setRecentLoding(false);
         }
@@ -83,7 +85,12 @@ const Analytics = () => {
             setErrorMessage(null);
             setOpen(true);
         } catch (error) {
-            if (error.response && error.response.data) {
+            if (error.response?.data?.code === 121) {
+                console.log('2');
+                
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            }else if (error.response && error.response.data) {
                 const { message, platform } = error.response.data;
                 setErrorMessage(`Error on ${platform}: ${message}`);
             } else {
@@ -121,12 +128,18 @@ const Analytics = () => {
                 headers: {
                     'Accept': 'application/json',
                     Authorization: `Bearer ${token}`,
-                },
+                }
             });
+            
             setPostsToDisplay(response.data.data);
             setViewMoreOpen(true);
         } catch (error) {
             console.error('Error fetching more posts:', error);
+            if (error.response?.data?.code === 121) {
+                console.log('3');
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            }
         }
     };
 
@@ -995,9 +1008,31 @@ const Analytics = () => {
                         </Button>
                     </DialogActions>
                 </Dialog>
+                <Dialog open={isSessionExpired} aria-labelledby="alert-dialog-title" PaperProps={{ sx: { backgroundColor: '#ffffff', width: '40vw', height: '30vh' } }}>
+                <DialogContent sx={{ backgroundColor: '#ffffff' }}>
+                    <DialogContentText sx={{ color: 'black', display: 'flex', fontSize: '20px', alignItems: 'center' }}>
+                        <IconButton>
+                            <WarningIcon
+                                style={{ color: 'orange', cursor: 'pointer', marginTop: '5px', fontSize: '40px', }}
+                            />
+                        </IconButton>
+                        <div>
+                            <Typography sx={{ fontSize: '20px', fontWeight: 'bold' }}>Your session has expired</Typography>
+                            <Typography sx={{ fontSize: '20px', position: 'relative', top: '5px' }}>Please log in again to continue using the app</Typography>
+                        </div>
+                    </DialogContentText>
+
+                    <DialogContentText sx={{ backgroundColor: '#ffffff', fontSize: '20px', fontWeight: 'bold', textAlign: 'center' }}>
+                        <Link to="/login">
+                            <Button sx={{ color: '#ba343b', fontSize: '15px', fontWeight: '600', border: '1px solid #ba343b', margin: '18px auto' }} variant="outlined">
+                                Login</Button>
+                        </Link>
+                    </DialogContentText>
+                </DialogContent>
+            </Dialog>
             </div>
+           
         </>
     );
 };
-
 export default Analytics;

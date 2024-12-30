@@ -10,15 +10,17 @@ import facebook1 from '../Assets/facebook1.svg';
 import fbicon from '../Assets/facebooksmall.svg';
 import { ReactSVG } from 'react-svg';
 import { toast } from 'react-toastify';
-import { Dialog, DialogContentText, DialogTitle, DialogContent, DialogActions, MenuItem, Select, Button, Checkbox, FormControlLabel, List, ListItem, Avatar, Typography } from "@mui/material";
+import { DialogTitle, MenuItem, Select, Checkbox, FormControlLabel, List, ListItem, Avatar } from "@mui/material";
 import { useDispatch, useSelector } from 'react-redux';
 import { setPageUrls } from '../Redux/action/pageUrlsSlice';
 import { setFbName } from '../Redux/action/NameSlice';
 import { setIsLoggedIn } from '../Redux/action/loginStatusSilce';
 import { useTranslation } from 'react-i18next';
+import { Dialog, DialogContent, DialogContentText, DialogActions, Button, IconButton, Typography } from '@mui/material';
+import WarningIcon from '@mui/icons-material/Warning';
 
 const FacebookLogin = () => {
-    let token = sessionStorage.getItem("token");
+    let token = localStorage.getItem("token");
     const [code, setCode] = useState('');
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -33,13 +35,13 @@ const FacebookLogin = () => {
     const [selectedPages, setSelectedPages] = useState([]);
     const [openFBDetails, setOpenFBDetails] = useState(false);
     const { t } = useTranslation('');
-
+    const [isSessionExpired, setIsSessionExpired] = useState(false);
     const dispatch = useDispatch()
     const { isLoggedIn } = useSelector((state) => state.loginStatus)
 
     const fetchConnectedSocial = async () => {
         try {
-            const endpoint = 'quantum-share/user/connected/socialmedia/facebook'
+            const endpoint = '/quantum-share/user/connected/socialmedia/facebook'
             const response = await axiosInstance.get(endpoint, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -64,7 +66,10 @@ const FacebookLogin = () => {
             }
         }
         catch (error) {
-            console.error(error)
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); 
+                localStorage.removeItem('token');
+            }
         }
     }
 
@@ -158,7 +163,12 @@ const FacebookLogin = () => {
             setOpenFBDetails(true)
         } catch (error) {
             console.error("Error fetching Facebook data:", error);
-            toast.error("Failed to fetch Facebook data.");
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            }else if(error){
+                toast.error("Failed to fetch Facebook data.");
+            } 
         }
     };
 
@@ -232,7 +242,12 @@ const FacebookLogin = () => {
             }
         } catch (error) {
             console.error('Error sending selected pages to backend:', error);
-            toast.error("Error saving pages. Please try again later.");
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            } if (error) {
+                toast.error("Error saving pages. Please try again later.");
+            }
         } finally {
             setLoading(false);
         }
@@ -263,7 +278,13 @@ const FacebookLogin = () => {
             toast.success("Disconnected from Facebook!");
         } catch (error) {
             console.error('Error disconnecting from Facebook:', error);
-            toast.error("Error disconnecting from Facebook. Please try again later.");
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Show session expired dialog
+                localStorage.removeItem('token');
+            }else if(error){
+                toast.error("Error disconnecting from Facebook. Please try again later.");
+            }
+             
         } finally {
             setDisconnecting(false);
         }

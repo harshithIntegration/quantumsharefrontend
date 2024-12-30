@@ -14,7 +14,7 @@ import { FaCirclePlay } from "react-icons/fa6";
 import { useTranslation } from 'react-i18next';
 
 const Features = () => {
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
     const theme = useTheme();
     const {t} = useTranslation('');
 

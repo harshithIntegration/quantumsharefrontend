@@ -14,7 +14,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import why from '../Assets/soc.webp'
 import Sidenav from '../Navbar/Sidenav';
-import { Link } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import sto from '../Assets/ais.webp'
 import AutoFixHighRoundedIcon from '@mui/icons-material/AutoFixHighRounded';
 import ContentCutRoundedIcon from '@mui/icons-material/ContentCutRounded';
@@ -23,11 +23,12 @@ import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
 import { CgPlayButtonO } from "react-icons/cg";
 import { useTranslation } from 'react-i18next';
 
+
 const About = () => {
-    const token = sessionStorage.getItem('token')
+    const token = localStorage.getItem('token')
     const [openWatchNow, setOpenWatchNow] = useState(false);
     const [openDemo, setOpenDemo] = useState(false);
-
+    
     const handleOpenWatchNow = () => setOpenWatchNow(true);
     const handleCloseWatchNow = () => setOpenWatchNow(false);
     const handleOpenDemo = () => setOpenDemo(true);

@@ -5,9 +5,6 @@ import axiosInstance from '../Helper/AxiosInstance';
 import { TailSpin } from 'react-loader-spinner';
 import Nav from '../Navbar/Nav';
 import Sidenav from '../Navbar/Sidenav';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { TextField } from '@mui/material';
 import { IoMdClose } from "react-icons/io";
@@ -17,27 +14,22 @@ import BusinessIcon from '@mui/icons-material/Business';
 import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import blankimage from '../Assets/BlankProfileImage.jpg';
 import { ToastContainer, toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Divider from '@mui/material/Divider';
-
+import { Dialog, DialogContent, DialogContentText, DialogActions, Button, IconButton, Typography } from '@mui/material';
+import WarningIcon from '@mui/icons-material/Warning';
 const AccountOverview = () => {
-    let token = sessionStorage.getItem("token");
+    let token = localStorage.getItem("token");
     const [userData, setUserData] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const fileInputRef = useRef(null);
     const [profile, setProfile] = useState(null);
     const [open, setOpen] = useState(false);
-    const [tempData, setTempData] = useState({
-        email: '',
-        firstname: '',
-        lastname: '',
-        phoneNo: '',
-        company: ''
-    });
+    const [tempData, setTempData] = useState({email: '',firstname: '',lastname: '',phoneNo: '',company: ''});
     const [errors, setErrors] = useState({});
     let navigate = useNavigate();
-
+    const [isSessionExpired, setIsSessionExpired] = useState(false);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -59,7 +51,12 @@ const AccountOverview = () => {
                     setProfile(data.profile_pic);
                 }
             } catch (error) {
-                setError(error.message);
+                if (error.response?.data?.code === 121) {
+                    setIsSessionExpired(true); 
+                    localStorage.removeItem('token');
+                }else if(error){
+                    setError(error.message);
+                }
             } finally {
                 setLoading(false);
             }
@@ -90,7 +87,6 @@ const AccountOverview = () => {
         const nameRegex = /^[A-Za-z\s]+$/;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const phoneRegex = /^\d{10}$/;
-
         if (tempData.firstname && tempData.firstname !== userData.name.split(' ')[0]) {
             if (!nameRegex.test(tempData.firstname.trim())) {
                 newErrors.firstname = 'First name should contain only alphabets';
@@ -151,10 +147,8 @@ const AccountOverview = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-    
             toast.success(response.data.message);
             handleClose();
-
             setUserData({
                 ...userData,
                 name: `${tempData.firstname} ${tempData.lastname}`,
@@ -162,21 +156,22 @@ const AccountOverview = () => {
                 mobile: tempData.phoneNo,
                 company_name: tempData.company
             });
-
             if (tempData.email && tempData.email !== userData.email) {
                 navigate('/verify/update');
             }
         } catch (error) {
-            if (error.response && error.response.status === 406) {
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true); // Open session expired dialog
+                localStorage.removeItem('token');
+            }else if (error.response && error.response.status === 406) {
                 toast.error("Account already exists with this email address");
-            } else {
+            }  else {
                 toast.error('Error updating profile: ' + error.message);
             }
         } finally {
             setLoading(false);
         }
-    };
-    
+    }
     return (
         <>
             <div>
@@ -186,17 +181,10 @@ const AccountOverview = () => {
                     <div style={{ flexGrow: 1 }} id='accountOverview'>
                         {loading ? (
                             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
-                                <TailSpin
-                                    height="40"
-                                    width="40"
-                                    color="#ba343b"
-                                    ariaLabel="tail-spin-loading"
-                                    radius="1"
-                                    visible={true}
-                                />
+                                <TailSpin height="40" width="40" color="#ba343b" ariaLabel="tail-spin-loading" radius="1" visible={true}/>
                             </div>
                         ) : error ? (
-                            <p>Error: {error}</p>
+                            <h1>Error</h1>
                         ) : (
                             userData && (
                                 <div id='accountDisplay'>
@@ -241,81 +229,27 @@ const AccountOverview = () => {
                                         <img src={blankimage} alt="" className="avatar-in" />
                                     )}
                                     <div
-                                        style={{
-                                            cursor: 'pointer',
-                                            marginTop: '3px',
-                                            display: 'block',
-                                            textAlign: 'center',
-                                            fontSize: 12,
-                                            color: '#ba343b',
-                                            fontWeight: '600',
-                                        }}
-                                        onClick={() => fileInputRef.current.click()}
-                                    >
-                                        Change Photo
+                                        style={{ cursor: 'pointer', marginTop: '3px', display: 'block', textAlign: 'center', fontSize: 12, color: '#ba343b', fontWeight: '600',}}
+                                        onClick={() => fileInputRef.current.click()}>Change Photo
                                     </div>
-                                    <input
-                                        type='file'
-                                        ref={fileInputRef}
-                                        style={{ display: 'none' }}
-                                        accept='image/*'
-                                        onChange={handleFileChange}
-                                    />
+                                    <input type='file' ref={fileInputRef} style={{ display: 'none' }} accept='image/*' onChange={handleFileChange} />
                                 </div>
                                 <Divider sx={{ width: '450px', position: 'relative', top: '10px' }} />
                                 <div id="scroll">
                                     <div className="textfield-container">
-                                        <TextField
-                                            label="First Name"
-                                            fullWidth
-                                            sx={{ marginTop: '10px' }}
-                                            value={tempData.firstname}
-                                            onChange={(e) => setTempData({ ...tempData, firstname: e.target.value })}
-                                            error={Boolean(errors.firstname)}
-                                            helperText={errors.firstname}
-                                        />
+                                        <TextField label="First Name" fullWidth sx={{ marginTop: '10px' }} value={tempData.firstname} onChange={(e) => setTempData({ ...tempData, firstname: e.target.value })} error={Boolean(errors.firstname)} helperText={errors.firstname} />
                                     </div>
                                     <div className="textfield-container">
-                                        <TextField
-                                            label="Last Name"
-                                            fullWidth
-                                            sx={{ marginTop: '10px' }}
-                                            value={tempData.lastname}
-                                            onChange={(e) => setTempData({ ...tempData, lastname: e.target.value })}
-                                            error={Boolean(errors.lastname)}
-                                            helperText={errors.lastname}
-                                        />
+                                        <TextField label="Last Name" fullWidth sx={{ marginTop: '10px' }} value={tempData.lastname} onChange={(e) => setTempData({ ...tempData, lastname: e.target.value })} error={Boolean(errors.lastname)} helperText={errors.lastname} />
                                     </div>
                                     <div className="textfield-container">
-                                        <TextField
-                                            label="Email"
-                                            fullWidth
-                                            sx={{ marginTop: '10px' }}
-                                            value={tempData.email}
-                                            onChange={(e) => setTempData({ ...tempData, email: e.target.value })}
-                                            error={Boolean(errors.email)}
-                                            helperText={errors.email}
-                                        />
+                                        <TextField label="Email" fullWidth sx={{ marginTop: '10px' }} value={tempData.email} onChange={(e) => setTempData({ ...tempData, email: e.target.value })} error={Boolean(errors.email)} helperText={errors.email} />
                                     </div>
                                     <div className="textfield-container">
-                                        <TextField
-                                            label="Phone Number"
-                                            fullWidth
-                                            sx={{ marginTop: '10px' }}
-                                            value={tempData.phoneNo}
-                                            onChange={(e) => setTempData({ ...tempData, phoneNo: e.target.value })}
-                                            error={Boolean(errors.phoneNo)}
-                                            helperText={errors.phoneNo}
-                                        />
+                                        <TextField label="Phone Number" fullWidth sx={{ marginTop: '10px' }} value={tempData.phoneNo} onChange={(e) => setTempData({ ...tempData, phoneNo: e.target.value })} error={Boolean(errors.phoneNo)} helperText={errors.phoneNo} />
                                     </div>
                                     <div className="textfield-container">
-                                        <TextField
-                                            label="Company Name"
-                                            fullWidth
-                                            sx={{ marginTop: '10px' }}
-                                            value={tempData.company}
-                                            onChange={(e) => setTempData({ ...tempData, company: e.target.value })}
-                                        />
+                                        <TextField label="Company Name" fullWidth sx={{ marginTop: '10px' }} value={tempData.company} onChange={(e) => setTempData({ ...tempData, company: e.target.value })} />
                                     </div>
                                 </div>
                             </DialogContent>
@@ -333,6 +267,28 @@ const AccountOverview = () => {
                     </div>
                 </div>
             </div>
+            <Dialog open={isSessionExpired} aria-labelledby="alert-dialog-title" PaperProps={{ sx: { backgroundColor: '#ffffff', width: '40vw', height: '30vh' } }}>
+                <DialogContent sx={{ backgroundColor: '#ffffff' }}>
+                    <DialogContentText sx={{ color: 'black', display: 'flex', fontSize: '20px', alignItems: 'center' }}>
+                        <IconButton>
+                            <WarningIcon
+                                style={{ color: 'orange', cursor: 'pointer', marginTop: '5px', fontSize: '40px', }}
+                            />
+                        </IconButton>
+                        <div>
+                            <Typography sx={{ fontSize: '20px', fontWeight: 'bold' }}>Your session has expired</Typography>
+                            <Typography sx={{ fontSize: '20px', position: 'relative', top: '5px' }}>Please log in again to continue using the app</Typography>
+                        </div>
+                    </DialogContentText>
+
+                    <DialogContentText sx={{ backgroundColor: '#ffffff', fontSize: '20px', fontWeight: 'bold', textAlign: 'center' }}>
+                        <Link to="/login">
+                            <Button sx={{ color: '#ba343b', fontSize: '15px', fontWeight: '600', border: '1px solid #ba343b', margin: '18px auto' }} variant="outlined">
+                                Login</Button>
+                        </Link>
+                    </DialogContentText>
+                </DialogContent>
+            </Dialog>
             <ToastContainer />
         </>
     );

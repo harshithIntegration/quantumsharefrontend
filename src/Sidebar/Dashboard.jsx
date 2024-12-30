@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, Label } from 'recharts';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import PhotoFilterIcon from '@mui/icons-material/PhotoFilter';
 import TryIcon from '@mui/icons-material/Try';
-import { IconButton, Button } from '@mui/material';
+import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Sidenav from '../Navbar/Sidenav';
@@ -19,19 +18,25 @@ import QI from '../Sidebar/QI';
 import Post from './Post';
 import AutoGraphIcon from '@mui/icons-material/AutoGraph';
 import { useTranslation } from 'react-i18next';
-
+import { Dialog, DialogContent, DialogContentText, Typography, IconButton } from '@mui/material';
+import WarningIcon from '@mui/icons-material/Warning';
 const Dashboard = () => {
     const { remainingDays, remainingCredits } = useSelector((state) => state.data);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    const navigate = useNavigate()
     const [AIopen, setAIopen] = useState(false)
     const [Postopen, setpostopen] = useState(false)
-    const navigate = useNavigate()
-    const {t} = useTranslation('');
+    const { t } = useTranslation();
+    const [isSessionExpired, setIsSessionExpired] = useState(false);
+
+    const handleSessionExpired = () => {
+        console.log('Session expired, opening dialog');
+        setIsSessionExpired(true);
+    };
 
     useEffect(() => {
-        FetchUser(dispatch);
-    }, [dispatch])
-
+        FetchUser(dispatch, handleSessionExpired);
+    }, [dispatch]);
     const data = [
         {
             name: 'Jan',
@@ -89,6 +94,7 @@ const Dashboard = () => {
     const handleClosePost = () => {
         setpostopen(false)
     }
+
 
     return (
         <>
@@ -241,18 +247,18 @@ const Dashboard = () => {
                                                 {t('scheduledpost')}
                                             </Typography>
                                             <Typography sx={{ fontSize: 14, textAlign: 'center' }} color="text.secondary" gutterBottom>
-                                                {t('scheduledpostdesc')}    
+                                                {t('scheduledpostdesc')}
                                             </Typography>
                                         </CardContent>
                                     </Card>
                                     <Card sx={{ width: 270, height: 300, margin: 1 }}>
                                         <CardContent>
                                             <Typography sx={{ fontSize: 18, textAlign: 'center', color: '#fff', bgcolor: '#ba343b', padding: '5px', borderRadius: '5px' }} gutterBottom>
-                                               {t('recentpost')}
+                                                {t('recentpost')}
                                             </Typography>
                                             <Typography sx={{ fontSize: 14, textAlign: 'center' }} color="text.secondary" gutterBottom>
-                                               {t('recentpostdesc')}
-                                                </Typography>
+                                                {t('recentpostdesc')}
+                                            </Typography>
                                         </CardContent>
                                     </Card>
                                     <Card sx={{ width: 270, height: 300, margin: 1 }}>
@@ -261,7 +267,7 @@ const Dashboard = () => {
                                                 {t('publishedpost')}
                                             </Typography>
                                             <Typography sx={{ fontSize: 14, textAlign: 'center' }} color="text.secondary" gutterBottom>
-                                               {t('publishedpostdesc')}
+                                                {t('publishedpostdesc')}
                                             </Typography>
                                         </CardContent>
                                     </Card>
@@ -271,7 +277,7 @@ const Dashboard = () => {
                                                 {t('draft')}
                                             </Typography>
                                             <Typography sx={{ fontSize: 14, textAlign: 'center' }} color="text.secondary" gutterBottom>
-                                               {t('draftdesc')}   
+                                                {t('draftdesc')}
                                             </Typography>
                                         </CardContent>
                                     </Card>
@@ -285,8 +291,31 @@ const Dashboard = () => {
                 <Link to='/reference-video'><FaCirclePlay className="circle-icon" /></Link>
                 <div className="hover-content">{t('referencevideo')}</div>
             </div>
-        </>
-    )
-}
+            <Dialog open={isSessionExpired} aria-labelledby="alert-dialog-title" PaperProps={{ sx: { backgroundColor: '#ffffff', width: '40vw', height: '30vh' } }}>
+                <DialogContent sx={{ backgroundColor: '#ffffff' }}>
+                    <DialogContentText sx={{ color: 'black', display: 'flex', fontSize: '20px', alignItems: 'center' }}>
+                        <IconButton>
+                            <WarningIcon
+                                style={{ color: 'orange', cursor: 'pointer', marginTop: '5px', fontSize: '40px', }}
+                            />
+                        </IconButton>
+                        <div>
+                            <Typography sx={{ fontSize: '20px', fontWeight: 'bold' }}>Your session has expired</Typography>
+                            <Typography sx={{ fontSize: '20px', position: 'relative', top: '5px' }}>Please log in again to continue using the app</Typography>
+                        </div>
+                    </DialogContentText>
 
-export default Dashboard
+                    <DialogContentText sx={{ backgroundColor: '#ffffff', fontSize: '20px', fontWeight: 'bold', textAlign: 'center' }}>
+                        <Link to="/login">
+                            <Button sx={{ color: '#ba343b', fontSize: '15px', fontWeight: '600', border: '1px solid #ba343b', margin: '18px auto' }} variant="outlined">
+                                Login</Button>
+                        </Link>
+                    </DialogContentText>
+                </DialogContent>
+            </Dialog>
+
+        </>
+    );
+};
+
+export default Dashboard;

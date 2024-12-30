@@ -96,7 +96,7 @@ const Login = () => {
                 },
                 params: params,
             });
-            sessionStorage.setItem('token', response.data.data);
+            localStorage.setItem('token', response.data.data);
             navigate('/dashboard');
             await FetchUser(dispatch)
         } catch (error) {
@@ -107,7 +107,11 @@ const Login = () => {
 
             if (errorCode === 120) {
                 navigate('/regenerate-password', { state: { email } });
-            } else {
+            }else if (errorCode === 121) {
+                localStorage.removeItem("token")
+                navigate('/session'); 
+            }
+             else {
                 toast.error(errorMessage || 'An error occurred');
             }
         }
@@ -158,6 +162,9 @@ const Login = () => {
         } catch (error) {
             if (error.response && error.response.data.status === 'error' && error.response.data.message === 'Password null') {
                 return { exists: true, passwordNull: true, email: error.response.data.data };
+            }else if (error.response.data.code === 121) {
+                localStorage.removeItem("token")
+                navigate('/session'); 
             }
             console.error('Error verifying email:', error);
             toast.error('Error checking email existence.');
@@ -178,10 +185,10 @@ const Login = () => {
                     navigate('/regenerate-password', { state: { email: decoded.email } });
                 } else {
                     if (token) {
-                        sessionStorage.setItem('token', token);
+                        localStorage.setItem('token', token);
                         navigate('/dashboard');
                     } else {
-                        console.error('Token is null. Cannot store in sessionStorage.');
+                        console.error('Token is null. Cannot store in localStorage.');
                         toast.error('Unexpected error: Token is missing.');
                     }
                 }
@@ -237,12 +244,17 @@ const Login = () => {
                 },
             });
             console.log(response);
-            sessionStorage.setItem('token', response.data.data);
+            localStorage.setItem('token', response.data.data);
             setOpen(false);
             navigate('/dashboard');
             await FetchUser(dispatch);
         } catch (error) {
-            toast.error('Error signing in with Google.');
+            if(error){
+            toast.error('Error signing in with Google.');}
+            else if (error.response.data.code === 121) {
+                localStorage.removeItem("token")
+                navigate('/session'); 
+            }
             console.error('Google Login Error:', error);
         } finally {
             setLoading(false);

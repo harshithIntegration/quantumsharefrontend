@@ -11,7 +11,7 @@ import { Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/ma
 import { useTranslation } from 'react-i18next';
 
 const TwitterLogin = () => {
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
     const [open, setOpen] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loading, setLoading] = useState(false);

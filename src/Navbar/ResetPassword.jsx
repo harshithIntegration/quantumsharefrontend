@@ -71,7 +71,13 @@ const ResetPassword = () => {
             }
         } catch (error) {
             console.error('Error updating password:', error);
-            toast.error('Error updating password. Please try again.');
+            if (error.response){
+                toast.error('Error updating password. Please try again.');
+            }
+            else if (error.response.data.code === 121) {
+                localStorage.removeItem('token');
+                navigate('/session'); 
+            }
         } finally {
             setLoading(false);
         }
