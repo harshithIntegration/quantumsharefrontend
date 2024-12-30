@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable jsx-a11y/img-redundant-alt */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
@@ -49,7 +51,7 @@ const Analytics = () => {
 
     const fetchAnalyticsData = async () => {
         try {
-            const response = await axiosInstance.get('/quatumshare/socialmedia/history', {
+            const response = await axiosInstance.get('/quantum-share/socialmedia/history', {
                 headers: {
                     'Accept': 'application/json',
                     Authorization: `Bearer ${token}`
@@ -70,7 +72,7 @@ const Analytics = () => {
     const handleViewInsights = async (pid) => {
         setLoading(true);
         try {
-            const response = await axiosInstance.get(`/quatumshare/socialmedia/view/analytics?pid=${pid}`, {
+            const response = await axiosInstance.get(`/quantum-share/socialmedia/view/analytics?pid=${pid}`, {
                 headers: {
                     'Accept': 'application/json',
                     Authorization: `Bearer ${token}`
@@ -115,7 +117,7 @@ const Analytics = () => {
 
     const handleViewMore = async () => {
         try {
-            const response = await axiosInstance.get(`/quatumshare/socialmedia/history/viewMore`, {
+            const response = await axiosInstance.get(`/quantum-share/socialmedia/history/viewMore`, {
                 headers: {
                     'Accept': 'application/json',
                     Authorization: `Bearer ${token}`,

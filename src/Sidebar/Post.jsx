@@ -459,7 +459,7 @@ const Post = ({ onClose }) => {
                                         delay = 5000;
                                     }
                                     setTimeout(async () => {
-                                        await axiosInstance.get(`/quatumshare/socialmedia/get/recent/post`, {
+                                        await axiosInstance.get(`/quantum-share/socialmedia/get/recent/post`, {
                                             headers: {
                                                 'Accept': 'application/json',
                                                 Authorization: `Bearer ${token}`
@@ -479,7 +479,7 @@ const Post = ({ onClose }) => {
                             toast.success(res.message);
                             const postId = res.data.id;
                             setTimeout(async () => {
-                                await axiosInstance.get(`/quatumshare/socialmedia/get/recent/post`, {
+                                await axiosInstance.get(`/quantum-share/socialmedia/get/recent/post`, {
                                     headers: {
                                         'Accept': 'application/json',
                                         Authorization: `Bearer ${token}`
@@ -504,7 +504,7 @@ const Post = ({ onClose }) => {
                             toast.success(res.message);
                             const postId = res.data.id;
                             setTimeout(async () => {
-                                await axiosInstance.get(`/quatumshare/socialmedia/get/recent/post`, {
+                                await axiosInstance.get(`/quantum-share/socialmedia/get/recent/post`, {
                                     headers: {
                                         'Accept': 'application/json',
                                         Authorization: `Bearer ${token}`

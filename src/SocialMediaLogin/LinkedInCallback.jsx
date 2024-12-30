@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -107,7 +108,7 @@ const LinkedInCallback = () => {
     const handleProfileClick = () => {
         setActiveSelection('profile');
         setIsSubmitVisible(true);
-        setSelectedUrn(selectedUrn); // Update with actual LinkedIn profile urn
+        setSelectedUrn(selectedUrn); 
         setSelectedAccessToken(selectedAccessToken);
     };
 
@@ -167,7 +168,7 @@ const LinkedInCallback = () => {
                     {Array.isArray(pages) && pages.length > 0 && (
                         <>
                             <div style={{ color: '#d3040c', marginTop: '2rem', fontWeight: 'bold' }}>
-                                {this('addPageAssociatedWithAccount')}
+                                {t('addPageAssociatedWithAccount')}
                             </div>
                             <ul style={{ paddingLeft: '0', listStyleType: 'none', marginTop: '1rem' }}>
                                 {pages.map((page) => (
