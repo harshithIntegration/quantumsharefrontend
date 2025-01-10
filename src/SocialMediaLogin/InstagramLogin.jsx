@@ -17,6 +17,7 @@ import { setInstaLoggedIn } from '../Redux/action/loginStatusSilce';
 import { t } from 'i18next';
 import { Dialog, DialogContent, DialogContentText,DialogActions, Button, IconButton, Typography } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
+
 const InstagramLogin = () => {
     let token = localStorage.getItem("token");
     const [code, setCode] = useState('');
@@ -81,8 +82,8 @@ const InstagramLogin = () => {
             } else {
                 window.fbAsyncInit = function () {
                     FB.init({
-                        // appId: '421449853704517',
-                        appId: '1397130744461736',
+                        appId: '421449853704517',
+                        // appId: '1397130744461736',
                         cookie: true,
                         xfbml: true,
                         version: 'v19.0'
@@ -175,8 +176,8 @@ const InstagramLogin = () => {
 
     const handleInstaDetailsClose = () => {
         setOpenInstaDetails(false);
+        setLoading(true);
         setSelectedProfile([]);
-        setLoading(false);
     }
 
     const handleSubmit = async () => {

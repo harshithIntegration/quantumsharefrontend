@@ -10,6 +10,7 @@ import InstagramIcon from '../Assets/instagramsmall.svg'
 import TelegramIcon from '../Assets/telegramsmall.svg'
 import YoutubeIcon from '../Assets/youtubesmall.svg'
 import RedditIcon from '../Assets/redditsm1.svg';
+import PinterestIcon from '../Assets/pinterestsmall.png'
 import { useTranslation } from 'react-i18next';
 
 const Media = ({ onMediaPlatform, postSubmitted }) => {
@@ -24,21 +25,25 @@ const Media = ({ onMediaPlatform, postSubmitted }) => {
     const linkLoggedIn = useSelector((state) => state.loginStatus.linkLoggedIn);
     const YouLoggedIn = useSelector((state) => state.loginStatus.YouLoggedIn);
     const redditLoggedIn = useSelector((state) => state.loginStatus.redditLoggedIn);
+    const pinterestLoggedIn = useSelector((state) => state.loginStatus.pinterestLoggedIn);
 
     const instagramUrl = useSelector((state) => state.imageUrls.instagramUrl);
     const pageUrls = useSelector((state) => state.imageUrls.pageUrls);
     const telegramProfileUrl = useSelector((state) => state.imageUrls.telegramProfileUrl);
     const linkedinprofile = useSelector((state) => state.imageUrls.linkedinprofile);
     const youtubeProfile = useSelector((state) => state.imageUrls.youtubeProfile);
-    const redditProfile=useSelector((state) => state.imageUrls.redditProfile);
+    const redditProfile = useSelector((state) => state.imageUrls.redditProfile);
+    const pinterestProfile = useSelector((state) => state.imageUrls.pinterestProfile);
 
     const fbpagename = useSelector((state) => state.profilename.fbpagename);
     const instaname = useSelector((state) => state.profilename.instaname)
     const linkname = useSelector((state) => state.profilename.linkname)
     const youname = useSelector((state) => state.profilename.youname)
     const telname = useSelector((state) => state.profilename.telname)
-    const redditname= useSelector((state) => state.profilename.redditname);
-    const {t} = useTranslation('');
+    const redditname = useSelector((state) => state.profilename.redditname);
+    const pinterestname = useSelector((state) => state.profilename.pinterestname);
+
+    const { t } = useTranslation('');
 
     const mediaPlatforms = [
         { id: 'facebook', icon: pageUrls, name: 'facebook', isLoggedIn, profileUrl: fbpagename },
@@ -46,7 +51,8 @@ const Media = ({ onMediaPlatform, postSubmitted }) => {
         { id: 'telegram', icon: telegramProfileUrl, name: 'telegram', isLoggedIn: telLoggedIn, profileUrl: telname },
         { id: 'LinkedIn', icon: linkedinprofile, name: 'LinkedIn', isLoggedIn: linkLoggedIn, profileUrl: linkname },
         { id: 'youtube', icon: youtubeProfile, name: 'youtube', isLoggedIn: YouLoggedIn, profileUrl: youname },
-        { id:'Reddit', icon: redditProfile, name: 'Reddit', isLoggedIn:redditLoggedIn, profileUrl: redditname},
+        { id: 'Reddit', icon: redditProfile, name: 'Reddit', isLoggedIn: redditLoggedIn, profileUrl: redditname },
+        { id: 'pinterest', icon: pinterestProfile, name: 'pinterest', isLoggedIn: pinterestLoggedIn, profileUrl: pinterestname },
     ];
     console.log(mediaPlatform);
 
@@ -96,7 +102,8 @@ const Media = ({ onMediaPlatform, postSubmitted }) => {
         LinkedIn: LinkedinIcon,
         telegram: TelegramIcon,
         youtube: YoutubeIcon,
-        reddit: RedditIcon
+        Reddit: RedditIcon,
+        pinterest: PinterestIcon,
     }
 
     useEffect(() => {

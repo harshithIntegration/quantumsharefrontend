@@ -23,7 +23,6 @@ import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
 import { CgPlayButtonO } from "react-icons/cg";
 import { useTranslation } from 'react-i18next';
 
-
 const About = () => {
     const token = localStorage.getItem('token')
     const [openWatchNow, setOpenWatchNow] = useState(false);

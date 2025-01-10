@@ -28,8 +28,9 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import QI from './QI';
 import TagIcon from '@mui/icons-material/Tag';
 import { useTranslation } from "react-i18next";
-import { Dialog, DialogContent, DialogContentText,DialogActions, Button, IconButton, Typography } from '@mui/material';
+import { Dialog, DialogContent, DialogContentText, DialogActions, Button, IconButton, Typography } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
+
 const Post = ({ onClose }) => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -84,6 +85,7 @@ const Post = ({ onClose }) => {
         }
         console.log(mediaPlatform);
     };
+
     const [warningMessages, setWarningMessages] = useState([]);
     const maxTitleCharacters = 100;
     const maxCaptionCharacters = 500;
@@ -153,7 +155,12 @@ const Post = ({ onClose }) => {
                 }
             }
         }
-
+        if (mediaPlatform.includes('pinterest')) {
+            if (!title) {
+                newWarningMessages.push("Please enter a title for Pinterest.");
+                shouldDisableShare = true;
+            }
+        }
         if (mediaPlatform.includes('Reddit')) {
             if (!title || !sr) {
                 if (!title) newWarningMessages.push("Please enter a title for Reddit.");
@@ -352,7 +359,8 @@ const Post = ({ onClose }) => {
         'telegram': 'Telegram',
         'LinkedIn': 'LinkedIn',
         'youtube': 'Youtube',
-        'Reddit': 'Reddit'
+        'Reddit': 'Reddit',
+        'pinterest': 'Pinterest'
     };
 
     const getDisplayPlatformName = (platform) => {
@@ -378,6 +386,8 @@ const Post = ({ onClose }) => {
                 return '/quantum-share/post/file/youtube';
             case 'Reddit':
                 return '/quantum-share/post/file/reddit';
+            case 'pinterest':
+                return '/quantum-share/post/file/pinterest';
             default:
                 throw new Error(`Unsupported platform: ${platform}`);
         }
@@ -414,6 +424,7 @@ const Post = ({ onClose }) => {
             );
             const responses = await Promise.all(platforms.map(async platform => {
                 const endpoint = getEndpointForPlatform(platform);
+                console.log(endpoint)
                 const formData = createFormData(file, caption, title, visibility, platform, sr, image1);
                 try {
                     const response = await axiosInstance.post(endpoint, formData, {
@@ -432,10 +443,8 @@ const Post = ({ onClose }) => {
                                     const postId = res.data.response.id;
                                     var delay = 0;
                                     console.log("before");
-
                                     const contentType = res.data.mediaType;
                                     console.log("content type : " + contentType);
-
                                     if (contentType.startsWith('video')) {
                                         console.log("video section");
                                         const contentlength = res.data.mediaSize;
@@ -554,6 +563,17 @@ const Post = ({ onClose }) => {
                         } else if (response.data.code === 404) {
                             toast.error(response.data.message);
                         }
+                    } else if (platform === 'pinterest') {
+                        if (response.data.success && response.data.success.message) {
+                            const res = response.data.success;
+                            toast.success(res.message);
+                        } else if (response.data.structure?.status === "error" && response.data.structure.code === 114) {
+                            const res = response.data.structure;
+                            console.error('Credit Depleted Error Message:', res.message);
+                            toast.info(res.message);
+                        } else if (response.data.structure?.code === 404) {
+                            toast.error(response.data.structure.message);
+                        }
                     }
                     return { platform, success: true };
                 } catch (error) {
@@ -563,9 +583,9 @@ const Post = ({ onClose }) => {
                         toast.error('Forbidden: You do not have permission to access this resource.');
                     } else if (platform === 'facebook') {
                         if (error.response?.data?.code === 121) {
-                            setIsSessionExpired(true); // Show session expired dialog
+                            setIsSessionExpired(true);
                             localStorage.removeItem('token');
-                        }else if (Array.isArray(responseData)) {
+                        } else if (Array.isArray(responseData)) {
                             responseData.forEach(err => {
                                 if (err.status === "error" && err.code === 114) {
                                     console.error('Credit Depleted Error Message:', err.message);
@@ -577,9 +597,9 @@ const Post = ({ onClose }) => {
                         }
                     } else if (platform === 'instagram') {
                         if (error.response?.data?.code === 121) {
-                            setIsSessionExpired(true); // Show session expired dialog
+                            setIsSessionExpired(true);
                             localStorage.removeItem('token');
-                        }else if (responseData.code === 116) {
+                        } else if (responseData.code === 116) {
                             toast.info('Unsupported aspect ratio. Please use one of Instagram\'s formats: 4:5, 1:1, or 1.91:1.');
                         } else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
                             const err = responseData.structure;
@@ -590,9 +610,9 @@ const Post = ({ onClose }) => {
                         }
                     } else if (platform === 'youtube') {
                         if (error.response?.data?.code === 121) {
-                            setIsSessionExpired(true); // Show session expired dialog
+                            setIsSessionExpired(true);
                             localStorage.removeItem('token');
-                        }else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
+                        } else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
                             const err = responseData.structure;
                             console.error('Credit Depleted Error Message:', err.message);
                             toast.info(err.message);
@@ -603,9 +623,9 @@ const Post = ({ onClose }) => {
                         }
                     } else if (platform === 'telegram') {
                         if (error.response?.data?.code === 121) {
-                            setIsSessionExpired(true); // Show session expired dialog
+                            setIsSessionExpired(true);
                             localStorage.removeItem('token');
-                        }else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
+                        } else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
                             const err = responseData.structure;
                             console.error('Credit Depleted Error Message:', err.message);
                             toast.info(err.message);
@@ -614,9 +634,9 @@ const Post = ({ onClose }) => {
                         }
                     } else if (platform === 'LinkedIn') {
                         if (error.response?.data?.code === 121) {
-                            setIsSessionExpired(true); // Show session expired dialog
+                            setIsSessionExpired(true);
                             localStorage.removeItem('token');
-                        }else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
+                        } else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
                             const err = responseData.structure;
                             console.error('Credit Depleted Error Message:', err.message);
                             toast.info(err.message);
@@ -625,22 +645,33 @@ const Post = ({ onClose }) => {
                         }
                     } else if (platform === 'Reddit') {
                         if (error.response?.data?.code === 121) {
-                            setIsSessionExpired(true); // Show session expired dialog
+                            setIsSessionExpired(true);
                             localStorage.removeItem('token');
-                        }else if (responseData.status === "error" && responseData.code === 114) {
+                        } else if (responseData.status === "error" && responseData.code === 114) {
                             const err = responseData;
                             console.error('Credit Depleted Error Message:', err.message);
                             toast.info(err.message);
                         } else if (responseData?.code === 404) {
                             toast.error(responseData.message);
                         }
+                    } else if (platform === 'pinterest') {
+                        if (error.response?.data?.code === 121) {
+                            setIsSessionExpired(true);
+                            localStorage.removeItem('token');
+                        } else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
+                            const err = responseData.structure;
+                            console.error('Credit Depleted Error Message:', err.message);
+                            toast.info(err.message);
+                        } else if (responseData.structure?.code === 404) {
+                            toast.error(responseData.structure.message);
+                        }
                     } else if (responseData.code === 115) {
                         toast.error("Token Expired, Please Login Again");
                         setTimeout(() => {
                             navigate("/login");
                         }, 4000);
-                    }if (error.response?.data?.code === 121) {
-                        setIsSessionExpired(true); // Show session expired dialog
+                    } if (error.response?.data?.code === 121) {
+                        setIsSessionExpired(true);
                         localStorage.removeItem('token');
                     } else {
                         console.log('An error occurred while processing your request.');
@@ -830,6 +861,12 @@ const Post = ({ onClose }) => {
         }
     }, [AiText])
 
+    const [selectedBoard, setSelectedBoard] = useState("");
+
+    const handleBoardChange = (event) => {
+        setSelectedBoard(event.target.value);
+    };
+
     return (
         <>
             <Dialog className="postContent" open={open} onClose={closeDialog} fullWidth maxWidth="lg">
@@ -842,12 +879,12 @@ const Post = ({ onClose }) => {
                             </div>
                             <div className="choose">
                                 <div style={{ display: 'flex', gap: '10px' }}>
-                                    {(mediaPlatform.includes('youtube') || mediaPlatform.includes('Reddit')) && (
+                                    {(mediaPlatform.includes('youtube') || mediaPlatform.includes('Reddit') || mediaPlatform.includes('pinterest')) && (
                                         <div style={{ display: 'flex', flexDirection: 'column', width: mediaPlatform.includes('Reddit') ? '48%' : '98%' }}>
                                             <label style={{ fontSize: '12px', fontWeight: 'bold' }}>
                                                 Title <span style={{ color: 'red' }}>*</span>
                                             </label>
-                                            <input required className="area" placeholder="Title ... [Only for YouTube and Reddit]" value={title} name="title" onChange={handleTitleChange} style={{ height: '40px', width: '100%', border: '1px solid #ccc', borderRadius: '5px', resize: 'none', outline: 'none', fontSize: '12px', padding: '12px', paddingRight: '50px', boxSizing: 'border-box' }} />
+                                            <input required className="area" placeholder="Title... [Only for YouTube, Reddit & Pinterest]" value={title} name="title" onChange={handleTitleChange} style={{ height: '40px', width: '100%', border: '1px solid #ccc', borderRadius: '5px', resize: 'none', outline: 'none', fontSize: '12px', padding: '12px', paddingRight: '50px', boxSizing: 'border-box' }} />
                                             <span style={{ position: 'relative', top: '5px', fontSize: '10px', color: title.length === maxTitleCharacters ? 'red' : '#666' }}>{title.length}/{maxTitleCharacters}</span>
                                         </div>)}
                                     {mediaPlatform.includes('Reddit') && (
@@ -855,7 +892,7 @@ const Post = ({ onClose }) => {
                                             <label style={{ fontSize: '12px', fontWeight: 'bold' }}>
                                                 SubReddit <span style={{ color: 'red' }}>*</span>
                                             </label>
-                                            <input required className="area" placeholder="SubReddit ... [Reddit]" value={sr} name="subreddit" onChange={handleSubReddit} style={{
+                                            <input required className="area" placeholder="SubReddit... [Reddit]" value={sr} name="subreddit" onChange={handleSubReddit} style={{
                                                 height: '40px', border: '1px solid #ccc', borderRadius: '5px', resize: 'none', outline: 'none', fontSize: '12px', padding: '12px'
                                             }} />
                                         </div>)}
@@ -1092,6 +1129,23 @@ const Post = ({ onClose }) => {
                                                 </Select>
                                             </FormControl>
                                         )}
+                                        {/* {mediaPlatform.includes('pinterest') && response?.structure?.data?.boardDetails && (
+                                            <FormControl sx={{ width: 242, maxWidth: '100%', marginTop: 4 }}>
+                                                <InputLabel sx={{ mt: -0.5 }}>Select a Pinterest Board</InputLabel>
+                                                <Select
+                                                    value={selectedBoard} 
+                                                    onChange={handleBoardChange}
+                                                    label="Select a Pinterest Board"
+                                                    sx={{ height: '45px' }}
+                                                >
+                                                    {JSON.parse(response.structure.data.boardDetails).map((board) => (
+                                                        <MenuItem key={board.boardId} value={board.boardId}>
+                                                            {board.boardName}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        )} */}
                                     </Stack>
                                 </div>
                             </div>

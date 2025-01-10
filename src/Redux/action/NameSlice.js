@@ -2,11 +2,12 @@ import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
     fbpagename: [],
-    instaname:null,
-    linkname:null,
-    youname:null,
-    telname:null,
-    redditname:null
+    instaname: null,
+    linkname: null,
+    youname: null,
+    telname: null,
+    redditname: null,
+    pinterestname: null,
 }
 
 const NameSlice = createSlice({
@@ -17,28 +18,32 @@ const NameSlice = createSlice({
             // console.log(action.payload);
             state.fbpagename = action.payload
         },
-        setInstaName:(state,action)=>{
+        setInstaName: (state, action) => {
             // console.log(action.payload);
-            state.instaname=action.payload
+            state.instaname = action.payload
         },
-        setLinkName:(state,action)=>{
+        setLinkName: (state, action) => {
             // console.log(action.payload);
-            state.linkname=action.payload
+            state.linkname = action.payload
         },
-        setYouName:(state,action)=>{
+        setYouName: (state, action) => {
             // console.log(action.payload);
-            state.youname=action.payload
+            state.youname = action.payload
         },
-        setTelName:(state,action)=>{
+        setTelName: (state, action) => {
             // console.log(action.payload);
-            state.telname=action.payload
+            state.telname = action.payload
         },
-        setRedditName:(state,action)=>{
+        setRedditName: (state, action) => {
             // console.log(action.payload);
-            state.redditname=action.payload
-        }
+            state.redditname = action.payload
+        },
+        setPinterestName: (state, action) => {
+            // console.log(action.payload);
+            state.pinterestname = action.payload
+        },
     }
 })
 
-export const { setFbName, setInstaName, setLinkName, setYouName, setTelName,setRedditName }=NameSlice.actions
+export const { setFbName, setInstaName, setLinkName, setYouName, setTelName, setRedditName, setPinterestName } = NameSlice.actions
 export default NameSlice.reducer

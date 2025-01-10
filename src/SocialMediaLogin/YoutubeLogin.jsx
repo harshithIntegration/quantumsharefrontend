@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { Dialog, DialogContent, DialogContentText, Button, IconButton, Typography } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
+
 const YoutubeLogin = () => {
     const token = localStorage.getItem('token');
     const [open, setOpen] = useState(false);
@@ -53,7 +54,7 @@ const YoutubeLogin = () => {
         catch (error) {
             console.error(error)
             if (error.response?.data?.code === 121) {
-                setIsSessionExpired(true); // Show session expired dialog
+                setIsSessionExpired(true);
                 localStorage.removeItem('token');
             }
         }
@@ -77,7 +78,7 @@ const YoutubeLogin = () => {
         } catch (error) {
             console.error('Error', error);
             if (error.response?.data?.code === 121) {
-                setIsSessionExpired(true); // Show session expired dialog
+                setIsSessionExpired(true); 
                 localStorage.removeItem('token');
             }else if(error){
                 toast.error('Error loading Youtube Login Page. Please try again later.');
@@ -110,7 +111,7 @@ const YoutubeLogin = () => {
         } catch (error) {
             console.error('Error disconnecting from Youtube:', error);
             if (error.response?.data?.code === 121) {
-                setIsSessionExpired(true); // Show session expired dialog
+                setIsSessionExpired(true); 
                 localStorage.removeItem('token');
             }else if (error) {
                 toast.error("Error disconnecting from Youtube. Please try again later.");

@@ -87,12 +87,10 @@ const RedditLogin = () => {
         } catch (error) {
             console.error("Failed to fetch Reddit authorization URL:", error);
             if (error.response?.data?.code === 121) {
-                setIsSessionExpired(true); // Show session expired dialog
+                setIsSessionExpired(true); 
                 localStorage.removeItem('token');
             }
-        } finally {
-            setLoading(false);
-        }
+        } 
     };
 
     const handleClose = () => {
@@ -119,7 +117,7 @@ const RedditLogin = () => {
         } catch (error) {
             console.error('Error disconnecting from reddit:', error);
             if (error.response?.data?.code === 121) {
-                setIsSessionExpired(true); // Show session expired dialog
+                setIsSessionExpired(true); 
                 localStorage.removeItem('token');
             }else  if(error){
                 toast.error("Error disconnecting from reddit. Please try again later.");

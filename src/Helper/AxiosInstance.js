@@ -1,9 +1,8 @@
 import axios from "axios";
 
 let axiosInstance = axios.create({
-    // baseURL: "https://hosting.quantumparadigm.in:8006/", // own server
-    // baseURL: "https://facebook.quantumparadigm.in:8006", // appreview
-    // baseURL: "https://facebook.quantumparadigm.in:7532", // quantumshare
+    // baseURL: "https://qshare.quantumparadigm.in:1222/" // qsapptest for app
+    // baseURL:"https://qshare.quantumparadigm.in:7532/"
     baseURL: "http://localhost:7532",
 })
 

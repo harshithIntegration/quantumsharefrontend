@@ -27,6 +27,7 @@ import ResetPassword from './Navbar/ResetPassword';
 import UpdateVerification from './Navbar/UpdateVerification';
 import RegeneratePassword from './Navbar/RegeneratePassword';
 import RedditCallback from './SocialMediaLogin/RedditCallback';
+import PinterestCallback from './SocialMediaLogin/PinterestCallback';
 
 
 const App = () => {
@@ -62,6 +63,7 @@ const App = () => {
                     <Route path='/quantum-share/linkedin/callback/success' element={<PrivateRoute><LinkedInCallback /></PrivateRoute>} />
                     <Route path='/youtube/callback/getChannelDetails' element={<PrivateRoute><YoutubeCallback /></PrivateRoute>} />
                     <Route path='/quantum-share/callback/reddit' element={<PrivateRoute><RedditCallback /></PrivateRoute>} />
+                    <Route path='/quantum-share/pinterest/callback/profileDetails' element={<PrivateRoute><PinterestCallback /></PrivateRoute>} />
                     <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
             </BrowserRouter>

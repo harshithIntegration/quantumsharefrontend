@@ -1,15 +1,20 @@
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
-import Button from '@mui/material/Button';
 import axiosInstance from "../Helper/AxiosInstance";
 import pinterest1 from '../Assets/pinterest1.svg';
-import pinteresticon from '../Assets/redditSmall.svg';
+import pinteresticon from '../Assets/pinterestsmall.png';
 import { ReactSVG } from 'react-svg';
 import { toast } from 'react-toastify';
-import { Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, Button, IconButton, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import WarningIcon from '@mui/icons-material/Warning';
+import { setPinterestLoggedIn } from '../Redux/action/loginStatusSilce';
+import { useDispatch, useSelector } from 'react-redux';
+import { setPinterestName } from '../Redux/action/NameSlice';
+import { setPinterestProfile } from '../Redux/action/pageUrlsSlice';
 
 const PinterestLogin = () => {
     const token = localStorage.getItem('token');
@@ -17,11 +22,47 @@ const PinterestLogin = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loading, setLoading] = useState(false);
     const [disconnecting, setDisconnecting] = useState(false);
-    const [channelImageUrl, setChannelImageUrl] = useState('');
-    const [channelName, setChannelName] = useState('');
-    const [subscriberCount, setSubscriberCount] = useState('');
-    const {t} = useTranslation('');
-    const navigate=useNavigate()
+    const [pinterestProfileImage, setPinterestProfileImage] = useState('');
+    const [pinterestProfileName, setPinterestProfileName] = useState('');
+    const [pinterestFollowersCount, setPinterestFollowersCount] = useState('');
+    const [isSessionExpired, setIsSessionExpired] = useState(false);
+    const { t } = useTranslation('');
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const { pinterestLoggedIn } = useSelector((state) => state.loginStatus)
+
+    const fetchConnectedSocial = async () => {
+        try {
+            const endpoint = '/quantum-share/user/connected/socialmedia/pinterest'
+            const response = await axiosInstance.get(endpoint, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            if (response.data.status === 'success' && response.data.data) {
+                const { pinterestProfileImage, pinterestProfileName, pinterestFollowersCount } = response.data.data.pinterest;
+                console.log(pinterestProfileImage);
+                setPinterestProfileImage(pinterestProfileImage);
+                dispatch(setPinterestProfile(pinterestProfileImage))
+                setPinterestProfileName(pinterestProfileName);
+                dispatch(setPinterestName(pinterestProfileName))
+                setPinterestFollowersCount(pinterestFollowersCount);
+                console.log('Pinterest Fetch:', response)
+                dispatch(setPinterestLoggedIn(true))
+            }
+        }
+        catch (error) {
+            console.error(error)
+            if (error.response?.data?.code === 121) {
+                setIsSessionExpired(true);
+                localStorage.removeItem('token');
+            }
+        }
+    }
+
+    useEffect(() => {
+        fetchConnectedSocial()
+    }, [token])
 
     const handlePinterestLogin = async () => {
         setLoading(true);
@@ -32,17 +73,18 @@ const PinterestLogin = () => {
                 }
             });
             const oauthUrl = response.data.data;
+            console.log(oauthUrl);
+            window.location.href = oauthUrl;
         } catch (error) {
             console.error('Error', error);
-            if(error){
+            if (error) {
                 toast.error('Error loading Pinterest Login Page. Please try again later.');
-            }else if(error.response.data.code===121){
+            } else if (error.response.data.code === 121) {
                 localStorage.removeItem('token')
                 navigate('/session')
             }
-            
-        } 
-    }    
+        }
+    }
 
     const handleDisconnect = () => {
         setOpen(true);
@@ -56,77 +98,130 @@ const PinterestLogin = () => {
         handleClose();
         setDisconnecting(true)
         try {
-            await axiosInstance.get('/quantum-share/disconnect/youtube', {
+            await axiosInstance.get('/quantum-share/disconnect/pinterest', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
-            setIsLoggedIn(false);
-            toast.success("Disconnected from Youtube!");
+            dispatch(setPinterestLoggedIn(false))
+            setPinterestName('');
+            setPinterestProfile('');
+            setPinterestFollowersCount('');
+            toast.success("Disconnected from Pinterest!");
         } catch (error) {
-            console.error('Error disconnecting from Youtube:', error);
-           if (error) {
-            toast.error("Error disconnecting from Youtube. Please try again later.");
-           }else if(error.response.data.code===121){
-            localStorage.removeItem('token')
-            navigate('/session')
-        }
+            console.error('Error disconnecting from Pinterest:', error);
+            if (error) {
+                toast.error("Error disconnecting from Pinterest. Please try again later.");
+            } else if (error.response.data.code === 121) {
+                localStorage.removeItem('token')
+                navigate('/session')
+            }
         } finally {
             setDisconnecting(false)
         }
     };
-    
+
+    const adjustFontSize = (username) => {
+        if (username.length > 20) return '0.875rem';
+        if (username.length > 15) return '0.962rem';
+        if (username.length > 10) return '1.2rem';
+        return '1.2rem';
+    };
+
     return (
         <>
             <section className='box-soc' style={{ paddingTop: '20px' }}>
-                {isLoggedIn ? (
-                    <div className="profile-container">
-                        <div className="profile-circle">
-                            <img
-                                src={channelImageUrl}
-                                alt="User Profile"
-                                style={{ width: '3.9rem', height: '3.9rem', borderRadius: '50%' }}
-                            />
-                            <div className="instagram-icon">
-                                <ReactSVG src={pinteresticon} />
+                {pinterestLoggedIn ? (
+                    <>
+                        <div className="profile-container">
+                            <div className="profile-circle">
+                                <img
+                                    src={pinterestProfileImage}
+                                    alt="User Profile"
+                                    style={{ width: '3.9rem', height: '3.9rem', borderRadius: '50%' }}
+                                />
+                                <div style={{ position: 'relative', bottom: '1.85rem', right: '-2rem', width: '2.5rem', height: '2.5rem' }}>
+                                    <img src={pinteresticon} />
+                                </div>
                             </div>
                         </div>
-                    </div>
+                        <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <div
+                                style={{
+                                    textAlign: 'center',
+                                    overflow: 'hidden',
+                                    whiteSpace: 'nowrap',
+                                    textOverflow: 'ellipsis',
+                                    maxWidth: '200px',
+                                    height: '2rem',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <p style={{ marginTop: '1px', fontSize: adjustFontSize(pinterestProfileName) }}>
+                                    <span style={{ color: 'gray' }}>{pinterestProfileName}</span>
+                                </p>
+                            </div>
+                            <h5>{`Followers : ${pinterestFollowersCount}`}</h5>
+                        </div>
+                    </>
                 ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', marginTop: '6px' }}>
-                        <ReactSVG src={pinterest1}></ReactSVG>
-                    </div>
+                    <>
+                        <div style={{ display: 'flex', flexDirection: 'column', marginTop: '8px' }}>
+                            <ReactSVG src={pinterest1}></ReactSVG>
+                        </div>
+                        <div style={{ marginTop: '15px', textAlign: 'center', overflow: 'visible', whiteSpace: 'nowrap' }}>
+                            <p style={{ marginTop: '1px', fontSize: '1.2rem', overflow: 'visible' }}>
+                                <span style={{ color: 'gray' }}>Pinterest</span>
+                            </p>
+                        </div>
+                    </>
                 )}
-                <div style={{ marginTop: '18px' }}>
-                    <p style={{ marginTop: '1px', fontSize: '1.2rem' }}>
-                        <span style={{ color: 'gray' }}>
-                            {channelName ? channelName : 'Pinterest'}
-                        </span>
-                    </p>
-                    <h5>{subscriberCount ? `Subsrcibers Count : ${subscriberCount}` : ''}</h5>
-                </div>
                 {loading || disconnecting ? (
-                    <Button variant='contained' sx={{ margin: '30px auto', marginBottom: '10px', fontWeight: '600' }} disabled>
+                    <Button variant='contained' sx={{ marginTop: pinterestLoggedIn ? '15px' : '30px', marginBottom: '10px', fontWeight: '600' }} disabled>
                         {loading ? 'Connecting...' : 'Disconnecting...'}
                     </Button>
                 ) : (
-                    !isLoggedIn ? (
-                        <Button variant='contained' sx={{ margin: '30px auto', marginBottom: '10px', fontWeight: '600' }} onClick={handlePinterestLogin} disabled>{t('connect')}</Button>
+                    !pinterestLoggedIn ? (
+                        <Button variant='contained' sx={{ marginTop: '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handlePinterestLogin}>{t('connect')}</Button>
                     ) : (
-                        <Button variant='contained' sx={{ margin: '30px auto', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>{t('disconnect')}</Button>
+                        <Button variant='contained' sx={{ marginTop: '20px', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>{t('disconnect')}</Button>
                     )
                 )}
             </section>
+
             <Dialog open={open} onClose={handleClose} maxWidth='lg'>
                 <DialogContent>
                     <DialogContentText sx={{ color: 'black', fontSize: '17px' }}>
-                        {t('confirmDisconnect')} {channelName} Youtube Channel ?
+                        {t('confirmDisconnect')} <b>{pinterestProfileName}</b> Pinterest Profile ?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>{t('no')}</Button>
                     <Button onClick={handleConfirmDisconnect} autoFocus>{t('yes')}</Button>
                 </DialogActions>
+            </Dialog>
+            <Dialog open={isSessionExpired} aria-labelledby="alert-dialog-title" PaperProps={{ sx: { backgroundColor: '#ffffff', width: '40vw', height: '30vh' } }}>
+                <DialogContent sx={{ backgroundColor: '#ffffff' }}>
+                    <DialogContentText sx={{ color: 'black', display: 'flex', fontSize: '20px', alignItems: 'center' }}>
+                        <IconButton>
+                            <WarningIcon
+                                style={{ color: 'orange', cursor: 'pointer', marginTop: '5px', fontSize: '40px', }}
+                            />
+                        </IconButton>
+                        <div>
+                            <Typography sx={{ fontSize: '20px', fontWeight: 'bold' }}>Your session has expired</Typography>
+                            <Typography sx={{ fontSize: '20px', position: 'relative', top: '5px' }}>Please log in again to continue using the app</Typography>
+                        </div>
+                    </DialogContentText>
+                    <DialogContentText sx={{ backgroundColor: '#ffffff', fontSize: '20px', fontWeight: 'bold', textAlign: 'center' }}>
+                        <Link to="/login">
+                            <Button sx={{ color: '#ba343b', fontSize: '15px', fontWeight: '600', border: '1px solid #ba343b', margin: '18px auto' }} variant="outlined">
+                                Login</Button>
+                        </Link>
+                    </DialogContentText>
+                </DialogContent>
             </Dialog>
         </>
     );
