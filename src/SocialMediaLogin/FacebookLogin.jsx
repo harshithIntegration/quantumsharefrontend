@@ -84,8 +84,8 @@ const FacebookLogin = () => {
             } else {
                 window.fbAsyncInit = function () {
                     FB.init({
-                        // appId: '421449853704517',
-                        appId: '1397130744461736',
+                        appId: '421449853704517',
+                        // appId: '1397130744461736',
                         cookie: true,
                         xfbml: true,
                         version: 'v19.0'

@@ -63,35 +63,35 @@
 //     //     setAiOpen(true)
 //     // }
 
-//     const handleSubmit = async () => {
-//         try {
-//             setLoading(true)
-//             const formData = new FormData();
-//             formData.append('textPromt', input);
+    // const handleSubmit = async () => {
+    //     try {
+    //         setLoading(true)
+    //         const formData = new FormData();
+    //         formData.append('textPromt', input);
 
-//             const endpoint = "/quantum-share/generate-image";
-//             const response = await axiosInstance.post(endpoint, formData, {
-//                 responseType: 'arraybuffer',
-//                 headers: {
-//                     'Accept': 'application/json',
-//                 },
-//             });
-//             console.log(response);
-//             const blob = new Blob([response.data], { type: 'image/png' });
-//             console.log(blob);
-//             const imageUrl = URL.createObjectURL(blob);
-//             url = imageUrl;
-//             console.log(url);
-//             console.log(imageUrl);
-//             setImageSrc(imageUrl);
-//             setError('');
-//         } catch (error) {
-//             console.error(error);
-//             if (error.response && error.response.data && error.response.data.message) {
-//                 setError(error.response.data.message);
-//             } else { setError('Error generating image'); }
-//         } finally { setLoading(false); }
-//     }
+    //         const endpoint = "/quantum-share/generate-image";
+    //         const response = await axiosInstance.post(endpoint, formData, {
+    //             responseType: 'arraybuffer',
+    //             headers: {
+    //                 'Accept': 'application/json',
+    //             },
+    //         });
+    //         console.log(response);
+    //         const blob = new Blob([response.data], { type: 'image/png' });
+    //         console.log(blob);
+    //         const imageUrl = URL.createObjectURL(blob);
+    //         url = imageUrl;
+    //         console.log(url);
+    //         console.log(imageUrl);
+    //         setImageSrc(imageUrl);
+    //         setError('');
+    //     } catch (error) {
+    //         console.error(error);
+    //         if (error.response && error.response.data && error.response.data.message) {
+    //             setError(error.response.data.message);
+    //         } else { setError('Error generating image'); }
+    //     } finally { setLoading(false); }
+    // }
 
 //     const [copied, setCopied] = useState(false);
 
@@ -291,8 +291,38 @@ const QI = ({ onAiClose }) => {
         }
     }
 
-    const handleSubmit = () => {
-        setAiOpen(true)
+    // const handleSubmit = () => {
+    //     setAiOpen(true)
+    // }
+
+        const handleSubmit = async () => {
+        try {
+            setLoading(true)
+            const formData = new FormData();
+            formData.append('textPromt', input);
+
+            const endpoint = "/quantum-share/generate-image";
+            const response = await axiosInstance.post(endpoint, formData, {
+                responseType: 'arraybuffer',
+                headers: {
+                    'Accept': 'application/json',
+                },
+            });
+            console.log(response);
+            const blob = new Blob([response.data], { type: 'image/png' });
+            console.log(blob);
+            const imageUrl = URL.createObjectURL(blob);
+            url = imageUrl;
+            console.log(url);
+            console.log(imageUrl);
+            setImageSrc(imageUrl);
+            setError('');
+        } catch (error) {
+            console.error(error);
+            if (error.response && error.response.data && error.response.data.message) {
+                setError(error.response.data.message);
+            } else { setError('Error generating image'); }
+        } finally { setLoading(false); }
     }
 
     const [copied, setCopied] = useState(false);
@@ -400,7 +430,7 @@ const QI = ({ onAiClose }) => {
                             >
                                 Generate &nbsp;<AutoAwesomeIcon />
                             </Button>
-                            <Dialog open={aiopen} onClose={handleClose} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description" fullWidth>
+                            {/* <Dialog open={aiopen} onClose={handleClose} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description" fullWidth>
                                 <DialogContent>
                                     <DialogContentText sx={{ color: 'black', fontSize: '18px' }}>Image generation is not for Free Trial</DialogContentText>
                                 </DialogContent>
@@ -408,7 +438,7 @@ const QI = ({ onAiClose }) => {
                                     <Button onClick={handleClose} style={{ color: '#ba343b' }}>Cancel</Button>
                                     <Button onClick={handleClose} style={{ color: '#ba343b' }} autoFocus>Ok</Button>
                                 </DialogActions>
-                            </Dialog>
+                            </Dialog> */}
                         </DialogContent>
                     </Grid>
                     <Grid item xs={12} md={6} sx={{ paddingLeft: '15px' }}>
