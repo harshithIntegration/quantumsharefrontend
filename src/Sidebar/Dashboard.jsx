@@ -1,7 +1,8 @@
+
 import React, { useEffect, useState } from 'react'
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, Label } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line} from 'recharts';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import PhotoFilterIcon from '@mui/icons-material/PhotoFilter';
 import TryIcon from '@mui/icons-material/Try';
@@ -20,6 +21,7 @@ import AutoGraphIcon from '@mui/icons-material/AutoGraph';
 import { useTranslation } from 'react-i18next';
 import { Dialog, DialogContent, DialogContentText, Typography, IconButton } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
+import axiosInstance from '../Helper/AxiosInstance';
 const Dashboard = () => {
     const { remainingDays, remainingCredits } = useSelector((state) => state.data);
     const dispatch = useDispatch();
@@ -28,74 +30,62 @@ const Dashboard = () => {
     const [Postopen, setpostopen] = useState(false)
     const { t } = useTranslation();
     const [isSessionExpired, setIsSessionExpired] = useState(false);
-
+    let token = localStorage.getItem("token");
     const handleSessionExpired = () => {
         console.log('Session expired, opening dialog');
         setIsSessionExpired(true);
     };
-
     useEffect(() => {
         FetchUser(dispatch, handleSessionExpired);
     }, [dispatch]);
-    const data = [
-        {
-            name: 'Jan',
-            competitors: 13,
-            followers: 24,
-            no: 50,
-        },
-        {
-            name: 'Feb',
-            competitors: 21,
-            followers: 13,
-        },
-        {
-            name: 'Mar',
-            competitors: 32,
-            followers: 8,
-        },
-        {
-            name: 'Apr',
-            competitors: 43,
-            followers: 39,
-
-        },
-        {
-            name: 'May',
-            competitors: 25,
-            followers: 40,
-        },
-        {
-            name: 'Jun',
-            competitors: 16,
-            followers: 30,
-        },
-    ];
-
+    useEffect(() => {
+        FetchUser(dispatch, handleSessionExpired);
+    }, [dispatch]);
+    const [combinedData, setCombinedData] = useState([]);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axiosInstance.get('/quantum-share/socialmedia/get/graph/data', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (response.data.status === "success") {
+                    const maxData = response.data.data.max;
+                    const dailyData = response.data.data.daily;
+                    const allDates = new Set([...Object.keys(maxData), ...Object.keys(dailyData)]);
+                    const combinedChartData = Array.from(allDates).map(date => ({
+                        date,
+                        maxPosts: maxData[date],
+                        dailyPosts: dailyData[date] || 0
+                    }));
+                    combinedChartData.sort((a, b) => new Date(a.date) - new Date(b.date));
+                    setCombinedData(combinedChartData);
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error.response ? error.response.data : error.message);
+            }
+        };
+        fetchData();
+    }, []);
     const handleAIComponent = () => {
         setAIopen(!AIopen)
     }
-
     const handleAIClose = () => {
         setAIopen(false)
     }
-
     const handleSocialClick = () => {
         navigate('/social-integration')
     }
-
     const handleAnalyticsClick = () => {
         navigate('/analytics')
     }
-
     const handlePost = () => {
         setpostopen(!Postopen)
     }
     const handleClosePost = () => {
         setpostopen(false)
     }
-
-
     return (
         <>
             <div>
@@ -186,59 +176,42 @@ const Dashboard = () => {
                                 <h4 style={{ padding: '10px', backgroundColor: 'white', margin: '10px', marginLeft: '1rem', borderRadius: '5px', marginTop: '15px', fontSize: 20, color: '#ba343b' }}>{t('analyticsOverview')}</h4>
                             </Grid>
                             <Grid item xs={12} md={6} lg={6}>
-                                <div className='charts' style={{ background: 'white', padding: '20px', margin: '10px', marginTop: '0px' }}>
-                                    <ResponsiveContainer width="100%" height="100%" >
-                                        <BarChart
-                                            width={500}
-                                            height={300}
-                                            data={data}
-                                            margin={{
-                                                top: 10,
-                                                right: 30,
-                                                left: 10,
-                                                bottom: 0,
-                                            }}
-                                        >
+                                <div className='charts' style={{ background: 'white', padding: '20px', margin: '10px', height: '300px' }}>
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <LineChart data={combinedData} height={400}>
                                             <CartesianGrid strokeDasharray="3 3" />
-                                            <XAxis dataKey="name" />
-                                            <YAxis >
-                                                <Label value="Activity In Percentage" angle={-90} position="insideLeft" offset={0} style={{ textAnchor: 'middle' }} />
-                                            </YAxis>
+                                            <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+                                            <YAxis />
                                             <Tooltip />
                                             <Legend />
-                                            <Bar dataKey="followers" fill="#d9686e" />
-                                            <Bar dataKey="competitors" fill="#f5cbcd" />
-                                        </BarChart>
+                                            <Line type="monotone" dataKey="maxPosts" stroke="#000" name="Max Posts" />
+                                            <Line type="monotone" dataKey="dailyPosts" stroke="#d9686e" name="Daily Posts" />
+                                        </LineChart>
                                     </ResponsiveContainer>
                                 </div>
                             </Grid>
                             <Grid item xs={12} md={6} lg={6}>
                                 <div className='charts' style={{ background: 'white', padding: '20px', margin: '10px', marginTop: '0px' }}>
-                                    <ResponsiveContainer width="100%" height="100%" >
-                                        <LineChart
-                                            width={500}
-                                            height={300}
-                                            data={data}
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <BarChart data={combinedData} width={500}
+                                            height={400}
                                             margin={{
                                                 top: 10,
                                                 right: 30,
                                                 left: 10,
                                                 bottom: 0,
-                                            }}
-                                        >
+                                            }}>
                                             <CartesianGrid strokeDasharray="3 3" />
-                                            <XAxis dataKey="name" />
-                                            <YAxis >
-                                                <Label value="Activity In Percentage" angle={-90} position="insideLeft" offset={0} style={{ textAnchor: 'middle' }} />
-                                            </YAxis>
+                                            <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+                                            <YAxis />
                                             <Tooltip />
                                             <Legend />
-                                            <Line type="monotone" dataKey="followers" stroke="#d9686e" activeDot={{ r: 8 }} />
-                                            <Line type="monotone" dataKey="competitors" stroke="#f5cbcd" />
-                                        </LineChart>
+                                            <Bar dataKey="maxPosts" fill="#d9686e" name="Max Posts" />
+                                        </BarChart>
                                     </ResponsiveContainer>
                                 </div>
                             </Grid>
+
                             <Grid item xs={12} md={12} lg={12}>
                                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
                                     <Card className='mystyle' sx={{ width: 270, height: 300, margin: 1 }}>
@@ -317,5 +290,4 @@ const Dashboard = () => {
         </>
     );
 };
-
 export default Dashboard;

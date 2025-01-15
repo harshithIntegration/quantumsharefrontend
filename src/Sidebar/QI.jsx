@@ -324,7 +324,6 @@ const QI = ({ onAiClose }) => {
             } else { setError('Error generating image'); }
         } finally { setLoading(false); }
     }
-
     const [copied, setCopied] = useState(false);
     const copyTextToClipboard = () => {
         navigator.clipboard.writeText(textResponse)
