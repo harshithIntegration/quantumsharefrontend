@@ -184,7 +184,7 @@ const PinterestLogin = () => {
                     </Button>
                 ) : (
                     !pinterestLoggedIn ? (
-                        <Button variant='contained' sx={{ marginTop: '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handlePinterestLogin}>{t('connect')}</Button>
+                        <Button variant='contained' sx={{ marginTop: '30px', marginBottom: '10px', fontWeight: '600' }} onClick={handlePinterestLogin} disabled>{t('connect')}</Button>
                     ) : (
                         <Button variant='contained' sx={{ marginTop: '20px', marginBottom: '10px', fontWeight: '600' }} onClick={handleDisconnect}>{t('disconnect')}</Button>
                     )

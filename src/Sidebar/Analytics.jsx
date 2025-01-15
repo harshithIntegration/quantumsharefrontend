@@ -1,5 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/img-redundant-alt */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
@@ -26,13 +26,15 @@ import { ReactSVG } from 'react-svg';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label } from 'recharts';
 import CallMadeIcon from '@mui/icons-material/CallMade';
 import CallReceivedIcon from '@mui/icons-material/CallReceived';
-import { PieChart } from '@mui/x-charts';
+import { PieChart as MuiPieChart } from '@mui/x-charts';
 import { TailSpin } from 'react-loader-spinner';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useTranslation } from 'react-i18next';
 import { Dialog, DialogContent, DialogContentText, DialogActions, Button, IconButton, Typography } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
+import PieChart from './PieCharts';
+
 const Analytics = () => {
     let token = localStorage.getItem("token");
     const [recentPosts, setRecentPosts] = useState([]);
@@ -59,7 +61,7 @@ const Analytics = () => {
             console.error("Error fetching analytics data", error);
             if (error.response?.data?.code === 121) {
                 console.log('1');
-                setIsSessionExpired(true); // Show session expired dialog
+                setIsSessionExpired(true);
                 localStorage.removeItem('token');
             }
         } finally {
@@ -88,7 +90,7 @@ const Analytics = () => {
             if (error.response?.data?.code === 121) {
                 console.log('2');
                 
-                setIsSessionExpired(true); // Show session expired dialog
+                setIsSessionExpired(true);
                 localStorage.removeItem('token');
             }else if (error.response && error.response.data) {
                 const { message, platform } = error.response.data;
@@ -130,14 +132,13 @@ const Analytics = () => {
                     Authorization: `Bearer ${token}`,
                 }
             });
-            
             setPostsToDisplay(response.data.data);
             setViewMoreOpen(true);
         } catch (error) {
             console.error('Error fetching more posts:', error);
             if (error.response?.data?.code === 121) {
                 console.log('3');
-                setIsSessionExpired(true); // Show session expired dialog
+                setIsSessionExpired(true);
                 localStorage.removeItem('token');
             }
         }
@@ -146,7 +147,6 @@ const Analytics = () => {
     const handleViewMoreClose = () => {
         setViewMoreOpen(false);
     };
-
     const iconStyle = {
         position: 'absolute',
         top: '55%',
@@ -154,7 +154,6 @@ const Analytics = () => {
         objectFit: 'contain',
         transform: 'translateY(-50%)',
     };
-
     const data = [
         {
             name: 'Jan',
@@ -390,6 +389,7 @@ const Analytics = () => {
                                                                             </button>
                                                                         </div>
                                                                     </Grid>
+                                                                
                                                                 ))}
                                                             {recentPosts.filter(post => post.imageUrl).length >= 10 && (
                                                                 <Grid item xs={3}>
@@ -530,7 +530,7 @@ const Analytics = () => {
                                             <div style={{ background: '#fff', padding: '20px', paddingRight: '5px', marginLeft: '20px', marginRight: '15px' }}>
                                                 <p>{t('postEngagement')}</p>
                                                 <div style={{ padding: '18px' }}>
-                                                    <PieChart
+                                                    <MuiPieChart
                                                         series={[
                                                             {
                                                                 data: [
@@ -857,7 +857,7 @@ const Analytics = () => {
                         ) : (
                             selectedPost && (
                                 <Grid container spacing={2}>
-                                    <Grid item xs={6}>
+                                    <Grid item xs={4}>
                                         {selectedPost.platform === 'facebook' && selectedPost.data.media_type.startsWith('video') ? (
                                             <img
                                                 src={selectedPost.data.full_picture}
@@ -890,8 +890,9 @@ const Analytics = () => {
                                         )}
                                         <br /><br />
                                         <p>{selectedPost.data.description}</p>
+                                        
                                     </Grid>
-                                    <Grid item xs={6}>
+                                    <Grid item xs={4}>
                                         {/* Facebook */}
                                         {selectedPost.data.total_comments !== undefined && (
                                             <p style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
@@ -960,10 +961,10 @@ const Analytics = () => {
                                                 <span style={{ fontWeight: '600' }}>Reach : {selectedPost.data.reach}</span>
                                             </p>
                                         )}
-                                        {selectedPost.data.media_type === 'video' && selectedPost.data.video_views !== undefined && (
+                                        {selectedPost.data.media_type === 'video' && selectedPost.data.ig_reels_video_view_total_time !== undefined && (
                                             <p style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                                 <VisibilityOutlinedIcon sx={{ color: 'grey', fontSize: '20px', marginRight: '8px' }} />
-                                                <span style={{ fontWeight: '600' }}>Views : {selectedPost.data.video_views}</span>
+                                                <span style={{ fontWeight: '600' }}>Views : {selectedPost.data.ig_reels_video_view_total_time}</span>
                                             </p>
                                         )}
                                         {/* Youtube */}
@@ -998,7 +999,11 @@ const Analytics = () => {
                                             </p>
                                         )} */}
                                     </Grid>
+                                    <Grid item xs={4}>
+                                    <PieChart data={selectedPost.data} platform={selectedPost.platform} />
+                                    </Grid>
                                 </Grid>
+                              
                             )
                         )}
                     </DialogContent>

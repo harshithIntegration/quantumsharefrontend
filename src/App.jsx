@@ -72,3 +72,17 @@ const App = () => {
 };
 
 export default App;
+
+
+// import React from 'react'
+// import Analytics from './Sidebar/Analytics'
+
+// const App = () => {
+//   return (
+//     <div>
+//       <Analytics/>
+//     </div>
+//   )
+// }
+
+// export default App

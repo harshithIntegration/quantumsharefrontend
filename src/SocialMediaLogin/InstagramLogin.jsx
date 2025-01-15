@@ -82,8 +82,8 @@ const InstagramLogin = () => {
             } else {
                 window.fbAsyncInit = function () {
                     FB.init({
-                        appId: '421449853704517',
-                        // appId: '1397130744461736',
+                        // appId: '421449853704517',
+                        appId: '1397130744461736',
                         cookie: true,
                         xfbml: true,
                         version: 'v19.0'
@@ -161,7 +161,7 @@ const InstagramLogin = () => {
         } catch (error) {
             console.error('Error sending token to backend:', error);
             if (error.response?.data?.code === 121) {
-                setIsSessionExpired(true); // Show session expired dialog
+                setIsSessionExpired(true); 
                 localStorage.removeItem('token');
             }else if (error) {
                 toast.error("Error Connecting to Instagram. Please try again later.");
