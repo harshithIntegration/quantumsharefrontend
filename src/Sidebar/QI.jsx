@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 // /* eslint-disable no-unused-vars */
 // import React, { useState, useContext } from 'react';
 // import Button from '@mui/material/Button';
@@ -63,35 +64,35 @@
 //     //     setAiOpen(true)
 //     // }
 
-    // const handleSubmit = async () => {
-    //     try {
-    //         setLoading(true)
-    //         const formData = new FormData();
-    //         formData.append('textPromt', input);
+// const handleSubmit = async () => {
+//     try {
+//         setLoading(true)
+//         const formData = new FormData();
+//         formData.append('textPromt', input);
 
-    //         const endpoint = "/quantum-share/generate-image";
-    //         const response = await axiosInstance.post(endpoint, formData, {
-    //             responseType: 'arraybuffer',
-    //             headers: {
-    //                 'Accept': 'application/json',
-    //             },
-    //         });
-    //         console.log(response);
-    //         const blob = new Blob([response.data], { type: 'image/png' });
-    //         console.log(blob);
-    //         const imageUrl = URL.createObjectURL(blob);
-    //         url = imageUrl;
-    //         console.log(url);
-    //         console.log(imageUrl);
-    //         setImageSrc(imageUrl);
-    //         setError('');
-    //     } catch (error) {
-    //         console.error(error);
-    //         if (error.response && error.response.data && error.response.data.message) {
-    //             setError(error.response.data.message);
-    //         } else { setError('Error generating image'); }
-    //     } finally { setLoading(false); }
-    // }
+//         const endpoint = "/quantum-share/generate-image";
+//         const response = await axiosInstance.post(endpoint, formData, {
+//             responseType: 'arraybuffer',
+//             headers: {
+//                 'Accept': 'application/json',
+//             },
+//         });
+//         console.log(response);
+//         const blob = new Blob([response.data], { type: 'image/png' });
+//         console.log(blob);
+//         const imageUrl = URL.createObjectURL(blob);
+//         url = imageUrl;
+//         console.log(url);
+//         console.log(imageUrl);
+//         setImageSrc(imageUrl);
+//         setError('');
+//     } catch (error) {
+//         console.error(error);
+//         if (error.response && error.response.data && error.response.data.message) {
+//             setError(error.response.data.message);
+//         } else { setError('Error generating image'); }
+//     } finally { setLoading(false); }
+// }
 
 //     const [copied, setCopied] = useState(false);
 
@@ -295,7 +296,7 @@ const QI = ({ onAiClose }) => {
     //     setAiOpen(true)
     // }
 
-        const handleSubmit = async () => {
+    const handleSubmit = async () => {
         try {
             setLoading(true)
             const formData = new FormData();
@@ -358,7 +359,7 @@ const QI = ({ onAiClose }) => {
         <>
             <Dialog
                 fullWidth
-                maxWidth="md" 
+                maxWidth="md"
                 open={true}
                 onClose={onAiClose}
                 PaperProps={{
@@ -368,11 +369,11 @@ const QI = ({ onAiClose }) => {
                         handleSubmit();
                     },
                     sx: {
-                        padding: '10px', 
-                        borderRadius: '12px', 
+                        padding: '10px',
+                        borderRadius: '12px',
                         display: 'flex',
-                        flexDirection: 'column', 
-                        height: '100%', 
+                        flexDirection: 'column',
+                        height: '100%',
                     },
                 }}
             >
@@ -390,7 +391,7 @@ const QI = ({ onAiClose }) => {
                                 name="userMessage"
                                 label="Enter text here"
                                 type="text"
-                                variant="outlined" 
+                                variant="outlined"
                                 value={inputText}
                                 fullWidth
                                 sx={{ marginBottom: '20px' }}

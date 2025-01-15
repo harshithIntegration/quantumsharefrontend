@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
@@ -32,6 +34,7 @@ import { useTranslation } from 'react-i18next';
 import { Dialog, DialogContent, DialogContentText, DialogActions, Button, IconButton, Typography } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
 import PieChart from './PieCharts';
+
 const Analytics = () => {
     let token = localStorage.getItem("token");
     const [recentPosts, setRecentPosts] = useState([]);
@@ -958,10 +961,10 @@ const Analytics = () => {
                                                 <span style={{ fontWeight: '600' }}>Reach : {selectedPost.data.reach}</span>
                                             </p>
                                         )}
-                                        {selectedPost.data.media_type === 'video' && selectedPost.data.video_views !== undefined && (
+                                        {selectedPost.data.media_type === 'video' && selectedPost.data.ig_reels_video_view_total_time !== undefined && (
                                             <p style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                                 <VisibilityOutlinedIcon sx={{ color: 'grey', fontSize: '20px', marginRight: '8px' }} />
-                                                <span style={{ fontWeight: '600' }}>Views : {selectedPost.data.video_views}</span>
+                                                <span style={{ fontWeight: '600' }}>Views : {selectedPost.data.ig_reels_video_view_total_time}</span>
                                             </p>
                                         )}
                                         {/* Youtube */}

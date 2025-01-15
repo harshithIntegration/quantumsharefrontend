@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import axiosInstance from "../Helper/AxiosInstance";
 import telegram1 from '../Assets/telegram1.svg';
@@ -18,6 +20,7 @@ import { setTelegramUrl } from '../Redux/action/pageUrlsSlice';
 import { useTranslation } from 'react-i18next';
 import { Dialog, DialogContent, DialogContentText, Button, IconButton, Typography } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
+
 const TelegramLogin = () => {
     let token = localStorage.getItem("token");
     const [open, setOpen] = useState(false);

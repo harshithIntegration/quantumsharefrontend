@@ -368,7 +368,7 @@ const SignUp = () => {
                                                 }} />
                                         </Grid>
                                         <Grid item xs={10}>
-                                            <TextField required fullWidth id="email" label={t('emailAddress')} name="email" autoComplete="email" value={email}
+                                            <TextField required fullWidth id="email" label={t('email')} name="email" autoComplete="email" value={email}
                                                 onChange={handleChange}
                                                 error={!!errors.email}
                                                 helperText={errors.email}

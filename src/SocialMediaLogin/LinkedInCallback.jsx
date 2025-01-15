@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -121,7 +122,7 @@ const LinkedInCallback = () => {
     const handleProfileClick = () => {
         setActiveSelection('profile');
         setIsSubmitVisible(true);
-        setSelectedUrn(selectedUrn); // Update with actual LinkedIn profile urn
+        setSelectedUrn(selectedUrn); 
         setSelectedAccessToken(selectedAccessToken);
     };
 

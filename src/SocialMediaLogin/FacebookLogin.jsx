@@ -84,8 +84,8 @@ const FacebookLogin = () => {
             } else {
                 window.fbAsyncInit = function () {
                     FB.init({
-                        appId: '421449853704517',
-                        // appId: '1397130744461736',
+                        // appId: '421449853704517',
+                        appId: '1397130744461736',
                         cookie: true,
                         xfbml: true,
                         version: 'v19.0'
@@ -164,7 +164,7 @@ const FacebookLogin = () => {
         } catch (error) {
             console.error("Error fetching Facebook data:", error);
             if (error.response?.data?.code === 121) {
-                setIsSessionExpired(true); // Show session expired dialog
+                setIsSessionExpired(true); 
                 localStorage.removeItem('token');
             }else if(error){
                 toast.error("Failed to fetch Facebook data.");
@@ -182,7 +182,7 @@ const FacebookLogin = () => {
 
     const handleFBDetailsClose = () => {
         setOpenFBDetails(false);
-        setLoading(false);
+        setLoading(true);
         setSelectedPages([]);
     }
 
@@ -243,7 +243,7 @@ const FacebookLogin = () => {
         } catch (error) {
             console.error('Error sending selected pages to backend:', error);
             if (error.response?.data?.code === 121) {
-                setIsSessionExpired(true); // Show session expired dialog
+                setIsSessionExpired(true); 
                 localStorage.removeItem('token');
             } if (error) {
                 toast.error("Error saving pages. Please try again later.");
