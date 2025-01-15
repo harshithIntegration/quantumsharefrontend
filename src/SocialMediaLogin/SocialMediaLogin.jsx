@@ -16,6 +16,7 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import RedditLogin from './RedditLogin';
 import PinterestLogin from './PinterestLogin';
 import { useTranslation } from 'react-i18next';
+import { FaCrown } from "react-icons/fa";
 
 const SocialMediaLogin = () => {
     const { t } = useTranslation('');
@@ -45,6 +46,7 @@ const SocialMediaLogin = () => {
                                     <LinkedInLogin />
                                     <YoutubeLogin />
                                     <RedditLogin />
+                                    {/* <PinterestLogin /> */}
                                     <TelegramLogin />
                                 </div>
                             </div>
@@ -57,7 +59,7 @@ const SocialMediaLogin = () => {
                                 <div className='box-container-soc' style={{ display: 'flex', justifyContent: 'space-evenly', margin: '25px auto', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
                                     <div style={{ position: 'relative', textAlign: 'center' }}>
                                         <TwitterLogin />
-                                        <AutoAwesomeIcon style={{ position: 'absolute', top: '10px', right: '25px', color: '#ffbf00', fontSize: '2rem' }} />
+                                        <FaCrown style={{ position: 'absolute', top: '5px', right: '8px', color: '#ffbf00', fontSize: '1.5rem' }} />
                                     </div>
                                     {/* <div style={{ position: 'relative', textAlign: 'center' }}>
                                         <RedditLogin />
@@ -65,7 +67,7 @@ const SocialMediaLogin = () => {
                                     </div> */}
                                     <div style={{ position: 'relative', textAlign: 'center' }}>
                                         <PinterestLogin />
-                                        <AutoAwesomeIcon style={{ position: 'absolute', top: '10px', right: '25px', color: '#ffbf00', fontSize: '2rem' }} />
+                                        <FaCrown style={{ position: 'absolute', top: '5px', right: '8px', color: '#ffbf00', fontSize: '1.5rem' }} />
                                     </div>
                                 </div>
                             </div>

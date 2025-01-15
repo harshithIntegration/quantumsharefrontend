@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { Dialog, DialogContent, DialogContentText, Button, IconButton, Typography } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
 import { Link } from 'react-router-dom';
+
 const YoutubeCallback = () => {
     const token = localStorage.getItem('token');
     const dispatch = useDispatch();
@@ -58,7 +59,7 @@ const YoutubeCallback = () => {
         } catch (error) {
             console.error('Error fetching channel details:', error);
             if (error.response?.data?.code === 121) {
-                setIsSessionExpired(true); // Show session expired dialog
+                setIsSessionExpired(true); 
                 localStorage.removeItem('token');
             }else if (error.response && error.response.data.code === 404) {
                 setDialogMessage("Please create a YouTube channel and try again.");

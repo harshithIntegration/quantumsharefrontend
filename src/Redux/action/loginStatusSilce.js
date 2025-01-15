@@ -6,7 +6,8 @@ const initialState = {
     telLoggedIn: false,
     linkLoggedIn: false,
     YouLoggedIn: false,
-    redditLoggedIn:false
+    redditLoggedIn: false,
+    pinterestLoggedIn: false
 };
 
 const loginStatusSlice = createSlice({
@@ -37,9 +38,13 @@ const loginStatusSlice = createSlice({
             // console.log(action.payload);
             state.redditLoggedIn = action.payload
         },
+        setPinterestLoggedIn: (state, action) => {
+            // console.log(action.payload);
+            state.pinterestLoggedIn = action.payload
+        },
     },
 });
 
-export const { setIsLoggedIn, setInstaLoggedIn, setTelLoggedIn, setLinkLoggedIn, setYouLoggedIn,setRedditLoggedIn } = loginStatusSlice.actions;
+export const { setIsLoggedIn, setInstaLoggedIn, setTelLoggedIn, setLinkLoggedIn, setYouLoggedIn, setRedditLoggedIn, setPinterestLoggedIn } = loginStatusSlice.actions;
 
 export default loginStatusSlice.reducer;

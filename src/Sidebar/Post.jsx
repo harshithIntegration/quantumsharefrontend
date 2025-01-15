@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-undef */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-undef */
 /* eslint-disable no-mixed-operators */
@@ -28,8 +29,38 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import QI from './QI';
 import TagIcon from '@mui/icons-material/Tag';
 import { useTranslation } from "react-i18next";
-import { Dialog, DialogContent, DialogContentText,DialogActions, Button, IconButton, Typography } from '@mui/material';
+import { Dialog, DialogContent, DialogContentText, DialogActions, Button, IconButton, Typography } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
+import {
+    ThumbUpAltOutlined,
+    ChatBubbleOutline,
+    ShareTwoTone,
+    FavoriteBorderOutlined,
+    SendOutlined,
+    BookmarkOutlined,
+    Repeat,
+    Send,
+    CommentOutlined,
+    ArrowDownward,
+    ArrowUpward,
+    Chat,
+    ThumbDownAltOutlined,
+} from '@mui/icons-material';
+import {
+    Card,
+    CardHeader,
+    CardMedia,
+    CardContent,
+    CardActions,
+    Avatar,
+} from '@mui/material';
+import { ReactComponent as InstagramIcon } from '../Assets/instagramsmall.svg';
+import { ReactComponent as FacebookIcon } from '../Assets/facebooksmall.svg';
+import { ReactComponent as LinkedInIcon } from '../Assets/linkedinsmall.svg';
+import { ReactComponent as YoutubeIcon } from '../Assets/youtubesmall.svg'
+import { ReactComponent as RedditIcon } from '../Assets/redditSmall.svg'
+import { ReactComponent as TelegramIcon } from '../Assets/telegramsmall.svg'
+
 const Post = ({ onClose }) => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -72,9 +103,28 @@ const Post = ({ onClose }) => {
     const { t } = useTranslation();
     const [isSessionExpired, setIsSessionExpired] = useState(false);
 
-    const handleSelectIconAndSendToParent = (selectedIcons, mediaPlatform) => {
-        setSelectedIcons(selectedIcons);
-        console.log(selectedIcons);
+    const platformData = {
+        instagram: { profilePic: InstagramIcon, username: 'Instagram', bgcolor: 'transparent' },
+        facebook: { profilePic: FacebookIcon, username: 'Facebook', bgcolor: 'transparent' },
+        LinkedIn: { profilePic: LinkedInIcon, username: 'LinkedIn', bgcolor: 'transparent' },
+        youtube: { profilePic: YoutubeIcon, username: 'Youtube', bgcolor: 'transparent' },
+        Reddit: { profilePic: RedditIcon, username: 'Reddit', bgcolor: 'transparent' },
+        Telegram: { profilePic: TelegramIcon, username: 'Telegram', bgcolor: 'transparent' },
+    };
+    const [instaShowMore, setInstaShowMore] = useState(false)
+    const [fbShowMore, setFbShowMore] = useState(false)
+    const [redditShowmore, setRedditShowmore] = useState(false)
+    const [youtubeShowmore, setYoutubeShowmore] = useState(false)
+
+    const maxLength = 150
+    const toggleShowMore1 = () => setInstaShowMore((prev) => !prev);
+    const toggleShowMore2 = () => setFbShowMore((prev) => !prev);
+    const toggleShowMore3 = () => setRedditShowmore((prev) => !prev);
+    const toggleShowMore4 = () => setYoutubeShowmore((prev) => !prev);
+
+    const handleSelectIconAndSendToParent = (mediaPlatform) => {
+        // setSelectedIcons(selectedIcons);
+        // console.log(selectedIcons);
         setMediaPlatform(mediaPlatform);
         if (!mediaPlatform.includes('youtube') && !mediaPlatform.includes('Reddit')) {
             setTitle('');
@@ -84,6 +134,7 @@ const Post = ({ onClose }) => {
         }
         console.log(mediaPlatform);
     };
+
     const [warningMessages, setWarningMessages] = useState([]);
     const maxTitleCharacters = 100;
     const maxCaptionCharacters = 500;
@@ -153,7 +204,12 @@ const Post = ({ onClose }) => {
                 }
             }
         }
-
+        if (mediaPlatform.includes('pinterest')) {
+            if (!title) {
+                newWarningMessages.push("Please enter a title for Pinterest.");
+                shouldDisableShare = true;
+            }
+        }
         if (mediaPlatform.includes('Reddit')) {
             if (!title || !sr) {
                 if (!title) newWarningMessages.push("Please enter a title for Reddit.");
@@ -352,7 +408,8 @@ const Post = ({ onClose }) => {
         'telegram': 'Telegram',
         'LinkedIn': 'LinkedIn',
         'youtube': 'Youtube',
-        'Reddit': 'Reddit'
+        'Reddit': 'Reddit',
+        'pinterest': 'Pinterest'
     };
 
     const getDisplayPlatformName = (platform) => {
@@ -378,6 +435,8 @@ const Post = ({ onClose }) => {
                 return '/quantum-share/post/file/youtube';
             case 'Reddit':
                 return '/quantum-share/post/file/reddit';
+            case 'pinterest':
+                return '/quantum-share/post/file/pinterest';
             default:
                 throw new Error(`Unsupported platform: ${platform}`);
         }
@@ -403,7 +462,9 @@ const Post = ({ onClose }) => {
     const handleSubmit = async () => {
         setConfirmCloseOpen(false);
         setOpen1(false);
-        const platforms = mediaPlatform.split(',');
+        // const platforms = mediaPlatform.split(',');
+        const platforms = Array.isArray(mediaPlatform) ? mediaPlatform : typeof mediaPlatform === 'string' ? mediaPlatform.split(',') : [];
+
         if (!platforms || platforms.length === 0) {
             toast.error('Please Select a Social Media Platform!');
             return;
@@ -414,6 +475,7 @@ const Post = ({ onClose }) => {
             );
             const responses = await Promise.all(platforms.map(async platform => {
                 const endpoint = getEndpointForPlatform(platform);
+                console.log(endpoint)
                 const formData = createFormData(file, caption, title, visibility, platform, sr, image1);
                 try {
                     const response = await axiosInstance.post(endpoint, formData, {
@@ -432,10 +494,8 @@ const Post = ({ onClose }) => {
                                     const postId = res.data.response.id;
                                     var delay = 0;
                                     console.log("before");
-
                                     const contentType = res.data.mediaType;
                                     console.log("content type : " + contentType);
-
                                     if (contentType.startsWith('video')) {
                                         console.log("video section");
                                         const contentlength = res.data.mediaSize;
@@ -554,6 +614,17 @@ const Post = ({ onClose }) => {
                         } else if (response.data.code === 404) {
                             toast.error(response.data.message);
                         }
+                    } else if (platform === 'pinterest') {
+                        if (response.data.success && response.data.success.message) {
+                            const res = response.data.success;
+                            toast.success(res.message);
+                        } else if (response.data.structure?.status === "error" && response.data.structure.code === 114) {
+                            const res = response.data.structure;
+                            console.error('Credit Depleted Error Message:', res.message);
+                            toast.info(res.message);
+                        } else if (response.data.structure?.code === 404) {
+                            toast.error(response.data.structure.message);
+                        }
                     }
                     return { platform, success: true };
                 } catch (error) {
@@ -563,9 +634,9 @@ const Post = ({ onClose }) => {
                         toast.error('Forbidden: You do not have permission to access this resource.');
                     } else if (platform === 'facebook') {
                         if (error.response?.data?.code === 121) {
-                            setIsSessionExpired(true); // Show session expired dialog
+                            setIsSessionExpired(true);
                             localStorage.removeItem('token');
-                        }else if (Array.isArray(responseData)) {
+                        } else if (Array.isArray(responseData)) {
                             responseData.forEach(err => {
                                 if (err.status === "error" && err.code === 114) {
                                     console.error('Credit Depleted Error Message:', err.message);
@@ -577,9 +648,9 @@ const Post = ({ onClose }) => {
                         }
                     } else if (platform === 'instagram') {
                         if (error.response?.data?.code === 121) {
-                            setIsSessionExpired(true); // Show session expired dialog
+                            setIsSessionExpired(true);
                             localStorage.removeItem('token');
-                        }else if (responseData.code === 116) {
+                        } else if (responseData.code === 116) {
                             toast.info('Unsupported aspect ratio. Please use one of Instagram\'s formats: 4:5, 1:1, or 1.91:1.');
                         } else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
                             const err = responseData.structure;
@@ -590,9 +661,9 @@ const Post = ({ onClose }) => {
                         }
                     } else if (platform === 'youtube') {
                         if (error.response?.data?.code === 121) {
-                            setIsSessionExpired(true); // Show session expired dialog
+                            setIsSessionExpired(true);
                             localStorage.removeItem('token');
-                        }else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
+                        } else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
                             const err = responseData.structure;
                             console.error('Credit Depleted Error Message:', err.message);
                             toast.info(err.message);
@@ -603,9 +674,9 @@ const Post = ({ onClose }) => {
                         }
                     } else if (platform === 'telegram') {
                         if (error.response?.data?.code === 121) {
-                            setIsSessionExpired(true); // Show session expired dialog
+                            setIsSessionExpired(true);
                             localStorage.removeItem('token');
-                        }else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
+                        } else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
                             const err = responseData.structure;
                             console.error('Credit Depleted Error Message:', err.message);
                             toast.info(err.message);
@@ -614,9 +685,9 @@ const Post = ({ onClose }) => {
                         }
                     } else if (platform === 'LinkedIn') {
                         if (error.response?.data?.code === 121) {
-                            setIsSessionExpired(true); // Show session expired dialog
+                            setIsSessionExpired(true);
                             localStorage.removeItem('token');
-                        }else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
+                        } else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
                             const err = responseData.structure;
                             console.error('Credit Depleted Error Message:', err.message);
                             toast.info(err.message);
@@ -625,22 +696,33 @@ const Post = ({ onClose }) => {
                         }
                     } else if (platform === 'Reddit') {
                         if (error.response?.data?.code === 121) {
-                            setIsSessionExpired(true); // Show session expired dialog
+                            setIsSessionExpired(true);
                             localStorage.removeItem('token');
-                        }else if (responseData.status === "error" && responseData.code === 114) {
+                        } else if (responseData.status === "error" && responseData.code === 114) {
                             const err = responseData;
                             console.error('Credit Depleted Error Message:', err.message);
                             toast.info(err.message);
                         } else if (responseData?.code === 404) {
                             toast.error(responseData.message);
                         }
+                    } else if (platform === 'pinterest') {
+                        if (error.response?.data?.code === 121) {
+                            setIsSessionExpired(true);
+                            localStorage.removeItem('token');
+                        } else if (responseData.structure?.status === "error" && responseData.structure.code === 114) {
+                            const err = responseData.structure;
+                            console.error('Credit Depleted Error Message:', err.message);
+                            toast.info(err.message);
+                        } else if (responseData.structure?.code === 404) {
+                            toast.error(responseData.structure.message);
+                        }
                     } else if (responseData.code === 115) {
                         toast.error("Token Expired, Please Login Again");
                         setTimeout(() => {
                             navigate("/login");
                         }, 4000);
-                    }if (error.response?.data?.code === 121) {
-                        setIsSessionExpired(true); // Show session expired dialog
+                    } if (error.response?.data?.code === 121) {
+                        setIsSessionExpired(true);
                         localStorage.removeItem('token');
                     } else {
                         console.log('An error occurred while processing your request.');
@@ -830,6 +912,12 @@ const Post = ({ onClose }) => {
         }
     }, [AiText])
 
+    const [selectedBoard, setSelectedBoard] = useState("");
+
+    const handleBoardChange = (event) => {
+        setSelectedBoard(event.target.value);
+    };
+
     return (
         <>
             <Dialog className="postContent" open={open} onClose={closeDialog} fullWidth maxWidth="lg">
@@ -842,12 +930,12 @@ const Post = ({ onClose }) => {
                             </div>
                             <div className="choose">
                                 <div style={{ display: 'flex', gap: '10px' }}>
-                                    {(mediaPlatform.includes('youtube') || mediaPlatform.includes('Reddit')) && (
+                                    {(mediaPlatform.includes('youtube') || mediaPlatform.includes('Reddit') || mediaPlatform.includes('pinterest')) && (
                                         <div style={{ display: 'flex', flexDirection: 'column', width: mediaPlatform.includes('Reddit') ? '48%' : '98%' }}>
                                             <label style={{ fontSize: '12px', fontWeight: 'bold' }}>
                                                 Title <span style={{ color: 'red' }}>*</span>
                                             </label>
-                                            <input required className="area" placeholder="Title ... [Only for YouTube and Reddit]" value={title} name="title" onChange={handleTitleChange} style={{ height: '40px', width: '100%', border: '1px solid #ccc', borderRadius: '5px', resize: 'none', outline: 'none', fontSize: '12px', padding: '12px', paddingRight: '50px', boxSizing: 'border-box' }} />
+                                            <input required className="area" placeholder="Title... [Only for YouTube, Reddit & Pinterest]" value={title} name="title" onChange={handleTitleChange} style={{ height: '40px', width: '100%', border: '1px solid #ccc', borderRadius: '5px', resize: 'none', outline: 'none', fontSize: '12px', padding: '12px', paddingRight: '50px', boxSizing: 'border-box' }} />
                                             <span style={{ position: 'relative', top: '5px', fontSize: '10px', color: title.length === maxTitleCharacters ? 'red' : '#666' }}>{title.length}/{maxTitleCharacters}</span>
                                         </div>)}
                                     {mediaPlatform.includes('Reddit') && (
@@ -855,7 +943,7 @@ const Post = ({ onClose }) => {
                                             <label style={{ fontSize: '12px', fontWeight: 'bold' }}>
                                                 SubReddit <span style={{ color: 'red' }}>*</span>
                                             </label>
-                                            <input required className="area" placeholder="SubReddit ... [Reddit]" value={sr} name="subreddit" onChange={handleSubReddit} style={{
+                                            <input required className="area" placeholder="SubReddit... [Reddit]" value={sr} name="subreddit" onChange={handleSubReddit} style={{
                                                 height: '40px', border: '1px solid #ccc', borderRadius: '5px', resize: 'none', outline: 'none', fontSize: '12px', padding: '12px'
                                             }} />
                                         </div>)}
@@ -1092,50 +1180,369 @@ const Post = ({ onClose }) => {
                                                 </Select>
                                             </FormControl>
                                         )}
+                                        {/* {mediaPlatform.includes('pinterest') && response?.structure?.data?.boardDetails && (
+                                            <FormControl sx={{ width: 242, maxWidth: '100%', marginTop: 4 }}>
+                                                <InputLabel sx={{ mt: -0.5 }}>Select a Pinterest Board</InputLabel>
+                                                <Select
+                                                    value={selectedBoard} 
+                                                    onChange={handleBoardChange}
+                                                    label="Select a Pinterest Board"
+                                                    sx={{ height: '45px' }}
+                                                >
+                                                    {JSON.parse(response.structure.data.boardDetails).map((board) => (
+                                                        <MenuItem key={board.boardId} value={board.boardId}>
+                                                            {board.boardName}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        )} */}
                                     </Stack>
                                 </div>
                             </div>
                         </Grid>
-                        <Grid item lg={5} md={5} xs={12} sx={{ border: 1, borderStyle: 'ridge', display: 'flex', flexDirection: 'column', background: '#f5f5f5' }}>
+                        <Grid item lg={5} md={5} xs={12} sx={{ border: 1, borderStyle: 'ridge', display: 'flex', flexDirection: 'column' }}>
                             <div className="preview" style={{ padding: '8px' }}>
                                 <h4 id="newPost">Media Preview</h4>
                             </div>
-                            <div style={{ background: '#fff', width: '95%', maxWidth: '100%', height: '100%', borderRadius: '10px' }}>
-                                <div className="main-preview" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '10px', background: '#fff' }}>
-                                    <div className="file-preview-container" style={{ height: 'auto', width: '350px', padding: '1px', maxWidth: '100%', textAlign: 'center' }}>
-                                        {fileType === 'image' && file && (
-                                            <img src={URL.createObjectURL(file)} alt="File Preview" className="file-preview" style={{ maxHeight: '100%', maxWidth: '100%' }} />
+                            {mediaPlatform.map((mediaPlatforms) => {
+                                const { profilePic: ProfileIcon, username, bgcolor } = platformData[mediaPlatforms] || {};
+                                return (
+                                    <Card
+                                        variant="outlined"
+                                        sx={{
+                                            maxWidth: 400,
+                                            mb: 2,
+                                            border: '0.1px solid #DFDFDF',
+                                            color: 'black',
+                                        }}
+                                    >
+                                        <CardHeader
+                                            avatar={
+                                                <Avatar sx={{ bgcolor: bgcolor }}>
+                                                    {ProfileIcon && <ProfileIcon />}
+                                                </Avatar>
+                                            }
+                                            title={
+                                                <Typography
+                                                    variant="h6"
+                                                    sx={{ fontSize: '15px', color: '#000' }}
+                                                >
+                                                    {username}
+                                                </Typography>
+                                            }
+                                            subheader={
+                                                mediaPlatforms === 'instagram' ? null : (
+                                                    <Typography
+                                                        variant="body2"
+                                                        sx={{ color: '#b0b3b8', fontSize: '0.7rem' }}
+                                                    >
+                                                        Just now
+                                                    </Typography>
+                                                )
+                                            }
+                                            sx={{ color: '#e4e6eb' }}
+                                            action={
+                                                <IconButton sx={{ color: '#b0b3b8' }}>•••</IconButton>
+                                            }
+                                        />
+                                        {mediaPlatforms === 'instagram' && (
+                                            <>
+                                                {file && fileType === 'image' && (
+                                                    <CardMedia
+                                                        component="img"
+                                                        image={URL.createObjectURL(file)}
+                                                        alt="Post image"
+                                                        sx={{
+                                                            width: '100%',
+                                                            height: 'auto',
+                                                        }}
+                                                    />
+                                                )}
+                                                {file && fileType === 'video' && (
+                                                    <CardMedia
+                                                        component="video"
+                                                        controls
+                                                        src={URL.createObjectURL(file)}
+                                                        alt="Post video"
+                                                        sx={{
+                                                            width: '100%',
+                                                            height: 'auto',
+                                                            backgroundColor: 'black',
+                                                        }}
+                                                    />
+                                                )}
+                                                <CardActions
+                                                    style={{
+                                                        display: 'flex',
+                                                        justifyContent: 'space-between',
+                                                    }}
+                                                >
+                                                    <div>
+                                                        <IconButton sx={{ color: 'gray' }}>
+                                                            <FavoriteBorderOutlined />
+                                                        </IconButton>
+                                                        <IconButton sx={{ color: 'gray' }}>
+                                                            <ChatBubbleOutline />
+                                                        </IconButton>
+                                                        <IconButton sx={{ color: 'gray' }}>
+                                                            <SendOutlined />
+                                                        </IconButton>
+                                                    </div>
+                                                    <IconButton sx={{ color: 'gray' }}>
+                                                        <BookmarkOutlined />
+                                                    </IconButton>
+                                                </CardActions>
+                                                <CardContent>
+                                                    <Typography
+                                                        variant="body2"
+                                                        sx={{
+                                                            flexDirection: 'column',
+                                                            wordWrap: 'break-word',
+                                                            wordBreak: 'break-word',
+                                                            letterSpacing: 'normal'
+                                                        }}
+                                                    >
+                                                        <Typography>{username}</Typography>
+                                                        {instaShowMore ? caption : `${caption.slice(0, maxLength)}`}
+                                                        {caption.length > maxLength && (
+                                                            <Button
+                                                                onClick={toggleShowMore1}
+                                                                sx={{
+                                                                    padding: 0,
+                                                                    minWidth: 0,
+                                                                    color: '#0073e6',
+                                                                    textTransform: 'none',
+                                                                    fontSize: 'inherit',
+                                                                }}
+                                                            >
+                                                                {instaShowMore ? " Show less" : " Show more"}
+                                                            </Button>
+                                                        )}
+
+                                                    </Typography>
+                                                    <Typography
+                                                        variant="caption"
+                                                        sx={{ color: '#b0b3b8', mt: 1 }}
+                                                    >
+                                                        Just now
+                                                    </Typography>
+                                                </CardContent>
+                                            </>
                                         )}
-                                        {/* {imageUrl && (
-                                            <img src={imageUrl} alt="Captured Preview" className="file-preview" style={{ maxHeight: '100%', maxWidth: '100%' }} />
-                                        )} */}
-                                        {fileType === 'video' && file && (
-                                            <video controls className="file-preview" style={{ maxHeight: '100%', maxWidth: '100%' }}>
-                                                <source src={URL.createObjectURL(file)} type="video/mp4" />
-                                                Your browser does not support the video tag.
-                                            </video>
+                                        {(mediaPlatforms === 'facebook' || mediaPlatforms === 'LinkedIn') && (
+                                            <>
+                                                <CardContent>
+                                                    <Typography
+                                                        variant="body2"
+                                                        style={{
+                                                            wordWrap: 'break-word',
+                                                            wordBreak: 'break-word',
+                                                            letterSpacing: 'normal',
+                                                        }}
+                                                    >
+                                                        {fbShowMore ? caption : `${caption.slice(0, maxLength)}`}
+                                                        {caption.length > maxLength && (
+                                                            <Button
+                                                                onClick={toggleShowMore2}
+                                                                sx={{
+                                                                    padding: 0,
+                                                                    minWidth: 0,
+                                                                    color: '#0073e6',
+                                                                    textTransform: 'none',
+                                                                    fontSize: 'inherit',
+                                                                }}
+                                                            >
+                                                                {fbShowMore ? ' Show less' : ' Show more'}
+                                                            </Button>
+                                                        )}
+                                                    </Typography>
+                                                </CardContent>
+                                                {file && fileType === 'image' && (
+                                                    <CardMedia component="img" image={URL.createObjectURL(file)} alt="Post image" />
+                                                )}
+                                                {file && fileType === 'video' && (
+                                                    <CardMedia component="video" controls src={URL.createObjectURL(file)} alt="Post video" />
+                                                )}
+                                                <CardActions style={{ display: 'flex', justifyContent: 'space-around' }}>
+                                                    <IconButton sx={{ color: 'gray' }}>
+                                                        <ThumbUpAltOutlined />
+                                                        <Typography variant="caption" sx={{ ml: 0.5 }}>
+                                                            Like
+                                                        </Typography>
+                                                    </IconButton>
+                                                    <IconButton sx={{ color: 'gray' }}>
+                                                        <ChatBubbleOutline />
+                                                        <Typography variant="caption" sx={{ ml: 0.5 }}>
+                                                            Comment
+                                                        </Typography>
+                                                    </IconButton>
+                                                    <IconButton sx={{ color: 'gray' }}>
+                                                        <ShareTwoTone />
+                                                        <Typography variant="caption" sx={{ ml: 0.5 }}>
+                                                            Share
+                                                        </Typography>
+                                                    </IconButton>
+                                                </CardActions>
+                                            </>
                                         )}
-                                        {!file && !imageUrl && (
-                                            <p id="imgPreview" style={{ marginTop: '100px', color: '#808080' }}>Image / Video Preview</p>
+
+                                        {mediaPlatforms === 'youtube' && (
+                                            <>
+                                                <CardContent>
+                                                    <Typography variant="body2" style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>
+                                                        {title}
+                                                    </Typography>
+                                                    <Typography variant="body2" style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>
+                                                        {youtubeShowmore ? caption : `${caption.slice(0, maxLength)}`}
+                                                        {caption.length > maxLength && (
+                                                            <Button
+                                                                onClick={toggleShowMore4}
+                                                                sx={{
+                                                                    padding: 0,
+                                                                    minWidth: 0,
+                                                                    color: '#0073e6',
+                                                                    textTransform: 'none',
+                                                                    fontSize: 'inherit',
+                                                                }}
+                                                            >
+                                                                {youtubeShowmore ? " Show less" : " Show more"}
+                                                            </Button>
+                                                        )}
+                                                    </Typography>
+
+                                                </CardContent>
+                                                {file && fileType === 'video' && (
+                                                    <CardMedia
+                                                        component="iframe"
+                                                        src={URL.createObjectURL(file)}
+                                                        title="YouTube Video"
+                                                        frameBorder="0"
+                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                        allowFullScreen
+                                                        sx={{ width: '100%', height: 'auto' }}
+                                                    />
+                                                )}
+                                                {/* <CardActions style={{ display: 'flex', justifyContent: 'space-around' }}>
+                                                    <IconButton sx={{ color: 'gray' }}>
+                                                        <ThumbUpAltOutlined />
+                                                        <Typography variant="caption" sx={{ ml: 0.5 }}>
+                                                            Like
+                                                        </Typography>
+                                                    </IconButton>
+                                                    <IconButton sx={{ color: 'gray' }}>
+                                                        <ThumbDownAltOutlined />
+                                                        <Typography variant="caption" sx={{ ml: 0.5 }}>
+                                                            Dislike
+                                                        </Typography>
+                                                    </IconButton>
+                                                    <IconButton sx={{ color: 'gray' }}>
+                                                        <ChatBubbleOutline />
+                                                        <Typography variant="caption" sx={{ ml: 0.5 }}>
+                                                            Comment
+                                                        </Typography>
+                                                    </IconButton>
+                                                    <IconButton sx={{ color: 'gray' }}>
+                                                        <ShareTwoTone />
+                                                        <Typography variant="caption" sx={{ ml: 0.5 }}>
+                                                            Share
+                                                        </Typography>
+                                                    </IconButton>
+                                                </CardActions> */}
+                                            </>
                                         )}
-                                    </div>
-                                </div>
-                                <div className="text-preview" style={{ wordBreak: 'break-all', padding: '10px' }}>
-                                    {(mediaPlatform.includes('youtube') || mediaPlatform.includes('Reddit')) &&
-                                        title.split('\n').map((line, index) => (
-                                            <div key={index}>{line}</div>
-                                        ))
-                                    }
-                                    {mediaPlatform.includes('Reddit') &&
-                                        sr.split('\n').map((line, index) => (
-                                            <div key={index}>{line}</div>
-                                        ))
-                                    }
-                                </div>
-                                <div className="text-preview" style={{ wordBreak: 'break-all', padding: '10px' }}>{caption.split('\n').map((line, index) => (
-                                    <div key={index}>{line}</div>
-                                ))}</div>
-                            </div>
+
+                                        {mediaPlatforms === 'Reddit' && (
+                                            <>
+                                                <CardContent>
+                                                    <Typography variant="body2" style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>
+                                                        {redditShowmore ? caption : `${caption.slice(0, maxLength)}`}
+                                                        {caption.length > maxLength && (
+                                                            <Button
+                                                                onClick={toggleShowMore3}
+                                                                sx={{
+                                                                    padding: 0,
+                                                                    minWidth: 0,
+                                                                    color: '#0073e6',
+                                                                    textTransform: 'none',
+                                                                    fontSize: 'inherit',
+                                                                }}
+                                                            >
+                                                                {redditShowmore ? " Show less" : " Show more"}
+                                                            </Button>
+                                                        )}
+                                                    </Typography>
+                                                </CardContent>
+                                                {file && fileType === 'image' && (
+                                                    <CardMedia component="img" image={URL.createObjectURL(file)} alt="Post image" />
+                                                )}
+                                                {file && fileType === 'video' && (
+                                                    <CardMedia component="video" controls src={URL.createObjectURL(file)} alt="Post video" />
+                                                )}
+                                                <CardActions style={{ display: 'flex', justifyContent: 'space-around' }}>
+                                                    <IconButton sx={{ color: 'gray' }}>
+                                                        <ArrowUpward />
+                                                        <Typography variant="caption" sx={{ ml: 0.5 }}>
+                                                            Upvote
+                                                        </Typography>
+                                                    </IconButton>
+                                                    <IconButton sx={{ color: 'gray' }}>
+                                                        <ArrowDownward />
+                                                        <Typography variant="caption" sx={{ ml: 0.5 }}>
+                                                            Downvote
+                                                        </Typography>
+                                                    </IconButton>
+                                                    <IconButton sx={{ color: 'gray' }}>
+                                                        <ChatBubbleOutline />
+                                                        <Typography variant="caption" sx={{ ml: 0.5 }}>
+                                                            Comment
+                                                        </Typography>
+                                                    </IconButton>
+                                                    <IconButton sx={{ color: 'gray' }}>
+                                                        <ShareTwoTone />
+                                                        <Typography variant="caption" sx={{ ml: 0.5 }}>
+                                                            Share
+                                                        </Typography>
+                                                    </IconButton>
+                                                </CardActions>
+                                            </>
+                                        )}
+
+                                        {mediaPlatforms === 'Telegram' && (
+                                            <>
+                                                <CardContent>
+                                                    <Typography variant="body2" style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>
+                                                        {caption}
+                                                    </Typography>
+                                                </CardContent>
+                                                {file && fileType === 'image' && (
+                                                    <CardMedia component="img" image={URL.createObjectURL(file)} alt="Post image" />
+                                                )}
+                                                <CardActions style={{ display: 'flex', justifyContent: 'space-around' }}>
+                                                    <IconButton sx={{ color: 'gray' }}>
+                                                        <Chat />
+                                                        <Typography variant="caption" sx={{ ml: 0.5 }}>
+                                                            Reply
+                                                        </Typography>
+                                                    </IconButton>
+                                                    <IconButton sx={{ color: 'gray' }}>
+                                                        <ShareTwoTone />
+                                                        <Typography variant="caption" sx={{ ml: 0.5 }}>
+                                                            Forward
+                                                        </Typography>
+                                                    </IconButton>
+                                                    <IconButton sx={{ color: 'gray' }}>
+                                                        <BookmarkOutlined />
+                                                        <Typography variant="caption" sx={{ ml: 0.5 }}>
+                                                            Save
+                                                        </Typography>
+                                                    </IconButton>
+                                                </CardActions>
+                                            </>
+                                        )}
+                                    </Card>
+                                );
+                            })}
                         </Grid>
                     </Grid>
                 </DialogContent>
