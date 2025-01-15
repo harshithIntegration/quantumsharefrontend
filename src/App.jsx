@@ -38,7 +38,6 @@ const App = () => {
                 <meta name="description" content="Quantum Share offers a seamless and secure way to share files and posts across social media. Revolutionize your sharing experience with our easy-to-use, privacy-focused platform." />
                 <link rel="canonical" href='/home' />
             </Helmet>
-
             <BrowserRouter>
                 <Routes>
                     <Route path='/' element={<Home />} />
@@ -70,19 +69,4 @@ const App = () => {
         </HelmetProvider>
     );
 };
-
 export default App;
-
-
-// import React from 'react'
-// import Analytics from './Sidebar/Analytics'
-
-// const App = () => {
-//   return (
-//     <div>
-//       <Analytics/>
-//     </div>
-//   )
-// }
-
-// export default App

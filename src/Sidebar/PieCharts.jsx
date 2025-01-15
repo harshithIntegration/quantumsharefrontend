@@ -87,7 +87,6 @@ const PieCharts = ({ data, platform }) => {
         default:
             chartData = { labels: [], datasets: [] }; // Fallback for unsupported platforms
     }
-
     return (
         <>
             <h3 style={{ color: '#ba343b' }}>Graphical Representation</h3>
@@ -108,6 +107,4 @@ const PieCharts = ({ data, platform }) => {
         </>
     );
 };
-
 export default PieCharts;
-
